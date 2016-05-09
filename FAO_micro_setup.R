@@ -29,6 +29,4 @@ mirdat <- merge(dat, mir, by="SSID")
 
 # Write data files --------------------------------------------------------
 write.csv(wetdat, "wetdat.csv", row.names=F)
-write.csv(mirdat, "wetdat.csv", row.names=F)
-
-
+write.csv(mirdat, "mirdat.csv", row.names=F)
