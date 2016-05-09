@@ -1,4 +1,4 @@
-#' Plant micro-nutrient bioavailability prediction setup
+#' Wheat plant micro-nutrient bioavailability prediction setup
 #' Soil and wheat plant data courtesy FAO, 1982 (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
 #' MIR soil data courtesy ICRAF
 #' M. Walsh, May 2016
@@ -22,4 +22,13 @@ soils <- read.table("soils.csv", header=T, sep=",") ## FAO soil chemistry data
 soils <- merge(cid, soils, by="CC")
 mir <- read.table("mir.csv", header=T, sep=",") ## ICRAF MIR data
 plant <- read.table("plants.csv", header=T, sep=",") ## FAO plant DM yield and micronutrient data
-dat <- merge(soils, plant, by="SSID")
+
+# Assemble dataframes
+wetdat <- merge(soils, plant, by="SSID")
+mirdat <- merge(dat, mir, by="SSID")
+
+# Write data files --------------------------------------------------------
+write.csv(wetdat, "wetdat.csv", row.names=F)
+write.csv(mirdat, "wetdat.csv", row.names=F)
+
+
