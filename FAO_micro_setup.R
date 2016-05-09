@@ -24,7 +24,7 @@ plant <- read.table("plants.csv", header=T, sep=",") ## FAO plant DM yield and m
 
 # Assemble dataframes
 wetdat <- merge(soils, plant, by="SSID")
-mirdat <- merge(dat, mir, by="SSID")
+mirdat <- merge(wetdat, mir, by="SSID")
 
 # Train/Test set partition ------------------------------------------------
 country <- names(table(mirdat$Country))
