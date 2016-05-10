@@ -40,7 +40,6 @@ registerDoParallel(mc)
 set.seed(1385321)
 tc <- trainControl(method = "repeatedcv", number = 10, repeats = 3, allowParallel = TRUE)
 
-
 # Plant Boron content (ppm) -----------------------------------------------
 # Wet chemistry covariates
 pB_wet.pls <- train(wetc, log(pB),
