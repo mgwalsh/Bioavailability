@@ -1,4 +1,4 @@
-#' Random Forest regression bioavailability predictions of wheat plant micronutrient contents from soil data
+#' Random Forest regression bioavailability predictions of wheat tissue micronutrient contents from soil data
 #' data courtesy FAO (1982) & ICRAF (2016)
 #' M. Walsh, May 2016
 
