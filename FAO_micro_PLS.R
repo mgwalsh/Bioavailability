@@ -17,14 +17,13 @@ suppressPackageStartupMessages({
 # SourceURL <- "https://raw.githubusercontent.com/mgwalsh/Bioavailability/master/FAO_micro_setup.R"
 # source_url(SourceURL)
 
-# Target variables: wheat dry matter yield (pDM, mg) & micro-nutrient concentrations (ppm)
-pB  <- fao_cal$pB
-pCu <- fao_cal$pCu
-pMn <- fao_cal$pMn
-pMo <- fao_cal$pMo
-pZn <- fao_cal$pZn
-pFe <- fao_cal$pFe
-
+# Target variables: micro-nutrient concentrations (ppm)
+pB  <- fao_cal$pB  ## Boron
+pCu <- fao_cal$pCu ## Copper
+pMn <- fao_cal$pMn ## Manganese
+pMo <- fao_cal$pMo ## Molybdenum
+pZn <- fao_cal$pZn ## Zinc
+pFe <- fao_cal$pFe ## Iron
 # Covariates
 wetc <- fao_cal[c(4:24)] ## Wet chemistry calibration data
 wetv <- fao_val[c(4:24)] ## Wet chemistry validation data from 8 randomly selected countries
