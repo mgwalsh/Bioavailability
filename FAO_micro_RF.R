@@ -178,3 +178,33 @@ pFe_mir.rfo <- train(mirc, pFe,
 print(pFe_mir.rfo)
 pFe_mir.imp <- varImp(pFe_mir.rfo, useModel = FALSE)
 plot(pFe_mir.imp, top=20)
+
+# Stop doParallel
+stopCluster(mc)
+
+# Test set predictions ----------------------------------------------------
+# Wet chemistry covariates
+pB_wet  <- predict(pB_wet.rfo, wetv)
+pCu_wet <- predict(pCu_wet.rfo, wetv)
+pMn_wet <- predict(pMn_wet.rfo, wetv)
+pMo_wet <- predict(pMo_wet.rfo, wetv)
+pZn_wet <- predict(pZn_wet.rfo, wetv)
+pFe_wet <- predict(pFe_wet.rfo, wetv)
+wet_pred <- cbind.data.frame(pB_wet,pCu_wet,pMn_wet,pMo_wet,pZn_wet,pFe_wet)
+wet_test <- wetv[c("SSID","pB","pCu","pMn","pMo","pZn","pFe")]
+wet_eval <- cbind(wet_test, wet_pred)
+
+# MIR covariates
+pB_mir  <- predict(pB_mir.rfo, mirv)
+pCu_mir <- predict(pCu_mir.rfo, mirv)
+pMn_mir <- predict(pMn_mir.rfo, mirv)
+pMo_mir <- predict(pMo_mir.rfo, mirv)
+pZn_mir <- predict(pZn_mir.rfo, mirv)
+pFe_mir <- predict(pFe_mir.rfo, mirv)
+mir_pred <- cbind.data.frame(pB_mir,pCu_mir,pMn_mir,pMo_mir,pZn_mir,pFe_mir)
+mir_test <- wetv[c("SSID","pB","pCu","pMn","pMo","pZn","pFe")]
+mir_eval <- cbind(mir_test, mir_pred)
+
+# Write data files --------------------------------------------------------
+write.csv(wet_eval, "wet_eval.csv", row.names=F)
+write.csv(mir_eval, "mir_eval.csv", row.names=F)
