@@ -3,9 +3,10 @@
 #' MIR soil data courtesy of ICRAF
 #' M. Walsh, May 2016
 
-# install.packages(c("downloader"), dependencies=T)
+# install.packages(c("downloader","caret"), dependencies=T)
 suppressPackageStartupMessages({
   require(downloader)
+  require(caret)
  })
 
 # Data setup --------------------------------------------------------------
@@ -27,11 +28,10 @@ wetdat <- merge(soils, plant, by="SSID")
 mirdat <- merge(wetdat, mir, by="SSID")
 
 # Train/Test set partition ------------------------------------------------
-country <- names(table(mirdat$Country))
 set.seed(1385321)
-train <- sample(country, 0.8*length(country)) ## sample 80% of of countries for calibration
-fao_cal <- mirdat[ mirdat$Country%in%train, ] ## calibration data
-fao_val <- mirdat[!mirdat$Country%in%train, ] ## validation data
+faoIndex <- createDataPartition(mirdat$SSID, p = 4/5, list = FALSE, times = 1)
+fao_cal <- mirdat[ faoIndex,]
+fao_val <- mirdat[-faoIndex,]
 
 # Write data files --------------------------------------------------------
 write.csv(fao_cal, "fao_cal.csv", row.names=F)
