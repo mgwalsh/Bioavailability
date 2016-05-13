@@ -27,9 +27,9 @@ pFe <- fao_cal$pFe ## Iron
 
 # Covariates
 wetc <- fao_cal[c(4:24)] ## Wet chemistry calibration data
-wetv <- fao_val[c(4:24)] ## Wet chemistry validation data from 8 randomly selected countries
+wetv <- fao_val[c(4:24)] ## Wet chemistry validation data
 mirc <- fao_cal[c(32:1795)] ## MIR calibration data
-mirv <- fao_val[c(32:1795)] ## MIR validation data for 8 randomly selected countries
+mirv <- fao_val[c(32:1795)] ## MIR validation data
 
 # RF models ---------------------------------------------------------------
 # Start doParallel to parallelize model fitting
