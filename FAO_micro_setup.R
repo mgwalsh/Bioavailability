@@ -30,8 +30,8 @@ mirdat <- merge(wetdat, mir, by="SSID")
 # Train/Test set partition ------------------------------------------------
 set.seed(1385321)
 faoIndex <- createDataPartition(mirdat$SSID, p = 4/5, list = FALSE, times = 1)
-fao_cal <- mirdat[ faoIndex,]
-fao_val <- mirdat[-faoIndex,]
+fao_cal <- mirdat[ faoIndex,] ## random 80% for calibration
+fao_val <- mirdat[-faoIndex,] ## random 20% for validation
 
 # Write data files --------------------------------------------------------
 write.csv(fao_cal, "fao_cal.csv", row.names=F)
