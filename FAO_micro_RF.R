@@ -53,6 +53,9 @@ pB_wet.rfo <- train(wetc, pB,
 print(pB_wet.rfo)
 pB_wet.imp <- varImp(pB_wet.rfo, useModel = FALSE)
 plot(pB_wet.imp, cex=1.2, cex.axis=2, col="black", top=20)
+plot(pB~fitted(pB_wet.rfo), xlab="Soil wet chemistry model fit (ppm)", ylab="Boron content of wheat plants (ppm)",
+     xlim=c(-0.1,100.1), ylim=c(-0.1,100.1), cex=0.8, wetc)
+abline(c(0,1), col="red", lwd=2)
 
 # MIR covariates
 pB_mir.rfo <- train(mirc, pB,
@@ -145,6 +148,9 @@ pZn_wet.rfo <- train(wetc, pZn,
 print(pZn_wet.rfo)
 pZn_wet.imp <- varImp(pZn_wet.rfo, useModel = FALSE)
 plot(pZn_wet.imp, cex=1.2, col="black", top=20)
+plot(pZn~fitted(pZn_wet.rfo), xlab="Soil wet chemistry model fit (ppm)", ylab="Zinc content of wheat plants (ppm)",
+     xlim=c(-0.1,100.1), ylim=c(-0.1,100.1), cex=0.8, wetc)
+abline(c(0,1), col="red", lwd=2)
 
 # MIR covariates
 pZn_mir.rfo <- train(mirc, pZn,
