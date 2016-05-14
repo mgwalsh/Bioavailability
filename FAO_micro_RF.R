@@ -1,5 +1,6 @@
 #' Random Forest regression bioavailability predictions of wheat tissue micronutrient contents from soil data
-#' data courtesy FAO (1982) & ICRAF (2016)
+#' Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
+#' MIR soil data courtesy of ICRAF (2016)
 #' M. Walsh, May 2016
 
 # Required packages
@@ -51,7 +52,7 @@ pB_wet.rfo <- train(wetc, pB,
                     trControl = tc)
 print(pB_wet.rfo)
 pB_wet.imp <- varImp(pB_wet.rfo, useModel = FALSE)
-plot(pB_wet.imp, top=20)
+plot(pB_wet.imp, cex=1.2, cex.axis=2, col="black", top=20)
 
 # MIR covariates
 pB_mir.rfo <- train(mirc, pB,
@@ -143,7 +144,7 @@ pZn_wet.rfo <- train(wetc, pZn,
                      trControl = tc)
 print(pZn_wet.rfo)
 pZn_wet.imp <- varImp(pZn_wet.rfo, useModel = FALSE)
-plot(pZn_wet.imp, top=20)
+plot(pZn_wet.imp, cex=1.2, col="black", top=20)
 
 # MIR covariates
 pZn_mir.rfo <- train(mirc, pZn,
