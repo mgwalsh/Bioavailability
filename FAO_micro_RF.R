@@ -18,7 +18,7 @@ suppressPackageStartupMessages({
 # SourceURL <- "https://raw.githubusercontent.com/mgwalsh/Bioavailability/master/FAO_micro_setup.R"
 # source_url(SourceURL)
 
-# Target elements: Wheat plant micro-nutrient concentrations (ppm)
+# Labels: Wheat plant micro-nutrient concentrations (ppm)
 pB  <- fao_cal$pB  ## Boron
 pCu <- fao_cal$pCu ## Copper
 pMn <- fao_cal$pMn ## Manganese
@@ -40,7 +40,7 @@ registerDoParallel(mc)
 # Control setup
 set.seed(1385321)
 tc <- trainControl(method = "oob", allowParallel = TRUE)
-tg <- expand.grid(mtry=seq(20, 200, by=10))
+tg <- expand.grid(mtry=seq(5, 20, by=1))
 
 # Plant Boron content (ppm) -----------------------------------------------
 # Wet chemistry covariates
@@ -113,29 +113,6 @@ pMn_mir.rfo <- train(mirc, pMn,
 print(pMn_mir.rfo)
 pMn_mir.imp <- varImp(pMn_mir.rfo, useModel = FALSE)
 plot(pMn_mir.imp, top=20)
-
-# Plant Molybdenum content (ppm) ------------------------------------------
-# Wet chemistry covariates
-pMo_wet.rfo <- train(wetc, pMo,
-                     preProc = c("center", "scale"),
-                     method = "rf",
-                     ntree = 501,
-                     tuneGrid = tg,
-                     trControl = tc)
-print(pMo_wet.rfo)
-pMo_wet.imp <- varImp(pMo_wet.rfo, useModel = FALSE)
-plot(pMo_wet.imp, top=20)
-
-# MIR covariates
-pMo_mir.rfo <- train(mirc, pMo,
-                     preProc = c("center", "scale"),
-                     method = "rf",
-                     ntree = 501,
-                     tuneGrid = tg,
-                     trControl = tc)
-print(pMo_mir.rfo)
-pMo_mir.imp <- varImp(pMo_mir.rfo, useModel = FALSE)
-plot(pMo_mir.imp, top=20)
 
 # Plant Zinc content (ppm) ------------------------------------------------
 # Wet chemistry covariates
