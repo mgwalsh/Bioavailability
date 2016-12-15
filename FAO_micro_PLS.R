@@ -24,6 +24,7 @@ pMn <- fao_cal$pMn ## Manganese
 pMo <- fao_cal$pMo ## Molybdenum
 pZn <- fao_cal$pZn ## Zinc
 pFe <- fao_cal$pFe ## Iron
+
 # Covariates
 wetc <- fao_cal[c(4:24)] ## Wet chemistry calibration data
 wetv <- fao_val[c(4:24)] ## Wet chemistry validation data from 8 randomly selected countries
