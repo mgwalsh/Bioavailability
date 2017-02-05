@@ -12,7 +12,6 @@ suppressPackageStartupMessages({
   require(doParallel)
   require(randomForest)
   require(gbm)
-  require(deepnet)
   require(bartMachine)
   require(glmnet)
 })
