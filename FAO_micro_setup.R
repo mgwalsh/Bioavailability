@@ -3,7 +3,7 @@
 #' MIR soil data courtesy of ICRAF
 #' M. Walsh, May 2016
 
-# install.packages(c("downloader","caret"), dependencies=T)
+# install.packages(c("downloader","compositions","MASS","RColorBrewer","caret"), dependencies=T)
 suppressPackageStartupMessages({
   require(downloader)
   require(compositions)
@@ -21,7 +21,7 @@ setwd("./FAO_data")
 download("https://www.dropbox.com/s/hhdoxswpfb9vlz1/FAO_micro_bioavailability.zip?dl=0", "FAO_micro_bioavailability.zip", mode="wb")
 unzip("FAO_micro_bioavailability.zip", overwrite=T)
 cid <- read.table("countries.csv", header=T, sep=",") ## country ID's
-soils <- read.table("soils.csv", header=T, sep=",") ## FAO soil chem data (in ppm, except for pH(water), EC, CaCO3, CEC, texture, Volwt)
+soils <- read.table("soils.csv", header=T, sep=",") ## FAO soil chem data (in ppm, except for pH, EC, CaCO3, CEC, texture, Volwt)
 soils <- merge(cid, soils, by="CC")
 mir <- read.table("mir.csv", header=T, sep=",") ## ICRAF MIR data
 mir <- mir[!duplicated(mir[,1]), ]
@@ -74,6 +74,16 @@ parcoord(idata, col = k, var.label=T)
 wetdat <- cbind(wetdat, idata)
 mirdat <- merge(wetdat, mir, by="SSID")
 
+# Plot soil-plant nutrient scatter plots
+par(mfrow=c(3,2), mar=c(4.5,4.5,1,1))
+plot(pB~B, cex=1.2, xlab="Soil B (ppm)", ylab="Plant B (ppm)", cex.lab=1.5, wetdat)
+plot(pCu~Cu, cex=1.2, xlab="Soil Cu (ppm)", ylab="Plant Cu (ppm)", cex.lab=1.5, wetdat)
+plot(pMn~Mn, cex=1.2, xlab="Soil Mn (ppm)", ylab="Plant Mn (ppm)", cex.lab=1.5, wetdat)
+plot(pMo~Mo, cex=1.2, xlab="Soil Mo (ppm)", ylab="Plant Mo (ppm)", cex.lab=1.5, wetdat)
+plot(pZn~Zn, cex=1.2, xlab="Soil Zn (ppm)", ylab="Plant Zn (ppm)", cex.lab=1.5, wetdat)
+plot(pFe~Fe, cex=1.2, xlab="Soil Fe (ppm)", ylab="Plant Fe (ppm)", cex.lab=1.5, wetdat)
+dev.off()
+
 # Train/Test set partition ------------------------------------------------
 set.seed(1385321)
 faoIndex <- createDataPartition(mirdat$SSID, p = 3/4, list = FALSE, times = 1)
@@ -85,4 +95,5 @@ write.csv(fao_cal, "fao_cal.csv", row.names=F)
 write.csv(fao_val, "fao_val.csv", row.names=F)
 
 # Remove extraneous objects from memory -----------------------------------
-rm(list=setdiff(ls(), c("fao_cal", "fao_val")))
+rm(list=setdiff(ls(), c("mirdat", "fao_cal", "fao_val")))
+dev.off()
