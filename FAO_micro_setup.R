@@ -82,7 +82,6 @@ plot(pMn~Mn, cex=1.2, xlab="Soil Mn (ppm)", ylab="Plant Mn (ppm)", cex.lab=1.5, 
 plot(pMo~Mo, cex=1.2, xlab="Soil Mo (ppm)", ylab="Plant Mo (ppm)", cex.lab=1.5, wetdat)
 plot(pZn~Zn, cex=1.2, xlab="Soil Zn (ppm)", ylab="Plant Zn (ppm)", cex.lab=1.5, wetdat)
 plot(pFe~Fe, cex=1.2, xlab="Soil Fe (ppm)", ylab="Plant Fe (ppm)", cex.lab=1.5, wetdat)
-dev.off()
 
 # Train/Test set partition ------------------------------------------------
 set.seed(1385321)
