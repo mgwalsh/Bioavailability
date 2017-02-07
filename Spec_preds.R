@@ -176,5 +176,5 @@ abline(c(0,1), col="red")
 dev.off()
 
 # Ensemble predictions 
-plot(L ~ ENS, pmirv, xlab = "Ensemble predicted", ylab = "Observed", cex.lab=1.5)
+plot(L ~ ENS, pmirv, xlab = "Ensemble predicted", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
