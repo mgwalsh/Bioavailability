@@ -161,20 +161,22 @@ stopCluster(mc)
 # Write data files --------------------------------------------------------
 write.csv(pmirv, "pmirv.csv", row.names=F)
 
-# Receiver operator characteristics ---------------------------------------
+# Prediction plots --------------------------------------------------------
 par(mfrow=c(2,2), mar=c(5,4.5,1,1))
 
 # MIR predictions # note that x & y axis limits will need to be adjusted
-plot(L ~ RFO, pmirv, xlab = "RFO predicted", ylab = "Observed", cex.lab=1.3)
+lmin <- 0
+lmax <- max(pmirv$L)
+plot(L ~ RFO, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "RFO predicted", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ GBM, pmirv, xlab = "GBM predicted", ylab = "Observed", cex.lab=1.3)
+plot(L ~ GBM, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "GBM predicted", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ PLS, pmirv, xlab = "PLS Predicted", ylab = "Observed", cex.lab=1.3)
+plot(L ~ PLS, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "PLS predicted", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ BART, pmirv, xlab = "BART Predicted", ylab = "Observed", cex.lab=1.3)
+plot(L ~ BART, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "BART predicted", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
 dev.off()
 
 # Ensemble predictions 
-plot(L ~ ENS, pmirv, xlab = "Ensemble predicted", ylab = "Observed", cex.lab=1.3)
+plot(L ~ ENS, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Ensemble predicted", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
