@@ -1,4 +1,4 @@
-#' FAO data wet chemistry predictions
+#' FAO data MIR spectral predictions
 #' Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
 #' MIR soil data courtesy of ICRAF (2016)
 #' M. Walsh, October 2016
