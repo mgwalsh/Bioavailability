@@ -1,4 +1,4 @@
-#' FAO data spectral predictions
+#' FAO data wet chemistry predictions
 #' Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
 #' MIR soil data courtesy of ICRAF (2016)
 #' M. Walsh, October 2016
@@ -12,8 +12,8 @@ rm(mirdat)
 
 # Labels ... insert the relevant label
 str(fao_cal) ## check potential labels
-lt <- fao_cal$pZn
-lv <- fao_val$pZn
+lt <- fao_cal$pB
+lv <- fao_val$pB
 
 # Soil spectral features
 mirt <- fao_cal[43:1806] # soil MIR
@@ -159,7 +159,7 @@ pmirv <- cbind(pmirv, ens_mir)
 stopCluster(mc)
 
 # Write data files --------------------------------------------------------
-write.csv(pmirv, "pmirv.csv", row.names=F)
+write.csv(pmirv, "B_pmirv.csv", row.names=F)
 
 # Prediction plots --------------------------------------------------------
 par(mfrow=c(2,2), mar=c(5,4.5,1,1))
@@ -167,16 +167,16 @@ par(mfrow=c(2,2), mar=c(5,4.5,1,1))
 # MIR predictions # note that x & y axis limits will need to be adjusted
 lmin <- 0
 lmax <- max(pmirv$L)
-plot(L ~ RFO, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "RFO predicted", ylab = "Observed", cex.lab=1.3)
+plot(L ~ RFO, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "RFO prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ GBM, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "GBM predicted", ylab = "Observed", cex.lab=1.3)
+plot(L ~ GBM, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "GBM prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ PLS, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "PLS predicted", ylab = "Observed", cex.lab=1.3)
+plot(L ~ PLS, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "PLS prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ BART, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "BART predicted", ylab = "Observed", cex.lab=1.3)
+plot(L ~ BART, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "BART prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
 dev.off()
 
 # Ensemble predictions 
-plot(L ~ ENS, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Ensemble predicted", ylab = "Observed", cex.lab=1.3)
+plot(L ~ ENS, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
