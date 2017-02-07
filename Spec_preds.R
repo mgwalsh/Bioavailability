@@ -8,11 +8,12 @@
 # or run ...
 # SourceURL <- "https://raw.githubusercontent.com/mgwalsh/Bioavailability/master/FAO_micro_setup.R"
 # source_url(SourceURL)
+rm(mirdat)
 
 # Labels ... insert the relevant label
 str(fao_cal) ## check potential labels
-lt <- fao_cal$V2
-lv <- fao_val$V2
+lt <- fao_cal$pZn
+lv <- fao_val$pZn
 
 # Soil spectral features
 mirt <- fao_cal[43:1806] # soil MIR
@@ -31,7 +32,6 @@ set.seed(1385321)
 tc <- trainControl(method = "cv", allowParallel = T)
 
 # Tuning parameters
-set.seed(1385321)
 tg <- expand.grid(mtry=seq(10, 150, by=10))
 
 # Fit model
@@ -93,7 +93,7 @@ tc <- trainControl(method = "repeatedcv", repeats = 5, allowParallel = TRUE)
 mir.pls <- train(mirt, lt,
                  preProc = c("center", "scale"),
                  method = "pls",
-                 tuneGrid = expand.grid(ncomp=seq(2,20,by=1)),
+                 tuneGrid = expand.grid(ncomp=seq(2, 20, by=1)),
                  trControl = tc)
 print(mir.pls)
 pls_mir <- predict(mir.pls, mirv) ## predict validation set
@@ -162,19 +162,19 @@ stopCluster(mc)
 write.csv(pmirv, "pmirv.csv", row.names=F)
 
 # Receiver operator characteristics ---------------------------------------
-par(mfrow=c(2,2), mar=c(4.5,4.5,1,1))
+par(mfrow=c(2,2), mar=c(5,4.5,1,1))
 
 # MIR predictions # note that x & y axis limits will need to be adjusted
-plot(L ~ RFO, pmirv, xlim=c(-31,-15), ylim=c(-31,-15), xlab = "Predicted", ylab = "Observed", cex.lab=1.2)
+plot(L ~ RFO, pmirv, xlab = "RFO predicted", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ GBM, pmirv, xlim=c(-31,-15), ylim=c(-31,-15), xlab = "Predicted", ylab = "Observed", cex.lab=1.2)
+plot(L ~ GBM, pmirv, xlab = "GBM predicted", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ PLS, pmirv, xlim=c(-31,-15), ylim=c(-31,-15), xlab = "Predicted", ylab = "Observed", cex.lab=1.2)
+plot(L ~ PLS, pmirv, xlab = "PLS Predicted", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ BART, pmirv, xlim=c(-31,-15), ylim=c(-31,-15), xlab = "Predicted", ylab = "Observed", cex.lab=1.2)
+plot(L ~ BART, pmirv, xlab = "BART Predicted", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
 dev.off()
 
 # Ensemble predictions 
-plot(L ~ ENS, pmirv, xlim=c(-31,-15), ylim=c(-31,-15), xlab = "Predicted", ylab = "Observed", cex.lab=1.2)
+plot(L ~ ENS, pmirv, xlab = "Ensemble predicted", ylab = "Observed", cex.lab=1.5)
 abline(c(0,1), col="red")
