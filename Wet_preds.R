@@ -11,7 +11,7 @@
 rm(mirdat)
 
 # Labels ... insert the relevant label
-str(fao_cal) ## check potential labels
+# str(fao_cal) ## check potential labels
 lt <- fao_cal$pZn ## variables prefaced with "p" are potential plant labels
 lv <- fao_val$pZn ## ensure that validation and training labels are the same
 
