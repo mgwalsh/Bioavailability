@@ -159,7 +159,7 @@ pwetv <- cbind(pwetv, ens_wet)
 stopCluster(mc)
 
 # Write data files --------------------------------------------------------
-write.csv(pwetv, "B_pwetv.csv", row.names=F) ## adjust output name
+write.csv(pwetv, "Zn_pwetv.csv", row.names=F) ## adjust output name
 
 # Prediction plots --------------------------------------------------------
 par(mfrow=c(2,2), mar=c(5,4.5,1,1))
