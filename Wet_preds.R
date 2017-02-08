@@ -1,7 +1,7 @@
 #' FAO data wet chemistry predictions
 #' Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
 #' MIR soil data courtesy of ICRAF (2016)
-#' M. Walsh, October 2016
+#' M. Walsh, February 2017
 
 # Data setup --------------------------------------------------------------
 # Run this first: https://github.com/mgwalsh/Bioavailability/blob/master/FAO_micro_setup.R
