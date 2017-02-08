@@ -12,7 +12,7 @@ rm(mirdat)
 
 # Labels ... insert the relevant label
 # str(fao_cal) ## check potential labels
-lt <- fao_cal$pZn ## variables prefaced with "p" are potential plant labels
+lt <- fao_cal$pZn ## variables prefaced by "p" are potential plant labels
 lv <- fao_val$pZn ## ensure that validation and training labels are the same
 
 # Soil spectral features
@@ -162,21 +162,26 @@ stopCluster(mc)
 write.csv(pwetv, "Zn_pwetv.csv", row.names=F) ## adjust output name
 
 # Prediction plots --------------------------------------------------------
+# Plot individual model predictions
+x11()
 par(mfrow=c(2,2), mar=c(5,4.5,1,1))
-
-# wet chem predictions
 lmin <- 0
 lmax <- max(pwetv$L)
-plot(L ~ RFO, pwetv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "RFO prediction", ylab = "Observed", cex.lab=1.3)
+plot(L ~ RFO, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "RFO prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ GBM, pwetv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "GBM prediction", ylab = "Observed", cex.lab=1.3)
+plot(L ~ GBM, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "GBM prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ PLS, pwetv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "PLS prediction", ylab = "Observed", cex.lab=1.3)
+plot(L ~ PLS, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "PLS prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ BART, pwetv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "BART prediction", ylab = "Observed", cex.lab=1.3)
+plot(L ~ BART, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "BART prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
+dev.copy(pdf, 'wet_model_preds.pdf')
 dev.off()
 
 # Ensemble predictions 
-plot(L ~ ENS, pwetv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed", cex.lab=1.3)
+x11()
+par(mfrow=c(1,1), mar=c(5,4.5,1,1))
+plot(L ~ ENS, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
+dev.copy(pdf, 'wet_ens_pred.pdf')
+dev.off()
