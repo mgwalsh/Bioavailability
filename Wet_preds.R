@@ -12,12 +12,12 @@ rm(mirdat)
 
 # Labels ... insert the relevant label
 str(fao_cal) ## check potential labels
-lt <- fao_cal$pB
-lv <- fao_val$pB
+lt <- fao_cal$pZn ## variables prefaced with "p" are potential plant labels
+lv <- fao_val$pZn ## ensure that validation and training labels are the same
 
 # Soil spectral features
-wett <- fao_cal[c(4,8:9,12:24)] # soil wet chem features
-wetv <- fao_val[c(4,8:9,12:24)] # soil wet chem features
+wett <- fao_cal[c(4,8:9,12:24)] ## soil wet chem features
+wetv <- fao_val[c(4,8:9,12:24)] ## ensure that validation features are the same
 
 # RF models ---------------------------------------------------------------
 library(doParallel)
