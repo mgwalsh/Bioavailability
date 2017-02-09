@@ -12,12 +12,12 @@ rm(mirdat)
 
 # Labels ... insert the relevant label
 str(fao_cal) ## check potential labels
-lt <- fao_cal$pB
-lv <- fao_val$pB
+lt <- fao_cal$pZn ## variables prefaced by "p" are potential plant labels
+lv <- fao_val$pZn ## ensure that validation and training labels are the same
 
 # Soil spectral features
-mirt <- fao_cal[43:1806] # soil MIR
-mirv <- fao_val[43:1806] # soil MIR
+mirt <- fao_cal[43:1806] # soil MIR features
+mirv <- fao_val[43:1806] # ensure that validation features are the same
 
 # RF models ---------------------------------------------------------------
 library(doParallel)
@@ -162,9 +162,9 @@ stopCluster(mc)
 write.csv(pmirv, "B_pmirv.csv", row.names=F)
 
 # Prediction plots --------------------------------------------------------
+# Plot individual MIR model predictions
+x11()
 par(mfrow=c(2,2), mar=c(5,4.5,1,1))
-
-# MIR predictions # note that x & y axis limits will need to be adjusted
 lmin <- 0
 lmax <- max(pmirv$L)
 plot(L ~ RFO, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "RFO prediction", ylab = "Observed", cex.lab=1.3)
@@ -175,8 +175,14 @@ plot(L ~ PLS, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "PLS predict
 abline(c(0,1), col="red")
 plot(L ~ BART, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "BART prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
+dev.copy(pdf, 'mir_model_preds.pdf')
 dev.off()
 
 # Ensemble predictions 
+x11()
+par(mfrow=c(1,1), mar=c(5,4.5,1,1))
 plot(L ~ ENS, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
+dev.copy(pdf, 'mir_ens_pred.pdf')
+dev.off()
+
