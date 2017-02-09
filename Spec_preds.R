@@ -178,11 +178,10 @@ abline(c(0,1), col="red")
 dev.copy(pdf, 'mir_model_preds.pdf')
 dev.off()
 
-# Ensemble predictions 
+# Plot ensemble predictions 
 x11()
 par(mfrow=c(1,1), mar=c(5,4.5,1,1))
 plot(L ~ ENS, pmirv, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
 dev.copy(pdf, 'mir_ens_pred.pdf')
 dev.off()
-
