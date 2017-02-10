@@ -129,7 +129,7 @@ detach("package:bartMachine", unload=TRUE)
 
 # Model stacking setup ----------------------------------------------------
 pmirv <- as.data.frame(cbind(lv, rfo_mir, gbm_mir, pls_mir, bar_mir))
-names(pmirv) <- c("L", "RFO", "GBM", "PLS", "BART")
+names(pmirv) <- c("L", "RFOm", "GBMm", "PLSm", "BARTm")
 
 # Remove extraneous objects from memory -----------------------------------
 # rm(list=setdiff(ls(), pmirv"))
