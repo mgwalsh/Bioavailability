@@ -12,8 +12,8 @@ rm(mirdat)
 
 # Labels ... insert the relevant label
 str(fao_cal) ## check potential labels
-lt <- fao_cal$pB ## variables prefaced by "p" are potential plant labels
-lv <- fao_val$pB ## ensure that validation and training labels are the same
+lt <- fao_cal$pZn ## variables prefaced by "p" are potential plant labels
+lv <- fao_val$pZn ## ensure that validation and training labels are the same
 
 # Soil spectral features
 mirt <- fao_cal[43:1806] # soil MIR features
@@ -159,7 +159,7 @@ pmirv <- cbind(pmirv, ens_mir)
 stopCluster(mc)
 
 # Write data files --------------------------------------------------------
-write.csv(pmirv, "B_pmirv.csv", row.names=F)
+write.csv(pmirv, "Zn_pmirv.csv", row.names=F)
 
 # Prediction plots --------------------------------------------------------
 # Plot individual MIR model predictions
