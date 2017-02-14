@@ -4,7 +4,7 @@
 #' M. Walsh, February 2017
 
 # Required packages
-# install.packages(c("devtools","arm")), dependencies=TRUE)
+# install.packages(c("devtools","quantreg")), dependencies=TRUE)
 suppressPackageStartupMessages({
   require(devtools)
   require(quantreg)
@@ -25,9 +25,9 @@ bref <- quantile(hidm$pB/hidm$B, p=c(0.05,0.5,0.95))
 mirdat$dB <- (mirdat$pB/mirdat$B)
 plot(log(dB)~log(B), mirdat, xlab=expression(paste("log"[e], " (", "B"[s], ")")),
      ylab=expression(paste("log"[e], " (", "B"[p], " / ", "B"[s], ")")), cex=1.2, cex.lab=1.5)
-abline(h=log(bref[1]), lty=2)
-abline(h=log(bref[2]), lwd=2)
-abline(h=log(bref[3]), lty=2)
+abline(h=log(bref[1]), lty=2) ## 5th percentile reference value
+abline(h=log(bref[2]), lwd=2) ## median
+abline(h=log(bref[3]), lty=2) ## 95th precentile
 abline(rq(log(dB)~log(B), tau=0.5, mirdat), col="red", lwd=2)
 
 # Copper
@@ -79,4 +79,4 @@ abline(h=log(feref[1]), lty=2)
 abline(h=log(feref[2]), lwd=2)
 abline(h=log(feref[3]), lty=2)
 abline(rq(log(dFe)~log(Fe), tau=0.5, mirdat), col="red", lwd=2)
-# dev.off()
+# dev.off() ## remember to turn graphics device off!
