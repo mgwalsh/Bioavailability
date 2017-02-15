@@ -61,6 +61,8 @@ abline(h=log(moref[3]), lty=2)
 abline(rq(log(dMo)~log(Mo), tau=0.5, mirdat), col="red", lwd=2)
 
 # Zinc
+# x11()
+# par(mfrow=c(1,1), mar=c(5,5,1,1))
 znref <- quantile(hidm$pZn/hidm$Zn, p=c(0.05,0.5,0.95))
 mirdat$dZn <- (mirdat$pZn/mirdat$Zn)
 plot(log(dZn)~log(Zn), mirdat, xlab=expression(paste("log"[e], " (", "Zn"[s], ")")),
@@ -69,6 +71,8 @@ abline(h=log(znref[1]), lty=2)
 abline(h=log(znref[2]), lwd=2)
 abline(h=log(znref[3]), lty=2)
 abline(rq(log(dZn)~log(Zn), tau=0.5, mirdat), col="red", lwd=2)
+# dev.copy(pdf, 'Zn_ER.pdf')
+# dev.off()
 
 # Iron
 feref <- quantile(hidm$pFe/hidm$Fe, p=c(0.05,0.5,0.95))
