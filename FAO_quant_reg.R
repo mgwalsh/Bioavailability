@@ -88,3 +88,4 @@ curve(exp(FeQ$coefficients[3])*x^FeQ$coefficients[4], add=T, from=0, to=490, col
 curve(exp(FeQ$coefficients[5])*x^FeQ$coefficients[6], add=T, from=0, to=490, col="red", lwd=2)
 curve(exp(FeQ$coefficients[7])*x^FeQ$coefficients[8], add=T, from=0, to=490, col="blue", lty=2)
 curve(exp(FeQ$coefficients[9])*x^FeQ$coefficients[10], add=T, from=0, to=490, col="blue", lwd=1)
+# dev.off() ## remember to turn graphics device off!
