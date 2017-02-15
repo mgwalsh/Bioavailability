@@ -71,6 +71,8 @@ abline(h=log(znref[1]), lty=2)
 abline(h=log(znref[2]), lwd=2)
 abline(h=log(znref[3]), lty=2)
 abline(rq(log(dZn)~log(Zn), tau=0.5, mirdat), col="red", lwd=2)
+# ZnQ <- rq(log(dZn)~log(Zn), tau=0.5, mirdat)
+# summary(ZnQ)
 # dev.copy(pdf, 'Zn_ER.pdf')
 # dev.off()
 
