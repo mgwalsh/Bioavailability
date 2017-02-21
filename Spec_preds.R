@@ -12,8 +12,8 @@ rm(mirdat)
 
 # Labels ... insert the relevant label
 str(fao_cal) ## check potential labels
-lt <- fao_cal$pZn ## variables prefaced by "p" are potential plant labels
-lv <- fao_val$pZn ## ensure that validation and training labels are the same
+lt <- log(fao_cal$pZn/fao_cal$Zn) ## variables prefaced by "p" are potential plant labels
+lv <- log(fao_val$pZn/fao_val$Zn) ## ensure that validation and training labels are the same
 
 # Soil spectral features
 mirt <- fao_cal[43:1806] # soil MIR features
