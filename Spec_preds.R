@@ -153,7 +153,7 @@ mir.ens <- train(L ~ ., data = pmirv,
                  trControl = tc)
 print(mir.ens)
 ens_mir <- as.data.frame(predict(mir.ens, pmirv))
-names(ens_mir) <- c("ENS")
+names(ens_mir) <- c("ENSm")
 pmirv <- cbind(pmirv, ens_mir)
 
 stopCluster(mc)
@@ -181,7 +181,7 @@ dev.off()
 # Plot ensemble predictions 
 x11()
 par(mfrow=c(1,1), mar=c(5,4.5,1,1))
-plot(L ~ ENS, pmirv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed", cex.lab=1.3)
+plot(L ~ ENSm, pmirv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
 dev.copy(pdf, 'mir_ens_pred.pdf')
 dev.off()
