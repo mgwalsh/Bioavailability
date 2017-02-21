@@ -75,13 +75,13 @@ wetdat <- cbind(wetdat, idata)
 mirdat <- merge(wetdat, mir, by="SSID")
 
 # Plot soil-plant nutrient scatter plots
-par(mfrow=c(3,2), mar=c(4.5,4.5,1,1))
-plot(pB~B, cex=1.2, xlab="Soil B (ppm)", ylab="Plant B (ppm)", cex.lab=1.5, wetdat)
-plot(pCu~Cu, cex=1.2, xlab="Soil Cu (ppm)", ylab="Plant Cu (ppm)", cex.lab=1.5, wetdat)
-plot(pMn~Mn, cex=1.2, xlab="Soil Mn (ppm)", ylab="Plant Mn (ppm)", cex.lab=1.5, wetdat)
-plot(pMo~Mo, cex=1.2, xlab="Soil Mo (ppm)", ylab="Plant Mo (ppm)", cex.lab=1.5, wetdat)
-plot(pZn~Zn, cex=1.2, xlab="Soil Zn (ppm)", ylab="Plant Zn (ppm)", cex.lab=1.5, wetdat)
-plot(pFe~Fe, cex=1.2, xlab="Soil Fe (ppm)", ylab="Plant Fe (ppm)", cex.lab=1.5, wetdat)
+par(mfrow=c(3,2), mar=c(5,5,1,1))
+plot(pB~B, cex=1.2, xlab=expression(paste("B"[s], " (ppm)")), ylab=expression(paste("B"[p], " (ppm)")), cex.lab=1.5, wetdat)
+plot(pCu~Cu, cex=1.2, xlab=expression(paste("Cu"[s], " (ppm)")), ylab=expression(paste("Cu"[p], " (ppm)")), cex.lab=1.5, wetdat)
+plot(pMn~Mn, cex=1.2, xlab=expression(paste("Mn"[s], " (ppm)")), ylab=expression(paste("Mn"[p], " (ppm)")), cex.lab=1.5, wetdat)
+plot(pMo~Mo, cex=1.2, xlab=expression(paste("Mo"[s], " (ppm)")), ylab=expression(paste("Mo"[p], " (ppm)")), cex.lab=1.5, wetdat)
+plot(pZn~Zn, cex=1.2, xlab=expression(paste("Zn"[s], " (ppm)")), ylab=expression(paste("Zn"[p], " (ppm)")), cex.lab=1.5, wetdat)
+plot(pFe~Fe, cex=1.2, xlab=expression(paste("Fe"[s], " (ppm)")), ylab=expression(paste("Fe"[p], " (ppm)")), cex.lab=1.5, wetdat)
 
 # Train/Test set partition ------------------------------------------------
 set.seed(1385321)
