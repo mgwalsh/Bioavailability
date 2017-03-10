@@ -16,7 +16,7 @@ suppressPackageStartupMessages({
 # source_url(SourceURL)
 
 # Select variables
-spx <- wetdat[c(4,7,9,33:42,32,26:31)]
+spx <- wetdat[c(32,4,7,9,33:42)]
 
 # Graphical models --------------------------------------------------------
 # Fit interaction model
