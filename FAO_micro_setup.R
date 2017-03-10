@@ -1,9 +1,9 @@
-#' Wheat plant dry matter micro-nutrient bioavailability prediction setup
+#' Wheat plant dry matter yield and micro-nutrient bioavailability prediction setup
 #' Soil and wheat plant wet chemistry data courtesy of FAO, 1982 (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
 #' MIR soil data courtesy of ICRAF
 #' M. Walsh, May 2016
 
-# install.packages(c("downloader","compositions","MASS","RColorBrewer","caret"), dependencies=T)
+install.packages(c("downloader","compositions","MASS","RColorBrewer","caret"), dependencies=T)
 suppressPackageStartupMessages({
   require(downloader)
   require(compositions)
@@ -82,6 +82,7 @@ plot(pMn~Mn, cex=1.2, xlab=expression(paste("Mn"[s], " (ppm)")), ylab=expression
 plot(pMo~Mo, cex=1.2, xlab=expression(paste("Mo"[s], " (ppm)")), ylab=expression(paste("Mo"[p], " (ppm)")), cex.lab=1.5, wetdat)
 plot(pZn~Zn, cex=1.2, xlab=expression(paste("Zn"[s], " (ppm)")), ylab=expression(paste("Zn"[p], " (ppm)")), cex.lab=1.5, wetdat)
 plot(pFe~Fe, cex=1.2, xlab=expression(paste("Fe"[s], " (ppm)")), ylab=expression(paste("Fe"[p], " (ppm)")), cex.lab=1.5, wetdat)
+dev.off()
 
 # Train/Test set partition ------------------------------------------------
 set.seed(1385321)
@@ -95,5 +96,5 @@ write.csv(fao_val, "fao_val.csv", row.names=F)
 
 # Remove extraneous objects from memory -----------------------------------
 rm(list=setdiff(ls(), c("mirdat", "fao_cal", "fao_val")))
-dev.off()
+
 
