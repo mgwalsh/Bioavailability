@@ -16,4 +16,14 @@ suppressPackageStartupMessages({
 # source_url(SourceURL)
 
 # Select variables
-psm <- wetdat[,26:42]
+spx <- wetdat[c(4,7,9,33:42,32,26:31)]
+
+# Graphical models --------------------------------------------------------
+# Fit interaction model
+gm0 <- mmod(~.^., data = spx)
+gm1 <- stepwise(gm0)
+
+# Plot graph
+dag <- ugList(terms(gm1), result="matrix")
+net <- as.network(x = dag, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
+plot.network(net, vertex.col = "white", vertex.cex = 5, displaylabels = T, label.pos = 5, mode = "circle")
