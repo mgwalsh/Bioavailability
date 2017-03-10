@@ -3,7 +3,7 @@
 #' MIR soil data courtesy of ICRAF
 #' M. Walsh, May 2016
 
-install.packages(c("downloader","compositions","MASS","RColorBrewer","caret"), dependencies=T)
+# install.packages(c("downloader","compositions","MASS","RColorBrewer","caret"), dependencies=T)
 suppressPackageStartupMessages({
   require(downloader)
   require(compositions)
@@ -95,6 +95,6 @@ write.csv(fao_cal, "fao_cal.csv", row.names=F)
 write.csv(fao_val, "fao_val.csv", row.names=F)
 
 # Remove extraneous objects from memory -----------------------------------
-rm(list=setdiff(ls(), c("mirdat", "fao_cal", "fao_val")))
+rm(list=setdiff(ls(), c("wetdat", "mirdat", "fao_cal", "fao_val")))
 
 
