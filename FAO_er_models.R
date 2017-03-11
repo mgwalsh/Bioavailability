@@ -25,9 +25,9 @@ bref <- quantile(hidm$pB/hidm$B, p=c(0.05,0.5,0.95))
 mirdat$dB <- (mirdat$pB/mirdat$B)
 plot(log(dB)~log(B), mirdat, xlab=expression(paste("log"[e], " (", "B"[s], ")")),
      ylab=expression(paste("log"[e], " (", "B"[p], " / ", "B"[s], ")")), cex=1.2, cex.lab=1.5)
-abline(h=log(bref[1]), lty=2) ## 5th percentile reference value
-abline(h=log(bref[2]), lwd=2) ## median
-abline(h=log(bref[3]), lty=2) ## 95th precentile
+abline(h=log(bref[1]), col="blue") ## 5th percentile reference value
+abline(h=log(bref[2]), lwd=2, col="red") ## median
+abline(h=log(bref[3]), col="blue") ## 95th precentile
 abline(rq(log(dB)~log(B), tau=0.5, mirdat), col="red", lwd=2)
 
 # Copper
@@ -35,9 +35,9 @@ curef <- quantile(hidm$pCu/hidm$Cu, p=c(0.05,0.5,0.95))
 mirdat$dCu <- (mirdat$pCu/mirdat$Cu)
 plot(log(dCu)~log(Cu), mirdat, xlab=expression(paste("log"[e], " (", "Cu"[s], ")")),
      ylab=expression(paste("log"[e], " (", "Cu"[p], " / ", "Cu"[s], ")")), cex=1.2, cex.lab=1.5)
-abline(h=log(curef[1]), lty=2)
-abline(h=log(curef[2]), lwd=2)
-abline(h=log(curef[3]), lty=2)
+abline(h=log(curef[1]), col="blue") ## 5th percentile reference value
+abline(h=log(curef[2]), lwd=2, col="red") ## median
+abline(h=log(curef[3]), col="blue") ## 95th precentile
 abline(rq(log(dCu)~log(Cu), tau=0.5, mirdat), col="red", lwd=2)
 
 # Manganese
@@ -45,9 +45,9 @@ mnref <- quantile(hidm$pMn/hidm$Mn, p=c(0.05,0.5,0.95))
 mirdat$dMn <- (mirdat$pMn/mirdat$Mn)
 plot(log(dMn)~log(Mn), mirdat, xlab=expression(paste("log"[e], " (", "Mn"[s], ")")),
      ylab=expression(paste("log"[e], " (", "Mn"[p], " / ", "Mn"[s], ")")), cex=1.2, cex.lab=1.5)
-abline(h=log(mnref[1]), lty=2)
-abline(h=log(mnref[2]), lwd=2)
-abline(h=log(mnref[3]), lty=2)
+abline(h=log(mnref[1]), col="blue") ## 5th percentile reference value
+abline(h=log(mnref[2]), lwd=2, col="red") ## median
+abline(h=log(mnref[3]), col="blue") ## 95th precentile
 abline(rq(log(dMn)~log(Mn), tau=0.5, mirdat), col="red", lwd=2)
 
 # Molybdenum
@@ -55,9 +55,9 @@ moref <- quantile(hidm$pMo/hidm$Mo, p=c(0.05,0.5,0.95))
 mirdat$dMo <- (mirdat$pMo/mirdat$Mo)
 plot(log(dMo)~log(Mo), mirdat, xlab=expression(paste("log"[e], " (", "Mo"[s], ")")),
      ylab=expression(paste("log"[e], " (", "Mo"[p], " / ", "Mo"[s], ")")), cex=1.2, cex.lab=1.5)
-abline(h=log(moref[1]), lty=2)
-abline(h=log(moref[2]), lwd=2)
-abline(h=log(moref[3]), lty=2)
+abline(h=log(moref[1]), col="blue") ## 5th percentile reference value
+abline(h=log(moref[2]), lwd=2, col="red") ## median
+abline(h=log(moref[3]), col="blue") ## 95th precentile
 abline(rq(log(dMo)~log(Mo), tau=0.5, mirdat), col="red", lwd=2)
 
 # Zinc
@@ -67,9 +67,9 @@ znref <- quantile(hidm$pZn/hidm$Zn, p=c(0.05,0.5,0.95))
 mirdat$dZn <- (mirdat$pZn/mirdat$Zn)
 plot(log(dZn)~log(Zn), mirdat, xlab=expression(paste("log"[e], " (", "Zn"[s], ")")),
      ylab=expression(paste("log"[e], " (", "Zn"[p], " / ", "Zn"[s], ")")), cex=1.2, cex.lab=1.5)
-abline(h=log(znref[1]), lty=2)
-abline(h=log(znref[2]), lwd=2)
-abline(h=log(znref[3]), lty=2)
+abline(h=log(znref[1]), col="blue") ## 5th percentile reference value
+abline(h=log(znref[2]), lwd=2, col="red") ## median
+abline(h=log(znref[3]), col="blue") ## 95th precentile
 abline(rq(log(dZn)~log(Zn), tau=0.5, mirdat), col="red", lwd=2)
 # ZnQ <- rq(log(dZn)~log(Zn), tau=0.5, mirdat)
 # summary(ZnQ)
@@ -81,8 +81,8 @@ feref <- quantile(hidm$pFe/hidm$Fe, p=c(0.05,0.5,0.95))
 mirdat$dFe <- (mirdat$pFe/mirdat$Fe)
 plot(log(dFe)~log(Fe), mirdat, xlab=expression(paste("log"[e], " (", "Fe"[s], ")")),
      ylab=expression(paste("log"[e], " (", "Fe"[p], " / ", "Fe"[s], ")")), cex=1.2, cex.lab=1.5)
-abline(h=log(feref[1]), lty=2)
-abline(h=log(feref[2]), lwd=2)
-abline(h=log(feref[3]), lty=2)
+abline(h=log(feref[1]), col="blue") ## 5th percentile reference value
+abline(h=log(feref[2]), lwd=2, col="red") ## median
+abline(h=log(feref[3]), col="blue") ## 95th precentile
 abline(rq(log(dFe)~log(Fe), tau=0.5, mirdat), col="red", lwd=2)
 # dev.off() ## remember to turn graphics device off!
