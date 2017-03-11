@@ -96,5 +96,3 @@ write.csv(fao_val, "fao_val.csv", row.names=F)
 
 # Remove extraneous objects from memory -----------------------------------
 rm(list=setdiff(ls(), c("wetdat", "mirdat", "fao_cal", "fao_val")))
-
-
