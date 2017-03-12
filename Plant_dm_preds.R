@@ -1,4 +1,4 @@
-#' Biomass predictions of greenhouse grown wheat plants from soil data
+#' 50% biomass end-point predictions of greenhouse grown wheat plants from soil data
 #' Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
 #' MIR soil data courtesy of ICRAF (2016)
 #' M. Walsh, October 2016
@@ -12,7 +12,7 @@ suppressPackageStartupMessages({
   require(doParallel)
   require(randomForest)
   require(gbm)
-  require(deepnet)
+  require(nnet)
   require(bartMachine)
   require(glmnet)
 })
@@ -28,9 +28,9 @@ HLt <- fao_cal$HL
 HLv <- fao_val$HL
 
 # Features
-wett <- fao_cal[c(4, 8:9, 33:42)] ## soil wetchem
+wett <- fao_cal[c(4, 7:9, 12:24)] ## soil wetchem
 mirt <- fao_cal[43:1806] # soil MIR
-wetv <- fao_val[c(4, 8:9, 33:42)] ## soil wetchem
+wetv <- fao_val[c(4, 7:9, 12:24)] ## soil wetchem
 mirv <- fao_val[43:1806] # soil MIR
 
 # RF models ---------------------------------------------------------------
@@ -124,22 +124,14 @@ set.seed(1385321)
 tc <- trainControl(method = "repeatedcv", repeats = 5, classProbs = TRUE,
                    summaryFunction = twoClassSummary, allowParallel = T)
 
-# Wet chemistry features
-tg <- expand.grid(layer1 = 2:10,
-                  layer2 = 0,
-                  layer3 = 0,
-                  hidden_dropout = 0,
-                  visible_dropout = 0)
-
-HL_wet.dnn <- train(wett, HLt, 
-                    method = "dnn", 
+HL_wet.net <- train(wett, HLt, 
+                    method = "nnet", 
                     preProc = c("center", "scale"), 
                     trControl = tc,
-                    metric ="ROC",
-                    tuneGrid = tg)
-print(HL_wet.dnn)
-dnn_wet <- predict(HL_wet.dnn, wetv, type = "prob")
-rm("HL_wet.dnn")
+                    metric ="ROC")
+print(HL_wet.net)
+net_wet <- predict(HL_wet.net, wetv, type = "prob")
+rm("HL_wet.net")
 
 # MIR features
 tg <- expand.grid(layer1 = seq(5, 50, by=5),
@@ -162,6 +154,7 @@ stopCluster(mc)
 
 # bartMachine models ------------------------------------------------------
 # Start doParallel to parallelize model fitting
+options(java.parameters = "-Xmx8000m")
 mc <- makeCluster(detectCores())
 registerDoParallel(mc)
 
@@ -200,11 +193,11 @@ rm("HL_mir.bar")
 stopCluster(mc)
 
 # Model stacking setup ----------------------------------------------------
-pwetv <- as.data.frame(cbind(HLv, rfo_wet$H, gbm_wet$H, dnn_wet$H, bar_wet$H))
-names(pwetv) <- c("HL", "RFO", "GBM", "DNN", "BART")
+pwetv <- as.data.frame(cbind(HLv, rfo_wet$H, gbm_wet$H, net_wet$H, bar_wet$H))
+names(pwetv) <- c("HL", "RFO", "GBM", "NET", "BART")
 pwetv$HL <- as.factor(ifelse(pwetv$HL == 1, "H", "L"))
 pmirv <- as.data.frame(cbind(HLv, rfo_mir$H, gbm_mir$H, dnn_mir$H, bar_mir$H))
-names(pmirv) <- c("HL", "RFO", "GBM", "DNN", "BART")
+names(pmirv) <- c("HL", "RFO", "GBM", "NET", "BART")
 pmirv$HL <- as.factor(ifelse(pmirv$HL == 1, "H", "L"))
 
 # Write data files --------------------------------------------------------
