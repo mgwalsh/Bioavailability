@@ -114,7 +114,7 @@ rm("HL_mir.gbm")
 
 stopCluster(mc)
 
-# DNN models --------------------------------------------------------------
+# NNET models -------------------------------------------------------------
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
 registerDoParallel(mc)
@@ -124,6 +124,7 @@ set.seed(1385321)
 tc <- trainControl(method = "repeatedcv", repeats = 5, classProbs = TRUE,
                    summaryFunction = twoClassSummary, allowParallel = T)
 
+# Wet chemistry features
 HL_wet.net <- train(wett, HLt, 
                     method = "nnet", 
                     preProc = c("center", "scale"), 
@@ -134,21 +135,14 @@ net_wet <- predict(HL_wet.net, wetv, type = "prob")
 rm("HL_wet.net")
 
 # MIR features
-tg <- expand.grid(layer1 = seq(5, 50, by=5),
-                  layer2 = 0,
-                  layer3 = 0,
-                  hidden_dropout = 0,
-                  visible_dropout = 0)
-
-HL_mir.dnn <- train(mirt, HLt, 
-                    method = "dnn", 
+HL_mir.net <- train(mirt, HLt, 
+                    method = "nnet", 
                     preProc = c("center", "scale"), 
                     trControl = tc,
-                    metric = "ROC",
-                    tuneGrid = tg)
-print(HL_mir.dnn)
-dnn_mir <- predict(HL_mir.dnn, mirv, type = "prob")
-rm("HL_mir.dnn")
+                    metric = "ROC")
+print(HL_mir.net)
+net_mir <- predict(HL_mir.net, mirv, type = "prob")
+rm("HL_mir.net")
 
 stopCluster(mc)
 
@@ -196,7 +190,7 @@ stopCluster(mc)
 pwetv <- as.data.frame(cbind(HLv, rfo_wet$H, gbm_wet$H, net_wet$H, bar_wet$H))
 names(pwetv) <- c("HL", "RFO", "GBM", "NET", "BART")
 pwetv$HL <- as.factor(ifelse(pwetv$HL == 1, "H", "L"))
-pmirv <- as.data.frame(cbind(HLv, rfo_mir$H, gbm_mir$H, dnn_mir$H, bar_mir$H))
+pmirv <- as.data.frame(cbind(HLv, rfo_mir$H, gbm_mir$H, net_mir$H, bar_mir$H))
 names(pmirv) <- c("HL", "RFO", "GBM", "NET", "BART")
 pmirv$HL <- as.factor(ifelse(pmirv$HL == 1, "H", "L"))
 
@@ -248,13 +242,13 @@ par(mfrow=c(2,2), mar=c(2.5,2.5,1,1))
 # Wetchem predictions
 boxplot(RFO~HL, notch=T, pwetv, ylim=c(0,1))
 boxplot(GBM~HL, notch=T, pwetv, ylim=c(0,1))
-boxplot(DNN~HL, notch=T, pwetv, ylim=c(0,1))
+boxplot(NET~HL, notch=T, pwetv, ylim=c(0,1))
 boxplot(BART~HL, notch=T, pwetv, ylim=c(0,1))
 
 # MIR predictions
 boxplot(RFO~HL, notch=T, pmirv, ylim=c(0,1))
 boxplot(GBM~HL, notch=T, pmirv, ylim=c(0,1))
-boxplot(DNN~HL, notch=T, pmirv, ylim=c(0,1))
+boxplot(NET~HL, notch=T, pmirv, ylim=c(0,1))
 boxplot(BART~HL, notch=T, pmirv, ylim=c(0,1))
 dev.off()
 
