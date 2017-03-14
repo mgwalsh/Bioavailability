@@ -18,7 +18,7 @@ dir.create("FAO_data", showWarnings=F)
 setwd("./FAO_data")
 
 # Download 
-download("https://www.dropbox.com/s/hhdoxswpfb9vlz1/FAO_micro_bioavailability.zip?dl=0", "FAO_micro_bioavailability.zip", mode="wb")
+download("https://www.dropbox.com/s/hhdoxswpfb9vlz1/FAO_micro_bioavailability.zip?raw=1", "FAO_micro_bioavailability.zip", mode="wb")
 unzip("FAO_micro_bioavailability.zip", overwrite=T)
 cid <- read.table("countries.csv", header=T, sep=",") ## country ID's
 soils <- read.table("soils.csv", header=T, sep=",") ## FAO soil chem data (in ppm, except for pH, EC, CaCO3, CEC, texture, Volwt)
