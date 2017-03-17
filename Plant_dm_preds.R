@@ -24,9 +24,9 @@ HLv <- fao_val$HL
 
 # Features
 wett <- fao_cal[c(4, 7:9, 12:24)] ## soil wetchem
-mirt <- fao_cal[43:1806] # soil MIR
-wetv <- fao_val[c(4, 7:9, 12:24)] ## soil wetchem
-mirv <- fao_val[43:1806] # soil MIR
+wetv <- fao_val[c(4, 7:9, 12:24)]
+mirt <- fao_cal[43:1806] ## soil MIR
+mirv <- fao_val[43:1806]
 
 # bartMachine models ------------------------------------------------------
 options(java.parameters = "-Xmx8000m")
@@ -38,16 +38,18 @@ registerDoParallel(mc)
 
 # Control setup
 set.seed(1385321)
-tc <- trainControl(method = "cv", classProbs = TRUE, returnResamp = "all",
-                   allowParallel = T)
+tc <- trainControl(method = "cv", classProbs = TRUE,
+                   summaryFunction = twoClassSummary, allowParallel = T)
 
 # Wet chemistry features
-HL_wet.bar <- train(wett, HLt,
+y <- relevel(HLt, "L")
+HL_wet.bar <- train(wett, y,
                     method = "bartMachine", 
                     preProc = c("center", "scale"), 
                     trControl = tc,
                     tuneLength = 3,
                     verbose = FALSE,
+                    metric = "ROC",
                     seed = 1)
 print(HL_wet.bar)
 bar_wet <- predict(HL_wet.bar, wetv, type = "prob")
@@ -55,12 +57,13 @@ rm("HL_wet.bar")
 
 # MIR features
 set.seed(1385321)
-HL_mir.bar <- train(mirt, HLt,
+HL_mir.bar <- train(mirt, y,
                     method = "bartMachine", 
                     preProc = c("pca"), 
                     trControl = tc,
                     tuneLength = 2,
                     verbose = FALSE,
+                    metric = "ROC"
                     seed = 1)
 print(HL_mir.bar)
 bar_mir <- predict(HL_mir.bar, mirv, type = "prob")
@@ -96,7 +99,7 @@ rm("HL_wet.rfo")
 
 # MIR features
 set.seed(1385321)
-tg <- expand.grid(mtry=seq(10, 150, by=10))
+tg <- expand.grid(mtry=seq(5, 30, by=5))
 HL_mir.rfo <- train(mirt, HLt,
                     preProc = c("pca"),
                     method = "rf",
