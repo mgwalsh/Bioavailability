@@ -10,11 +10,6 @@ suppressPackageStartupMessages({
   require(caret)
   require(plyr)
   require(doParallel)
-  require(randomForest)
-  require(gbm)
-  require(nnet)
-  require(bartMachine)
-  require(glmnet)
 })
 
 # Data setup --------------------------------------------------------------
@@ -33,7 +28,50 @@ mirt <- fao_cal[43:1806] # soil MIR
 wetv <- fao_val[c(4, 7:9, 12:24)] ## soil wetchem
 mirv <- fao_val[43:1806] # soil MIR
 
+# bartMachine models ------------------------------------------------------
+options(java.parameters = "-Xmx8000m")
+library(bartMachine)
+
+# Start doParallel to parallelize model fitting
+mc <- makeCluster(detectCores())
+registerDoParallel(mc)
+
+# Control setup
+set.seed(1385321)
+tc <- trainControl(method = "cv", classProbs = TRUE, returnResamp = "all",
+                   allowParallel = T)
+
+# Wet chemistry features
+HL_wet.bar <- train(wett, HLt,
+                    method = "bartMachine", 
+                    preProc = c("center", "scale"), 
+                    trControl = tc,
+                    tuneLength = 3,
+                    verbose = FALSE,
+                    seed = 1)
+print(HL_wet.bar)
+bar_wet <- predict(HL_wet.bar, wetv, type = "prob")
+rm("HL_wet.bar")
+
+# MIR features
+set.seed(1385321)
+HL_mir.bar <- train(mirt, HLt,
+                    method = "bartMachine", 
+                    preProc = c("pca"), 
+                    trControl = tc,
+                    tuneLength = 2,
+                    verbose = FALSE,
+                    seed = 1)
+print(HL_mir.bar)
+bar_mir <- predict(HL_mir.bar, mirv, type = "prob")
+rm("HL_mir.bar")
+
+stopCluster(mc)
+detach("package:bartMachine", unload=TRUE)
+
 # RF models ---------------------------------------------------------------
+require(randomForest)
+
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
 registerDoParallel(mc)
@@ -46,7 +84,7 @@ tc <- trainControl(method = "cv", classProbs = TRUE,
 # Wet chemistry covariates
 tg <- expand.grid(mtry=seq(2, 10, by=1))
 HL_wet.rfo <- train(wett, HLt,
-                    preProc = c("center", "scale"),
+                    preProc = c("center","scale"),
                     method = "rf",
                     ntree = 501,
                     metric = "ROC",
@@ -60,7 +98,7 @@ rm("HL_wet.rfo")
 set.seed(1385321)
 tg <- expand.grid(mtry=seq(10, 150, by=10))
 HL_mir.rfo <- train(mirt, HLt,
-                    preProc = c("center", "scale"),
+                    preProc = c("pca"),
                     method = "rf",
                     ntree = 501,
                     metric = "ROC",
@@ -73,6 +111,8 @@ rm("HL_mir.rfo")
 stopCluster(mc)
 
 # GBM models --------------------------------------------------------------
+require(gbm)
+
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
 registerDoParallel(mc)
@@ -92,6 +132,7 @@ HL_wet.gbm <- train(wett, HLt,
                     method = "gbm", 
                     preProc = c("center", "scale"),
                     trControl = tc,
+                    metric = "ROC",
                     tuneGrid = tg)
 print(HL_wet.gbm)
 gbm_wet <- predict(HL_wet.gbm, wetv, type = "prob")
@@ -105,7 +146,7 @@ tg <- expand.grid(.n.trees=seq(10, 100, by=10),
 
 HL_mir.gbm <- train(mirt, HLt, 
                     method = "gbm", 
-                    preProc = c("center", "scale"),
+                    preProc = c("pca"),
                     trControl = tc,
                     tuneGrid = tg)
 print(HL_mir.gbm)
@@ -114,84 +155,46 @@ rm("HL_mir.gbm")
 
 stopCluster(mc)
 
-# NNET models -------------------------------------------------------------
+# KNN models ------------------------------------------------------------
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
 registerDoParallel(mc)
 
 # Control setup
 set.seed(1385321)
-tc <- trainControl(method = "repeatedcv", repeats = 5, classProbs = TRUE,
+tc <- trainControl(method = "cv", classProbs = TRUE,
                    summaryFunction = twoClassSummary, allowParallel = T)
 
 # Wet chemistry features
-HL_wet.net <- train(wett, HLt, 
-                    method = "nnet", 
-                    preProc = c("center", "scale"), 
+HL_wet.knn <- train(wett, HLt, 
+                    method = "knn",
+                    tuneLength = 11,
+                    preProc = c("center","scale"), 
                     trControl = tc,
                     metric ="ROC")
-print(HL_wet.net)
-net_wet <- predict(HL_wet.net, wetv, type = "prob")
-rm("HL_wet.net")
+print(HL_wet.knn)
+knn_wet <- predict(HL_wet.knn, wetv, type = "prob")
+rm("HL_wet.knn")
 
 # MIR features
-HL_mir.net <- train(mirt, HLt, 
-                    method = "nnet", 
-                    preProc = c("center", "scale"), 
+HL_mir.knn <- train(mirt, HLt, 
+                    method = "knn",
+                    tuneLength = 11,
+                    preProc = c("pca"), 
                     trControl = tc,
                     metric = "ROC")
-print(HL_mir.net)
-net_mir <- predict(HL_mir.net, mirv, type = "prob")
-rm("HL_mir.net")
-
-stopCluster(mc)
-
-# bartMachine models ------------------------------------------------------
-# Start doParallel to parallelize model fitting
-options(java.parameters = "-Xmx8000m")
-mc <- makeCluster(detectCores())
-registerDoParallel(mc)
-
-# Control setup
-set.seed(1385321)
-tc <- trainControl(method = "cv", classProbs = TRUE, summaryFunction = twoClassSummary, returnResamp = "all",
-                   allowParallel = T)
-
-# Wet chemistry features
-HL_wet.bar <- train(wett, HLt,
-                    method = "bartMachine", 
-                    preProc = c("center", "scale"), 
-                    trControl = tc,
-                    tuneLength = 2,
-                    metric = "ROC",
-                    verbose = FALSE,
-                    seed = 1)
-print(HL_wet.bar)
-bar_wet <- predict(HL_wet.bar, wetv, type = "prob")
-rm("HL_wet.bar")
-
-# MIR features
-set.seed(1385321)
-HL_mir.bar <- train(mirt, HLt,
-                    method = "bartMachine", 
-                    preProc = c("center", "scale"), 
-                    trControl = tc,
-                    tuneLength = 2,
-                    metric = "ROC",
-                    verbose = FALSE,
-                    seed = 1)
-print(HL_mir.bar)
-bar_mir <- predict(HL_mir.bar, mirv, type = "prob")
-rm("HL_mir.bar")
+print(HL_mir.knn)
+knn_mir <- predict(HL_mir.knn, mirv, type = "prob")
+rm("HL_mir.knn")
 
 stopCluster(mc)
 
 # Model stacking setup ----------------------------------------------------
-pwetv <- as.data.frame(cbind(HLv, rfo_wet$H, gbm_wet$H, net_wet$H, bar_wet$H))
-names(pwetv) <- c("HL", "RFO", "GBM", "NET", "BART")
+pwetv <- as.data.frame(cbind(HLv, rfo_wet$H, gbm_wet$H, knn_wet$H, bar_wet$L))
+names(pwetv) <- c("HL", "RFO", "GBM", "KNN", "BART")
 pwetv$HL <- as.factor(ifelse(pwetv$HL == 1, "H", "L"))
-pmirv <- as.data.frame(cbind(HLv, rfo_mir$H, gbm_mir$H, net_mir$H, bar_mir$H))
-names(pmirv) <- c("HL", "RFO", "GBM", "NET", "BART")
+pmirv <- as.data.frame(cbind(HLv, rfo_mir$H, gbm_mir$H, knn_mir$H, bar_mir$L))
+names(pmirv) <- c("HL", "RFO", "GBM", "KNN", "BART")
 pmirv$HL <- as.factor(ifelse(pmirv$HL == 1, "H", "L"))
 
 # Write data files --------------------------------------------------------
@@ -202,13 +205,15 @@ write.csv(pmirv, "pmirv.csv", row.names=F)
 # rm(list=setdiff(ls(), c("pwetv", "pmirv")))
 
 # Model stacking ----------------------------------------------------------
+require(glmnet)
+
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
 registerDoParallel(mc)
 
 # Control setup
 set.seed(1385321)
-tc <- trainControl(method = "cv", classProbs = TRUE, summaryFunction = twoClassSummary,
+tc <- trainControl(method = "repeatedcv", repeats = 5, classProbs = TRUE, summaryFunction = twoClassSummary,
                    allowParallel = T)
 
 # Wet chemistry model stack
@@ -242,13 +247,13 @@ par(mfrow=c(2,2), mar=c(2.5,2.5,1,1))
 # Wetchem predictions
 boxplot(RFO~HL, notch=T, pwetv, ylim=c(0,1))
 boxplot(GBM~HL, notch=T, pwetv, ylim=c(0,1))
-boxplot(NET~HL, notch=T, pwetv, ylim=c(0,1))
+boxplot(KNN~HL, notch=T, pwetv, ylim=c(0,1))
 boxplot(BART~HL, notch=T, pwetv, ylim=c(0,1))
 
 # MIR predictions
 boxplot(RFO~HL, notch=T, pmirv, ylim=c(0,1))
 boxplot(GBM~HL, notch=T, pmirv, ylim=c(0,1))
-boxplot(NET~HL, notch=T, pmirv, ylim=c(0,1))
+boxplot(KNN~HL, notch=T, pmirv, ylim=c(0,1))
 boxplot(BART~HL, notch=T, pmirv, ylim=c(0,1))
 dev.off()
 
