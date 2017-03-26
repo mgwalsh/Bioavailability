@@ -90,7 +90,9 @@ abline(h=log(pref[3]), col="blue") ## 95th precentile
 abline(v=log(sref[1]), col="blue") ## 5th percentile reference value
 abline(v=log(sref[2]), lwd=2, col="red") ## median
 abline(v=log(sref[3]), col="blue") ## 95th precentile
-# abline(rq(log(dZn)~log(Zn), tau=0.5, wetdat), col="red", lwd=2)
+# abline(rq(log(dZn)~log(Zn), tau=0.05, hidm), col="blue", lwd=1)
+# abline(rq(log(dZn)~log(Zn), tau=0.5, hidm), col="red", lwd=2)
+#abline(rq(log(dZn)~log(Zn), tau=0.95, hidm), col="blue", lwd=1)
 # ZnQ <- rq(log(dZn)~log(Zn), tau=0.5, wetdat)
 # summary(ZnQ)
 # dev.copy(pdf, 'Zn_ER.pdf')
@@ -102,9 +104,9 @@ sref <- quantile(hidm$Fe, p=c(0.05,0.5,0.95))
 wetdat$dFe <- (wetdat$pFe/wetdat$Fe)
 plot(log(dFe)~log(Fe), wetdat, xlab=expression(paste("log"[e], " (", "Fe"[s], ")")),
      ylab=expression(paste("log"[e], " (", "Fe"[p], " / ", "Fe"[s], ")")), cex=1.2, cex.lab=1.5)
-abline(h=log(pref[1]), col="blue") ## 5th percentile reference value
-abline(h=log(pref[2]), lwd=2, col="red") ## median
-abline(h=log(pref[3]), col="blue") ## 95th precentile
+# abline(h=log(pref[1]), col="blue") ## 5th percentile reference value
+# abline(h=log(pref[2]), lwd=2, col="red") ## median
+# abline(h=log(pref[3]), col="blue") ## 95th precentile
 abline(v=log(sref[1]), col="blue") ## 5th percentile reference value
 abline(v=log(sref[2]), lwd=2, col="red") ## median
 abline(v=log(sref[3]), col="blue") ## 95th precentile
