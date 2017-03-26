@@ -63,7 +63,7 @@ HL_mir.bar <- train(mirt, y,
                     trControl = tc,
                     tuneLength = 2,
                     verbose = FALSE,
-                    metric = "ROC"
+                    metric = "ROC",
                     seed = 1)
 print(HL_mir.bar)
 bar_mir <- predict(HL_mir.bar, mirv, type = "prob")
