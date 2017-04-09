@@ -125,7 +125,7 @@ curve(exp(ZnY$coefficients[1])*x^ZnY$coefficients[2], add=T, from=0, to=2500, co
 curve(exp(ZnY$coefficients[5])*x^ZnY$coefficients[6], add=T, from=0, to=2500, col="blue", lwd=2)
 curve(exp(ZnY$coefficients[3])*x^ZnY$coefficients[4], add=T, from=0, to=2500, col="red", lwd=2)
 
-# QUEFTS-type fit
+# QUEFTS-type step 1 fit
 # ZnQ <- rq(log(pDM)~log(uZn), tau=c(0.025,0.5,0.975), data=wetdat)
 # print(ZnQ)
 # summary(ZnQ)
