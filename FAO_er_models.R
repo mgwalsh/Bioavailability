@@ -147,3 +147,11 @@ curve(exp(ZnS$coefficients[3])*x^ZnS$coefficients[4], add=T, from=0, to=200, col
 ZnI <- rq(log(uZn)~log(Zn)*log(pDM), tau=c(0.025,0.5,0.975), data=wetdat) ## Zn uptake/pot
 print(ZnI)
 summary(ZnI)
+ZnI.fit <- as.data.frame(exp(predict(ZnI, wetdat)))
+names(ZnI.fit) <- c("Zn025","Zn50","Zn975")
+wetdat <- cbind(wetdat, ZnI.fit)
+plot(uZn~Zn50, wetdat, xlab="Zn uptake index (mg / pot)", xlim=c(0,25), ylim=c(0,25), ylab="Zn uptake (mg / pot)", cex=1.1, cex.lab=1.3)
+abline(c(0,1), col="red", lwd=2)
+
+
+
