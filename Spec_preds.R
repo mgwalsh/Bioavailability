@@ -8,12 +8,12 @@
 # or run ...
 # SourceURL <- "https://raw.githubusercontent.com/mgwalsh/Bioavailability/master/FAO_micro_setup.R"
 # source_url(SourceURL)
-rm(mirdat)
+rm(list=setdiff(ls(), c("fao_cal", "fao_val")))
 
 # Labels ... insert the relevant label
 str(fao_cal) ## check potential labels
-lt <- log(fao_cal$pZn/fao_cal$Zn) ## variables prefaced by "p" are potential plant labels
-lv <- log(fao_val$pZn/fao_val$Zn) ## ensure that validation and training labels are the same
+lt <- log(fao_cal$Zn) ## variables prefaced by "p" are potential plant labels
+lv <- log(fao_val$Zn) ## ensure that validation and training labels are the same
 
 # Soil spectral features
 mirt <- fao_cal[43:1806] # soil MIR features
