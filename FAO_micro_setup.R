@@ -1,7 +1,7 @@
-#' Wheat plant dry matter yield and micro-nutrient bioavailability prediction setup
-#' Soil and wheat plant wet chemistry data courtesy of FAO, 1982 (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
-#' MIR soil data courtesy of ICRAF
-#' M. Walsh, May 2016
+# Wheat plant dry matter yield and micro-nutrient bioavailability prediction setup
+# Soil and wheat plant wet chemistry data courtesy of FAO, 1982 (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
+# MIR soil data courtesy of ICRAF
+# M. Walsh, May 2016
 
 # install.packages(c("downloader","compositions","MASS","RColorBrewer","caret"), dependencies=T)
 suppressPackageStartupMessages({
