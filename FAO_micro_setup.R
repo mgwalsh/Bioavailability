@@ -86,9 +86,9 @@ dev.off()
 
 # Train/Test set partition ------------------------------------------------
 set.seed(1385321)
-faoIndex <- createDataPartition(mirdat$SSID, p = 3/4, list = FALSE, times = 1)
-fao_cal <- mirdat[ faoIndex,] ## random 75% for calibration
-fao_val <- mirdat[-faoIndex,] ## random 25% for validation
+faoIndex <- createDataPartition(mirdat$SSID, p = 4/5, list = FALSE, times = 1)
+fao_cal <- mirdat[ faoIndex,] ## random 80% for calibration
+fao_val <- mirdat[-faoIndex,] ## random 20% for validation
 
 # Write data files --------------------------------------------------------
 write.csv(fao_cal, "fao_cal.csv", row.names=F)
