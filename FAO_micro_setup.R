@@ -1,4 +1,4 @@
-# Wheat plant dry matter yield and micro-nutrient bioavailability prediction setup
+# Wheat plant dry matter yield and micro-nutrient uptake prediction setup
 # Soil and wheat plant wet chemistry data courtesy of FAO, 1982 (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
 # MIR soil data courtesy of ICRAF
 # M. Walsh, May 2016
@@ -32,6 +32,16 @@ wetdat <- wetdat[!duplicated(wetdat), ]
 # High/Low biomass label (mg DM / pot)
 qlevel <- quantile(wetdat$pDM, p=1/2)
 wetdat$HL <- as.factor(ifelse(wetdat$pDM > qlevel, "H", "L"))
+
+# Shoot micro-nutrient uptake
+attach(wetdat)
+wetdat$uB  <- pDM*pB/10000
+wetdat$uCu <- pDM*pCu/10000
+wetdat$uMn <- pDM*pMn/10000
+wetdat$uMo <- pDM*pMo/10000
+wetdat$uZn <- pDM*pZn/10000
+wetdat$uFe <- pDM*pFe/10000
+detach(wetdat)
 
 # Soil nutrient profile setup ---------------------------------------------
 fpart <- names(wetdat[c(13:17, 19:21, 23:24)])
@@ -76,12 +86,12 @@ mirdat <- merge(wetdat, mir, by="SSID")
 
 # Plot soil-plant nutrient scatter plots
 par(mfrow=c(3,2), mar=c(5,5,1,1))
-plot(pB~B, cex=1.2, xlab=expression(paste("B"[s], " (ppm)")), ylab=expression(paste("B"[p], " (ppm)")), cex.lab=1.5, wetdat)
-plot(pCu~Cu, cex=1.2, xlab=expression(paste("Cu"[s], " (ppm)")), ylab=expression(paste("Cu"[p], " (ppm)")), cex.lab=1.5, wetdat)
-plot(pMn~Mn, cex=1.2, xlab=expression(paste("Mn"[s], " (ppm)")), ylab=expression(paste("Mn"[p], " (ppm)")), cex.lab=1.5, wetdat)
-plot(pMo~Mo, cex=1.2, xlab=expression(paste("Mo"[s], " (ppm)")), ylab=expression(paste("Mo"[p], " (ppm)")), cex.lab=1.5, wetdat)
-plot(pZn~Zn, cex=1.2, xlab=expression(paste("Zn"[s], " (ppm)")), ylab=expression(paste("Zn"[p], " (ppm)")), cex.lab=1.5, wetdat)
-plot(pFe~Fe, cex=1.2, xlab=expression(paste("Fe"[s], " (ppm)")), ylab=expression(paste("Fe"[p], " (ppm)")), cex.lab=1.5, wetdat)
+plot(uB~B, cex=1.2, xlab=expression(paste("B"[s], " (ppm)")), ylab=expression(paste("B"[u], " (ppm)")), cex.lab=1.5, wetdat)
+plot(uCu~Cu, cex=1.2, xlab=expression(paste("Cu"[s], " (ppm)")), ylab=expression(paste("Cu"[u], " (ppm)")), cex.lab=1.5, wetdat)
+plot(uMn~Mn, cex=1.2, xlab=expression(paste("Mn"[s], " (ppm)")), ylab=expression(paste("Mn"[u], " (ppm)")), cex.lab=1.5, wetdat)
+plot(uMo~Mo, cex=1.2, xlab=expression(paste("Mo"[s], " (ppm)")), ylab=expression(paste("Mo"[u], " (ppm)")), cex.lab=1.5, wetdat)
+plot(uZn~Zn, cex=1.2, xlab=expression(paste("Zn"[s], " (ppm)")), ylab=expression(paste("Zn"[u], " (ppm)")), cex.lab=1.5, wetdat)
+plot(uFe~Fe, cex=1.2, xlab=expression(paste("Fe"[s], " (ppm)")), ylab=expression(paste("Fe"[u], " (ppm)")), cex.lab=1.5, wetdat)
 dev.off()
 
 # Train/Test set partition ------------------------------------------------
