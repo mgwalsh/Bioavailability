@@ -45,7 +45,6 @@ print(wet.rfo)
 rfo_wet <- predict(wet.rfo, wetv) ## predict validation set
 
 stopCluster(mc)
-detach("package:randomForest", unload=TRUE)
 
 # GBM models --------------------------------------------------------------
 library(plyr)
