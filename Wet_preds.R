@@ -42,7 +42,6 @@ wet.rfo <- train(wett, lt,
                  tuneGrid = tg,
                  trControl = tc)
 print(wet.rfo)
-plot(varImp(wet.rfo))
 rfo_wet <- predict(wet.rfo, wetv) ## predict validation set
 
 stopCluster(mc)
