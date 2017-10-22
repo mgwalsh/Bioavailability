@@ -1,7 +1,7 @@
-#' FAO data wet chemistry predictions
-#' Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
-#' MIR soil data courtesy of ICRAF (2016)
-#' M. Walsh, February 2017
+# FAO data wet chemistry predictions
+# Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
+# MIR soil data courtesy of ICRAF (2016)
+# M. Walsh, February 2017
 
 # Data setup --------------------------------------------------------------
 # Run this first: https://github.com/mgwalsh/Bioavailability/blob/master/FAO_micro_setup.R
@@ -12,12 +12,12 @@ rm(mirdat)
 
 # Labels ... insert the relevant label
 # str(fao_cal) ## check potential labels
-lt <- fao_cal$pZn ## variables prefaced by "p" are potential plant labels
-lv <- fao_val$pZn ## ensure that validation and training labels are the same
+lt <- fao_cal$uZn ## variables prefaced by "u" are uptake labels
+lv <- fao_val$uZn ## ensure that validation and training labels are the same
 
 # Soil spectral features
-wett <- fao_cal[c(4,8:9,12:24)] ## soil wet chem features
-wetv <- fao_val[c(4,8:9,12:24)] ## ensure that validation features are the same
+wett <- fao_cal[c(4:24)] ## soil wet chem features
+wetv <- fao_val[c(4:24)] ## ensure that validation features are the same
 
 # RF models ---------------------------------------------------------------
 library(doParallel)
@@ -32,7 +32,7 @@ set.seed(1385321)
 tc <- trainControl(method = "cv", allowParallel = T)
 
 # Tuning parameters
-tg <- expand.grid(mtry=seq(10, 150, by=10))
+tg <- expand.grid(mtry=seq(1, 15, by=1))
 
 # Fit model
 wet.rfo <- train(wett, lt,
@@ -42,8 +42,8 @@ wet.rfo <- train(wett, lt,
                  tuneGrid = tg,
                  trControl = tc)
 print(wet.rfo)
+plot(varImp(wet.rfo))
 rfo_wet <- predict(wet.rfo, wetv) ## predict validation set
-rm("wet.rfo")
 
 stopCluster(mc)
 detach("package:randomForest", unload=TRUE)
@@ -72,8 +72,8 @@ wet.gbm <- train(wett, lt,
                  trControl = tc,
                  tuneGrid = tg)
 print(wet.gbm)
+plot(varImp(wet.gbm))
 gbm_wet <- predict(wet.gbm, wetv) ## predict validation set
-rm("wet.gbm")
 
 stopCluster(mc)
 detach("package:gbm", unload=TRUE)
@@ -96,8 +96,8 @@ wet.pls <- train(wett, lt,
                  tuneGrid = expand.grid(ncomp=seq(2, 10, by=1)),
                  trControl = tc)
 print(wet.pls)
+plot(varImp(wet.pls))
 pls_wet <- predict(wet.pls, wetv) ## predict validation set
-rm("wet.pls")
 
 stopCluster(mc)
 detach("package:pls", unload=TRUE)
@@ -121,8 +121,8 @@ wet.bar <- train(wett, lt,
                  tuneLength = 2,
                  seed = 123)
 print(wet.bar)
+plot(varImp(wet.bar))
 bar_wet <- predict(wet.bar, wetv)
-rm("wet.bar")
 
 stopCluster(mc)
 detach("package:bartMachine", unload=TRUE)
@@ -152,6 +152,7 @@ wet.ens <- train(L ~ ., data = pwetv,
                  family = "gaussian",
                  trControl = tc)
 print(wet.ens)
+plot(varImp(wet.ens))
 ens_wet <- as.data.frame(predict(wet.ens, pwetv))
 names(ens_wet) <- c("ENS")
 pwetv <- cbind(pwetv, ens_wet)
@@ -163,7 +164,6 @@ write.csv(pwetv, "Zn_pwetv.csv", row.names=F) ## adjust output name
 
 # Prediction plots --------------------------------------------------------
 # Plot individual model predictions
-x11()
 par(mfrow=c(2,2), mar=c(5,4.5,1,1))
 lmin <- 0
 lmax <- max(pwetv$L)
@@ -175,13 +175,8 @@ plot(L ~ PLS, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "PL
 abline(c(0,1), col="red")
 plot(L ~ BART, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "BART prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-dev.copy(pdf, 'wet_model_preds.pdf')
-dev.off()
 
 # Ensemble predictions 
-x11()
 par(mfrow=c(1,1), mar=c(5,4.5,1,1))
 plot(L ~ ENS, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed", cex.lab=1.3)
 abline(c(0,1), col="red")
-dev.copy(pdf, 'wet_ens_pred.pdf')
-dev.off()
