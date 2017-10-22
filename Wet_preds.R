@@ -1,4 +1,4 @@
-# FAO data wet chemistry predictions
+# FAO data soil wet chemistry plant nutrient uptake predictions
 # Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
 # MIR soil data courtesy of ICRAF (2016)
 # M. Walsh, February 2017
@@ -166,13 +166,13 @@ write.csv(pwetv, "Zn_pwetv.csv", row.names=F) ## adjust output name
 par(mfrow=c(2,2), mar=c(5,4.5,1,1))
 lmin <- 0
 lmax <- max(pwetv$L)
-plot(L ~ RFO, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "RFO prediction", ylab = "Observed", cex.lab=1.3)
+plot(L ~ RFO, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "RFO prediction", ylab = "Observed uptake", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ GBM, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "GBM prediction", ylab = "Observed", cex.lab=1.3)
+plot(L ~ GBM, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "GBM prediction", ylab = "Observed uptake", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ PLS, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "PLS prediction", ylab = "Observed", cex.lab=1.3)
+plot(L ~ PLS, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "PLS prediction", ylab = "Observed uptake", cex.lab=1.3)
 abline(c(0,1), col="red")
-plot(L ~ BART, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "BART prediction", ylab = "Observed", cex.lab=1.3)
+plot(L ~ BART, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "BART prediction", ylab = "Observed uptake", cex.lab=1.3)
 abline(c(0,1), col="red")
 
 # Ensemble predictions 
