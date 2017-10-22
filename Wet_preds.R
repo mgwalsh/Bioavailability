@@ -177,5 +177,5 @@ abline(c(0,1), col="red")
 
 # Ensemble predictions 
 par(mfrow=c(1,1), mar=c(5,4.5,1,1))
-plot(L ~ ENS, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed", cex.lab=1.3)
+plot(L ~ ENS, pwetv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed uptake", cex.lab=1.3)
 abline(c(0,1), col="red")
