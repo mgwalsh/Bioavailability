@@ -33,14 +33,14 @@ wetdat <- wetdat[!duplicated(wetdat), ]
 qlevel <- quantile(wetdat$pDM, p=1/2)
 wetdat$HL <- as.factor(ifelse(wetdat$pDM > qlevel, "H", "L"))
 
-# Shoot micro-nutrient uptake
+# Shoot micro-nutrient uptake in mg
 attach(wetdat)
-wetdat$uB  <- pDM*pB/10000
-wetdat$uCu <- pDM*pCu/10000
-wetdat$uMn <- pDM*pMn/10000
-wetdat$uMo <- pDM*pMo/10000
-wetdat$uZn <- pDM*pZn/10000
-wetdat$uFe <- pDM*pFe/10000
+wetdat$uB  <- pDM*pB/1000000
+wetdat$uCu <- pDM*pCu/1000000
+wetdat$uMn <- pDM*pMn/1000000
+wetdat$uMo <- pDM*pMo/1000000
+wetdat$uZn <- pDM*pZn/1000000
+wetdat$uFe <- pDM*pFe/1000000
 detach(wetdat)
 
 # Soil nutrient profile setup ---------------------------------------------
