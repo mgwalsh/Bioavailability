@@ -1,23 +1,22 @@
 # FAO data MIR spectral predictions
 # Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
 # MIR soil data courtesy of ICRAF (2016)
-# M. Walsh, October 2016
+# M. Walsh, March 2019
 
 # Data setup --------------------------------------------------------------
 # Run this first: https://github.com/mgwalsh/Bioavailability/blob/master/FAO_micro_setup.R
 # or run ...
 # SourceURL <- "https://raw.githubusercontent.com/mgwalsh/Bioavailability/master/FAO_micro_setup.R"
 # source_url(SourceURL)
-rm(list=setdiff(ls(), c("fao_cal", "fao_val")))
 
 # Labels ... insert the relevant label
 str(fao_cal) ## check potential labels
-lt <- log(fao_cal$Zn) ## variables prefaced by "p" are potential plant labels
-lv <- log(fao_val$Zn) ## ensure that validation and training labels are the same
+lt <- log(fao_cal$Fe) ## variables prefaced by "p" are potential plant labels
+lv <- log(fao_val$Fe) ## ensure that validation and training labels are the same
 
 # Soil spectral features
-mirt <- fao_cal[43:1806] # soil MIR features
-mirv <- fao_val[43:1806] # ensure that validation features are the same
+mirt <- fao_cal[49:1812] # soil MIR features
+mirv <- fao_val[49:1812] # ensure that validation features are the same
 
 # RF models ---------------------------------------------------------------
 library(doParallel)
