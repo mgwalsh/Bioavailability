@@ -11,12 +11,12 @@
 
 # Labels ... insert the relevant label
 str(fao_cal) ## check potential labels
-lt <- log(fao_cal$Fe) ## variables prefaced by "p" are potential plant labels
-lv <- log(fao_val$Fe) ## ensure that validation and training labels are the same
+lt <- log(fao_cal$Fe+1) ## variables prefaced by "p" are potential plant labels
+lv <- log(fao_val$Fe+1) ## ensure that validation and training labels are the same
 
 # Soil spectral features
-mirt <- fao_cal[49:1812] # soil MIR features
-mirv <- fao_val[49:1812] # ensure that validation features are the same
+mirt <- fao_cal[33:1796] # soil MIR features
+mirv <- fao_val[33:1796] # ensure that validation features are the same
 
 # RF models ---------------------------------------------------------------
 library(doParallel)
@@ -42,7 +42,6 @@ mir.rfo <- train(mirt, lt,
                  trControl = tc)
 print(mir.rfo)
 rfo_mir <- predict(mir.rfo, mirv) ## predict validation set
-rm("mir.rfo")
 
 stopCluster(mc)
 detach("package:randomForest", unload=TRUE)
