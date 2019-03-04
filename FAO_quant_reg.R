@@ -1,7 +1,7 @@
-#' Wheat plant micro-nutrient bioavailability quantiles
-#' Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
-#' MIR soil data courtesy of ICRAF (2016)
-#' M. Walsh, May 2016
+# Wheat plant micro-nutrient bioavailability quantiles
+# Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
+# MIR soil data courtesy of ICRAF (2016)
+# M. Walsh, May 2016
 
 # Required packages
 # install.packages(c("devtools","quantreg")), dependencies=TRUE)
