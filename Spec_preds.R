@@ -10,7 +10,7 @@
 # source_url(SourceURL)
 
 # Labels ... insert the relevant label
-str(fao_cal) ## check potential labels
+# str(fao_cal) ## check potential labels
 lt <- log(fao_cal$Fe+1) ## variables prefaced by "p" are potential plant labels
 lv <- log(fao_val$Fe+1) ## ensure that validation and training labels are the same
 
@@ -41,10 +41,7 @@ mir.rfo <- train(mirt, lt,
                  tuneGrid = tg,
                  trControl = tc)
 print(mir.rfo)
-rfo_mir <- predict(mir.rfo, mirv) ## predict validation set
-
-stopCluster(mc)
-detach("package:randomForest", unload=TRUE)
+rfo_mir <- predict(mir.rfo, mirdat) ## predict validation set
 
 # GBM models --------------------------------------------------------------
 library(plyr)
@@ -70,8 +67,7 @@ mir.gbm <- train(mirt, lt,
                  trControl = tc,
                  tuneGrid = tg)
 print(mir.gbm)
-gbm_mir <- predict(mir.gbm, mirv) ## predict validation set
-rm("mir.gbm")
+gbm_mir <- predict(mir.gbm, mirdat) ## predict validation set
 
 stopCluster(mc)
 detach("package:gbm", unload=TRUE)
@@ -94,8 +90,7 @@ mir.pls <- train(mirt, lt,
                  tuneGrid = expand.grid(ncomp=seq(2, 20, by=1)),
                  trControl = tc)
 print(mir.pls)
-pls_mir <- predict(mir.pls, mirv) ## predict validation set
-rm("mir.pls")
+pls_mir <- predict(mir.pls, mirdat) ## predict validation set
 
 stopCluster(mc)
 detach("package:pls", unload=TRUE)
@@ -120,7 +115,6 @@ mir.bar <- train(mirt, lt,
                  seed = 123)
 print(mir.bar)
 bar_mir <- predict(mir.bar, mirv)
-rm("mir.bar")
 
 stopCluster(mc)
 detach("package:bartMachine", unload=TRUE)
