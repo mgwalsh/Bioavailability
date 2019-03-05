@@ -41,7 +41,11 @@ mir.rfo <- train(mirt, lt,
                  tuneGrid = tg,
                  trControl = tc)
 print(mir.rfo)
-rfo_mir <- predict(mir.rfo, mirdat) ## predict validation set
+rf_mirt <- predict(mir.rfo, mirt) ## predict training set
+rf_mirv <- predict(mir.rfo, mirv) ## predict validation set
+
+stopCluster(mc)
+detach("package:randomForest", unload=TRUE)
 
 # GBM models --------------------------------------------------------------
 library(plyr)
@@ -67,7 +71,8 @@ mir.gbm <- train(mirt, lt,
                  trControl = tc,
                  tuneGrid = tg)
 print(mir.gbm)
-gbm_mir <- predict(mir.gbm, mirdat) ## predict validation set
+gb_mirt <- predict(mir.gbm, mirt) ## predict training set
+gb_mirv <- predict(mir.gbm, mirv) ## predict validation set
 
 stopCluster(mc)
 detach("package:gbm", unload=TRUE)
@@ -90,7 +95,8 @@ mir.pls <- train(mirt, lt,
                  tuneGrid = expand.grid(ncomp=seq(2, 20, by=1)),
                  trControl = tc)
 print(mir.pls)
-pls_mir <- predict(mir.pls, mirdat) ## predict validation set
+pls_mirt <- predict(mir.pls, mirt) ## predict validation set
+pls_mirv <- predict(mir.pls, mirv) ## predict validation set
 
 stopCluster(mc)
 detach("package:pls", unload=TRUE)
@@ -114,20 +120,23 @@ mir.bar <- train(mirt, lt,
                  tuneLength = 2,
                  seed = 123)
 print(mir.bar)
-bar_mir <- predict(mir.bar, mirv)
+bar_mirt <- predict(mir.bar, mirt) ## predict training set
+bar_mirv <- predict(mir.bar, mirv) ## predict validation set
 
 stopCluster(mc)
 detach("package:bartMachine", unload=TRUE)
 
 # Model stacking setup ----------------------------------------------------
-pmirv <- as.data.frame(cbind(lv, rfo_mir, gbm_mir, pls_mir, bar_mir))
+pmirt <- as.data.frame(cbind(lt, rf_mirt, gb_mirt, pls_mirt, bar_mirt))
+names(pmirt) <- c("L", "RFOm", "GBMm", "PLSm", "BARTm")
+pmirv <- as.data.frame(cbind(lv, rf_mirv, gb_mirv, pls_mirv, bar_mirv))
 names(pmirv) <- c("L", "RFOm", "GBMm", "PLSm", "BARTm")
 
 # Remove extraneous objects from memory -----------------------------------
 # rm(list=setdiff(ls(), pmirv"))
 
 # Model stacking ----------------------------------------------------------
-library(glmnet)
+library(MASS)
 
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
@@ -140,36 +149,26 @@ tc <- trainControl(method = "cv", allowParallel = T)
 # MIR model stack
 set.seed(1385321)
 mir.ens <- train(L ~ ., data = pmirv,
-                 method = "glmnet",
+                 method = "glm",
                  family = "gaussian",
                  trControl = tc)
+
 print(mir.ens)
-ens_mir <- as.data.frame(predict(mir.ens, pmirv))
-names(ens_mir) <- c("ENSm")
-pmirv <- cbind(pmirv, ens_mir)
+summary(mir.ens)
+ens_mirt <- as.data.frame(predict(mir.ens, pmirt))
+names(ens_mirt) <- c("ENSm")
+pmirt <- cbind(pmirt, ens_mirt)
+ens_mirv <- as.data.frame(predict(mir.ens, pmirv))
+names(ens_mirv) <- c("ENSm")
+pmirv <- cbind(pmirv, ens_mirv)
 
 stopCluster(mc)
 
 # Write data files --------------------------------------------------------
-write.csv(pmirv, "Zn_pmirv.csv", row.names=F)
+write.csv(pmirv, "Fe_pmirt.csv", row.names=F)
+write.csv(pmirv, "Fe_pmirv.csv", row.names=F)
 
 # Prediction plots --------------------------------------------------------
-# Plot individual MIR model predictions
-x11()
-par(mfrow=c(2,2), mar=c(5,4.5,1,1))
-lmin <- 0
-lmax <- max(pmirv$L)
-plot(L ~ RFOm, pmirv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "RFO prediction", ylab = "Observed", cex.lab=1.3)
-abline(c(0,1), col="red")
-plot(L ~ GBMm, pmirv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "GBM prediction", ylab = "Observed", cex.lab=1.3)
-abline(c(0,1), col="red")
-plot(L ~ PLSm, pmirv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "PLS prediction", ylab = "Observed", cex.lab=1.3)
-abline(c(0,1), col="red")
-plot(L ~ BARTm, pmirv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "BART prediction", ylab = "Observed", cex.lab=1.3)
-abline(c(0,1), col="red")
-dev.copy(pdf, 'mir_model_preds.pdf')
-dev.off()
-
 # Plot ensemble predictions 
 x11()
 par(mfrow=c(1,1), mar=c(5,4.5,1,1))
