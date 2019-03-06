@@ -168,8 +168,9 @@ pmira <- rbind(pmirt, pmirv) ## combined predictions based on ensemble model
 stopCluster(mc)
 
 # Write data files --------------------------------------------------------
-write.csv(pmirv, "Fe_pmirt.csv", row.names=F)
+write.csv(pmirt, "Fe_pmirt.csv", row.names=F)
 write.csv(pmirv, "Fe_pmirv.csv", row.names=F)
+write.csv(pmira, "Fe_pmira.csv", row.names=F)
 
 # Prediction plots --------------------------------------------------------
 # Plot ensemble predictions 
