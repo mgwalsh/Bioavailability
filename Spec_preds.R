@@ -163,7 +163,7 @@ pmirt <- cbind(pmirt, ens_mirt)
 ens_mirv <- as.data.frame(predict(mir.ens, pmirv))
 names(ens_mirv) <- c("ENSm")
 pmirv <- cbind(pmirv, ens_mirv)
-pmira <- rbind(pmirt, pmirv) ## combined predictions based on ensemble model
+pmira <- rbind(pmirt, pmirv) ## combined predictions based on validation model
 
 stopCluster(mc)
 
@@ -171,6 +171,4 @@ stopCluster(mc)
 write.csv(pmirt, "Fe_pmirt.csv", row.names=F)
 write.csv(pmirv, "Fe_pmirv.csv", row.names=F)
 write.csv(pmira, "Fe_pmira.csv", row.names=F)
-
-# Plot ensemble predictions -----------------------------------------------
 
