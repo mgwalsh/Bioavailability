@@ -155,12 +155,15 @@ mir.ens <- train(L ~ ., data = pmirv,
 
 print(mir.ens)
 summary(mir.ens)
+
+# Predictions -------------------------------------------------------------
 ens_mirt <- as.data.frame(predict(mir.ens, pmirt))
 names(ens_mirt) <- c("ENSm")
 pmirt <- cbind(pmirt, ens_mirt)
 ens_mirv <- as.data.frame(predict(mir.ens, pmirv))
 names(ens_mirv) <- c("ENSm")
 pmirv <- cbind(pmirv, ens_mirv)
+pmira <- rbind(pmirt, pmirv) ## combined predictions based on ensemble model
 
 stopCluster(mc)
 
