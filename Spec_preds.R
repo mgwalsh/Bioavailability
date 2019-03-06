@@ -11,8 +11,8 @@
 
 # Labels ... insert the relevant label
 # str(fao_cal) ## check potential labels
-lt <- log(fao_cal$Fe+1) ## variables prefaced by "p" are potential plant labels
-lv <- log(fao_val$Fe+1) ## ensure that validation and training labels are the same
+lt <- log((fao_cal$pFe+1)/(fao_cal$Fe+1)) ## variables prefaced by "p" are potential plant labels
+lv <- log((fao_val$pFe+1)/(fao_val$Fe+1)) ## ensure that validation and training labels are the same
 
 # Soil spectral features
 mirt <- fao_cal[33:1796] # soil MIR features
@@ -168,7 +168,7 @@ pmira <- rbind(pmirt, pmirv) ## combined predictions based on validation model
 stopCluster(mc)
 
 # Write data files --------------------------------------------------------
-write.csv(pmirt, "Fe_pmirt.csv", row.names=F) ## training set
-write.csv(pmirv, "Fe_pmirv.csv", row.names=F) ## validation set
-write.csv(pmira, "Fe_pmira.csv", row.names=F) ## all sample predictions
+write.csv(pmirt, "ERFe_pmirt.csv", row.names=F) ## training set
+write.csv(pmirv, "ERFe_pmirv.csv", row.names=F) ## validation set
+write.csv(pmira, "ERFe_pmira.csv", row.names=F) ## all sample predictions
 
