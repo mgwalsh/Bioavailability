@@ -172,11 +172,5 @@ write.csv(pmirt, "Fe_pmirt.csv", row.names=F)
 write.csv(pmirv, "Fe_pmirv.csv", row.names=F)
 write.csv(pmira, "Fe_pmira.csv", row.names=F)
 
-# Prediction plots --------------------------------------------------------
-# Plot ensemble predictions 
-x11()
-par(mfrow=c(1,1), mar=c(5,4.5,1,1))
-plot(L ~ ENSm, pmirv, cex=1.2, xlim=c(lmin, lmax), ylim=c(lmin, lmax), xlab = "Model ensemble prediction", ylab = "Observed", cex.lab=1.3)
-abline(c(0,1), col="red")
-dev.copy(pdf, 'mir_ens_pred.pdf')
-dev.off()
+# Plot ensemble predictions -----------------------------------------------
+
