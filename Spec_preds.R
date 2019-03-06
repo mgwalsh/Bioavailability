@@ -168,7 +168,7 @@ pmira <- rbind(pmirt, pmirv) ## combined predictions based on validation model
 stopCluster(mc)
 
 # Write data files --------------------------------------------------------
-write.csv(pmirt, "Fe_pmirt.csv", row.names=F)
-write.csv(pmirv, "Fe_pmirv.csv", row.names=F)
-write.csv(pmira, "Fe_pmira.csv", row.names=F)
+write.csv(pmirt, "Fe_pmirt.csv", row.names=F) ## training set
+write.csv(pmirv, "Fe_pmirv.csv", row.names=F) ## validation set
+write.csv(pmira, "Fe_pmira.csv", row.names=F) ## all sample predictions
 
