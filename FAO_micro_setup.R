@@ -3,12 +3,10 @@
 # MIR soil data courtesy of ICRAF
 # M. Walsh, March 2019
 
-# install.packages(c("downloader","compositions","MASS","RColorBrewer","caret"), dependencies=T)
+# install.packages(c("downloader","MASS","RColorBrewer","caret"), dependencies=T)
 suppressPackageStartupMessages({
   require(downloader)
-  require(compositions)
   require(MASS)
-  require(RColorBrewer)
   require(caret)
  })
 
