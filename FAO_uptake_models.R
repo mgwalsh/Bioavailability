@@ -1,7 +1,7 @@
-#' Trace mineral soil-plant enrichment/uptake models
-#' Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
-#' MIR soil data courtesy of ICRAF (2016)
-#' M. Walsh, February 2017
+# Trace mineral soil-plant enrichment/uptake models
+# Soil and wheat plant wet chemistry data courtesy of FAO (doc @ https://www.dropbox.com/s/gwk07tanhu86tqj/Silanpaa%20Report.pdf?dl=0)
+# MIR soil data courtesy of ICRAF (2016)
+# M. Walsh, February 2017
 
 # Required packages
 # install.packages(c("devtools","quantreg")), dependencies=TRUE)
