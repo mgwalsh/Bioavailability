@@ -69,7 +69,7 @@ stopCluster(mc)
 fname <- paste("./Results/", labs, "_rf.rds", sep = "")
 saveRDS(rf, fname)
 
-# GBM
+# Generalized boosting
 # start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
 registerDoParallel(mc)
@@ -129,7 +129,7 @@ mc <- makeCluster(detectCores())
 registerDoParallel(mc)
 
 # model setup
-set.seed(seed)
+set.seed(1385321)
 tc <- trainControl(method="repeatedcv", number=10, repeats=3, allowParallel=T)
 
 st <- train(fval, lval,
