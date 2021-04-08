@@ -156,3 +156,6 @@ print(stQ)
 curve(stQ$coefficients[4]*x+stQ$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
 abline(c(0,1), col="grey", lwd=1)
 
+# write output file with all the predictions
+write.csv(samp, "./Results/Zn_samp_preds.csv", row.names = FALSE)
+
