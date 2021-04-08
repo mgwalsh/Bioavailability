@@ -148,11 +148,13 @@ samp$gb <- predict(gb, samp)
 samp$cu <- predict(cu, samp)
 samp$st <- predict(st, samp)
 
+# quantile regression fit on whole dataset
+stQ <- rq(Zn~st, tau=c(0.025,0.5,0.975), data=samp)
+print(stQ)
+
 par(pty="s")
 plot(Zn~st, xlab="Ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.2, 
      xlim=c(10,50), ylim=c(10,50), samp)
-stQ <- rq(Zn~st, tau=c(0.025,0.5,0.975), data=samp) ## quantile regression fit
-print(stQ)
 curve(stQ$coefficients[4]*x+stQ$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
 abline(c(0,1), col="grey", lwd=1)
 
