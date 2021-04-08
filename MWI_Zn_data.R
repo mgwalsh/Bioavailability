@@ -24,6 +24,7 @@ dir.create("./Results")
 
 samp <- read.table("MWI_Zn_data.csv", header = T, sep = ",")
 samp <- samp[complete.cases(samp[,c(7:18)]), ] ## removes incomplete cases
+samp <- within(samp, rm(Oxalates))
 
 # set calibration/validation set randomization seed
 seed <- 12358
@@ -39,8 +40,7 @@ labs <- c("Zn")
 lcal <- as.vector(t(gs_cal[labs]))
 
 # soil calibration features
-fcal <- gs_cal[,7:18]
-
+fcal <- gs_cal[,7:17]
 
 # Training models with cross-validation -----------------------------------
 # Random forest
@@ -50,7 +50,7 @@ registerDoParallel(mc)
 
 # control setup
 set.seed(1385321)
-tc <- trainControl(method = "cv", allowParallel = T)
+tc <- trainControl(method = "cv", allowParallel = TRUE)
 tg <- expand.grid(mtry = seq(1,10, by=1)) ## model tuning steps
 
 # model training
@@ -59,9 +59,12 @@ rf <- train(fcal, lcal,
             method = "rf",
             ntree = 301,
             metric = "RMSE",
+            importance = TRUE,
             tuneGrid = tg,
             trControl = tc)
 
+rfImp <- varImp(rf)
+plot(rfImp)
 gs_val$rf <- predict(rf, gs_val)
 stopCluster(mc)
 fname <- paste("./Results/", labs, "_rf.rds", sep = "")
@@ -74,7 +77,7 @@ registerDoParallel(mc)
 
 # control setup
 set.seed(1385321)
-tc <- trainControl(method = "cv", allowParallel = T)
+tc <- trainControl(method = "cv", importance = TRUE, allowParallel = TRUE)
 
 ## for initial <gbm> tuning guidelines see @ https://stats.stackexchange.com/questions/25748/what-are-some-useful-guidelines-for-gbm-parameters
 tg <- expand.grid(interaction.depth = seq(2,5, by=1), shrinkage = 0.01, n.trees = seq(101,501, by=50),
@@ -88,6 +91,8 @@ gb <- train(fcal, lcal,
             tuneGrid = tg,
             metric = "RMSE")
 
+gbImp <- varImp(gb)
+plot(gbImp)
 gs_val$gb <- predict(gb, gs_val)
 stopCluster(mc)
 fname <- paste("./Results/", labs, "_gb.rds", sep = "")
@@ -106,8 +111,11 @@ tc <- trainControl(method="repeatedcv", number=10, repeats=3, allowParallel = T)
 cu <- train(fcal, lcal, 
             method = "cubist", 
             trControl = tc,
+            importance = TRUE,
             metric = "RMSE")
 
+cuImp <- varImp(cu)
+plot(cuImp)
 gs_val$cu <- predict(cu, gs_val)
 stopCluster(mc)
 fname <- paste("./Results/", labs, "_cu.rds", sep = "")
@@ -115,7 +123,7 @@ saveRDS(cu, fname)
 
 # Stacking model on validation set ----------------------------------------
 lval <- as.vector(t(gs_val[labs]))
-fval <- gs_val[,20:22] ## subset validation features
+fval <- gs_val[,19:21] ## subset validation features
 
 # start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
