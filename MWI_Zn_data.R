@@ -153,6 +153,7 @@ samp$st <- predict(st, samp)
 stQ <- rq(Zn~st, tau=c(0.025,0.5,0.975), data=samp)
 print(stQ)
 
+# plot
 par(pty="s")
 plot(Zn~st, xlab="Ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.2, 
      xlim=c(10,50), ylim=c(10,50), samp)
