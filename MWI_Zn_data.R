@@ -137,6 +137,7 @@ st <- train(fval, lval,
             trControl = tc,
             metric = "RMSE")
 
+summary(st)
 gs_val$st <- predict(st, gs_val) ## stacked predictions
 stopCluster(mc)
 fname <- paste("./Results/", labs, "_st.rds", sep = "")
