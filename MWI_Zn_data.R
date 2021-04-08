@@ -2,7 +2,6 @@
 # Data courtesy of the GeoNutrion project (http://www.geonutrition.com/)
 # M. Walsh, April 2020
 
-
 # Install & load packages -------------------------------------------------
 # package names
 packages <- c("downloader", "devtools", "caret", "plyr", "MASS", "randomForest", "gbm", "Cubist", "quantreg", "doParallel")
@@ -24,7 +23,7 @@ dir.create("./Results")
 
 samp <- read.table("MWI_Zn_data.csv", header = T, sep = ",")
 samp <- samp[complete.cases(samp[,c(7:18)]), ] ## removes incomplete cases
-samp <- within(samp, rm(Oxalates))
+samp <- within(samp, rm(Oxalates)) # I drop the sum of oxalates and fit these individually
 
 # set calibration/validation set randomization seed
 seed <- 12358
