@@ -34,7 +34,7 @@ gsIndex <- createDataPartition(samp$Zn, p = 4/5, list = F, times = 1)
 gs_cal <- samp[ gsIndex,]
 gs_val <- samp[-gsIndex,]
 
-# Soil calibration labels
+# soil calibration labels
 labs <- c("Zn")
 lcal <- as.vector(t(gs_cal[labs]))
 
@@ -48,7 +48,7 @@ mc <- makeCluster(detectCores())
 registerDoParallel(mc)
 
 # control setup
-set.seed(1385321)
+set.seed(seed)
 tc <- trainControl(method = "cv", allowParallel = TRUE)
 tg <- expand.grid(mtry = seq(1,10, by=1)) ## model tuning steps
 
@@ -75,7 +75,7 @@ mc <- makeCluster(detectCores())
 registerDoParallel(mc)
 
 # control setup
-set.seed(1385321)
+set.seed(seed)
 tc <- trainControl(method = "cv", importance = TRUE, allowParallel = TRUE)
 
 ## for initial <gbm> tuning guidelines see @ https://stats.stackexchange.com/questions/25748/what-are-some-useful-guidelines-for-gbm-parameters
@@ -129,7 +129,7 @@ mc <- makeCluster(detectCores())
 registerDoParallel(mc)
 
 # model setup
-set.seed(1385321)
+set.seed(seed)
 tc <- trainControl(method="repeatedcv", number=10, repeats=3, allowParallel=T)
 
 st <- train(fval, lval,
