@@ -1,6 +1,6 @@
 # Malawi Maize grain Zn predictions from soil data
 # Data courtesy of the GeoNutrion project (http://www.geonutrition.com/)
-# M. Walsh, April 2020
+# M. Walsh, April 2021
 
 # Install & load packages -------------------------------------------------
 # package names
