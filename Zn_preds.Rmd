@@ -24,7 +24,7 @@ Zinc is an important micro-nutrient in crop, livestock and human nutrition (see 
 
 # General data setup
 
-To actually run this notebook, you will need to load the packages indicated in the chunk directly below. This allows you to assemble the wet chemistry and spectral dataframes providing a lot of options to generate spectral predictions of acidity relevant plant and soil micro-nutrient properties such as .... The notebook itself is maintained on [Github](https://github.com/mgwalsh/Soils/blob/master/Spec_acidity_preds.Rmd), and you can fork and modify it from there as you see fit.
+To actually run this notebook, you will need to load the packages indicated in the chunk directly below. This allows you to assemble the wet chemistry and spectral dataframes providing a lot of options to generate spectral predictions of acidity relevant plant and soil micro-nutrient properties such as .... The notebook itself is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/Zn_preds.Rmd), and you can fork and modify it from there as you see fit.
 
 ```{r}
 # Package names
