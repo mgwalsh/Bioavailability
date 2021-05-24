@@ -1,0 +1,41 @@
+---
+title: Spectral predictions of Zinc concentrations in Maize grain and soils
+author: M.G. Walsh, E. Towett ...
+date: "`r format(Sys.time(), '%d, %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 1
+    fig_caption: true
+    css: style.css
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(message = FALSE)
+```
+
+# Introduction
+
+The spectral signatures of soils, plants and materials generally are defined by their reflectance or absorbance as a function of wavelength in the electromagnetic spectrum. Under controlled conditions, the signatures result from electronic transitions of atoms and vibrational stretching and bending of structural groups of atoms that form molecules or crystals. Spectroscopy has been shown to provide highly repeatable, rapid and low cost measurements of many different soil and plant properties in numerous studies. The amount of light absorbed by a sample can be measured with minimal sample preparation (generally drying and fine grinding) across a wide range of ultra-violet (UV), visible (VIS), near (NIR) and mid-infrared (MIR) wavelengths to provide a unique spectral signature. An individual measurement can be performed in about 30 seconds, in contrast to conventional soil and plant tests, which are typically slow, labor-intensive, expensive and/or use harmful chemicals.
+
+This notebook is intended for self-learning. It does not go into the details of the [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) itself, but instead it focuses on **spectrometry** processes and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures (features) relative to their corresponding reference measurements (labels). In this particular example, we shall use topsoil (0-20 cm) and co-located maize grain Zinc concentration data that were collected as part of the [GeoNutrition project](), currently operating in Malawi and Ethiopia.
+
+Zinc is an important micro-nutrient in crop, livestock and human nutrition (see e.g., ) ...
+
+# General data setup
+
+To actually run this notebook, you will need to load the packages indicated in the chunk directly below. This allows you to assemble the wet chemistry and spectral dataframes providing a lot of options to generate spectral predictions of acidity relevant plant and soil micro-nutrient properties such as .... The notebook itself is maintained on [Github](https://github.com/mgwalsh/Soils/blob/master/Spec_acidity_preds.Rmd), and you can fork and modify it from there as you see fit.
+
+```{r}
+# Package names
+packages <- c("downloader", "caret", "caretEnsemble", "soil.spec", "MASS", "pls", "glmnet", "randomForest", "xgboost", "Cubist", "quantreg", "leaflet", "htmlwidgets", "plyr", "dplyr", "doParallel")
+
+# Install packages
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+# Load packages
+invisible(lapply(packages, library, character.only = TRUE))
+```
