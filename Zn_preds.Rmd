@@ -1,6 +1,6 @@
 ---
 title: Spectral predictions of Zinc concentrations in Maize grain and soils
-author: M.G. Walsh, E. Towett ...
+author: M.G. Walsh, P.C. Nalivata, E. Towett, ...
 date: "`r format(Sys.time(), '%d, %B, %Y')`"
 output:
   html_document:
@@ -16,11 +16,11 @@ knitr::opts_chunk$set(message = FALSE)
 
 # Introduction
 
+Zinc (Zn) is a trace element found in varying concentrations in all soils, plants and animals. It is essential for the normal growth of higher plants, animals and humans. While Zn is needed in only small quantities, if those amounts are inadequate, plants and/or animals will suffer from physiological stress brought about by the dysfunction of several enzyme systems and other metabolic functions in which Zn plays a key role. In Malawi, Zn deficiency prevalence rates of 59-62% in people have been reported based on a national survey of serum Zn concentrations ([Likoswe et al., 2020](https://doi.org/10.3390/nu12061563)). This value may be even higher in the rural areas of Malawi ([Siyame et al., 2013](https://doi.org/10.1024/0300-9831/a000158)).
+
 The spectral signatures of soils, plants and materials generally are defined by their reflectance or absorbance as a function of wavelength in the electromagnetic spectrum. Under controlled conditions, the signatures result from electronic transitions of atoms and vibrational stretching and bending of structural groups of atoms that form molecules or crystals. Spectroscopy has been shown to provide highly repeatable, rapid and low cost measurements of many different soil and plant properties in numerous studies. The amount of light absorbed by a sample can be measured with minimal sample preparation (primarily drying and fine grinding) across a wide range of ultra-violet (UV), visible (VIS), near (NIR) and mid-infrared (MIR) wavelengths to provide a unique spectral signature. An individual measurement can be performed in about 30 seconds, in contrast to conventional soil and plant tests, which are typically slow, labor-intensive, expensive and/or use harmful chemicals.
 
-This notebook is intended for self-learning. It does not go into the details of the [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) itself, but instead it focuses on **spectrometry** processes and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures (features) relative to their corresponding reference measurements (labels). In this particular example, we shall use topsoil (0-20 cm) and co-located maize grain Zinc concentration data that were collected as part of the [GeoNutrition project](http://www.geonutrition.com), currently operating in Malawi and Ethiopia.
-
-Zinc is an important micro-nutrient in crop, livestock and human nutrition (see e.g., ) ...
+This notebook is intended for self-learning. It does not go into the details of the [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) itself, but instead it focuses on **spectrometry** processes and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures of  (features) relative to their corresponding reference measurements (labels). In this particular example, we shall use topsoil (0-20 cm) and co-located maize grain Zn concentration data that were collected as part of the [GeoNutrition project](http://www.geonutrition.com) in Malawi.
 
 # General data setup
 
@@ -39,3 +39,5 @@ if (any(installed_packages == FALSE)) {
 # Load packages
 invisible(lapply(packages, library, character.only = TRUE))
 ```
+
+
