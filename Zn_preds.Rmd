@@ -16,13 +16,17 @@ knitr::opts_chunk$set(message = FALSE)
 
 # Introduction
 
-Micronutrients i.e., essential vitamins and minerals, are vital to healthy development and disease prevention. With the exception of vitamin D, micronutrients are not produced in the body and must be derived from the diet. Though people only need small amounts of micronutrients, consuming their recommended amounts is important, as *micronutrient deficiencies* (MNDs) can have severe consequences. Zinc deficiency is among the 5 most widespread MNDs (i.e., Iron, Vitamin A, Iodine, Folate and Zinc) of greatest global concern [Bailey et al (2015)](https://doi.org/10.1159/000371618) and is the focus of this notebook. 
+Micronutrients i.e., essential vitamins and minerals, are vital to healthy development and disease prevention. With the exception of vitamin D, micronutrients are not produced in the body and must be derived from the diet. Though people only need small amounts of micronutrients, consuming their recommended amounts is important, as *micronutrient deficiencies* (MNDs) can have severe consequences. Zinc deficiency is among the 5 most widespread MNDs (including Iron, Vitamin A, Iodine, Folate and Zinc) of greatest global concern [Bailey et al (2015)](https://doi.org/10.1159/000371618) and is the focus of this notebook. 
 
 Zinc (Zn) is a trace element found in varying concentrations in all soils, plants and animals. It is essential for the normal growth of higher plants, animals and humans. While Zn is needed in only small quantities, if those amounts are inadequate, plants and/or animals will suffer from physiological stress brought about by the dysfunction of several enzyme systems and other metabolic functions in which Zn plays a key role [Wessels and Brown (2012)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0050568). In Malawi, Zn deficiency prevalence rates of 59-62% in people have been reported based on a national survey of serum Zn concentrations ([Likoswe et al., 2020](https://doi.org/10.3390/nu12061563)). This value may be even higher in the rural areas ([Siyame et al., 2013](https://doi.org/10.1024/0300-9831/a000158)).
 
-The spectral signatures of soils, plants and materials generally are defined by their reflectance or absorbance as a function of wavelength in the electromagnetic spectrum. Under controlled conditions, the signatures result from electronic transitions of atoms and vibrational stretching and bending of structural groups of atoms that form molecules or crystals. Spectroscopy has been shown to provide highly repeatable, rapid and low cost measurements of many different soil and plant properties in numerous studies. The amount of light absorbed by a sample can be measured with minimal sample preparation (primarily drying and fine grinding) across a wide range of ultra-violet (UV), visible (VIS), near (NIR) and mid-infrared (MIR) wavelengths to provide a unique spectral signature. An individual measurement can be performed in about 30 seconds, in contrast to conventional soil and plant tests, which are typically slow, labor-intensive, expensive and/or use harmful chemicals.
+The spectral signatures of soils, plants and materials generally are defined by their reflectance or absorbance as a function of wavelength in the electromagnetic spectrum. Under controlled conditions, the signatures result from electronic transitions of atoms and vibrational stretching and bending of structural groups of atoms that form molecules or crystals. Spectroscopy has been shown to provide highly repeatable, rapid and low cost measurements of many different soil and plant properties in numerous studies. The amount of light absorbed by a sample can be measured with minimal sample preparation (primarily drying and fine grinding) across a wide range of ultra-violet (UV), visible (VIS), near (NIR) and mid-infrared (MIR) wavelengths to provide a unique spectral signature. An individual measurement can be performed in about 30 seconds, in contrast to conventional soil and plant tests, which are typically slow, labor-intensive, expensive and/or use hazardous chemicals. The main questions posed here are:
 
-This notebook is intended for self-learning. It does not go into the details of the [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) itself, but instead it focuses on **spectrometry** processes and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures of  (features) relative to their corresponding reference measurements (labels). In this particular example, we shall use topsoil (0-20 cm) and co-located maize grain Zn concentration data that were collected as part of the [GeoNutrition project](http://www.geonutrition.com) in Malawi.
+* Can we use MIR spectra to predict Zn concentrations in Maize grain and soils reliably?
+
+* Are those predictions *useful enough* to guide Zn deficiency diagnostics?
+
+The notebook is intended for self-learning. It does not go into the details of the [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) itself (and which is well covered in the literature), but instead it focuses on *spectrometry* processes and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures of  (features) relative to their corresponding reference measurements (labels). In this particular example, we shall use topsoil (0-20 cm) and co-located maize grain Zn concentration data that were collected as part of the [GeoNutrition project](http://www.geonutrition.com) in Malawi.
 
 # General data setup
 
@@ -49,30 +53,7 @@ The next chunk downloads the data needed for running this example. It assembles 
 dir.create("MW_Zn", showWarnings = F)
 setwd("./MW_Zn")
 dir.create("Results", showWarnings = F)
-
-# Data download
-download("https://osf.io/f4dpw/?raw=1", "MW_Zn_data.zip", mode="wb")
-unzip("MW_Zn_data.zip", overwrite = T)
-
-# Merge the wet chemistry reference dataframes
-adata <- merge(prof, cnls, by = "ssid")
-adata <- merge(adata, text, by = "ssid")
-adata <- merge(adata, oxid, by = "ssid")
-
-
 ```
 
 The following chunk then writes out the dataframe `MW_Zn_data.csv` into your `./MW_Zn/Results` directory if you'd like to process those outputs in software other than R. It also generates a location map of where those soil samples were obtained.
-
-```{r}
-# Write out reference data frame
-write.csv(adata, "./soil_acidity/Results/AfSIS_reference_data.csv", row.names = F)
-
-# Soil sample locations
-w <- leaflet() %>%
-  setView(lng = mean(adata$lon), lat = mean(adata$lat), zoom = 3) %>%
-  addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
-  addCircleMarkers(adata$lon, adata$lat, clusterOptions = markerClusterOptions())
-w ## plot widget 
-```
 
