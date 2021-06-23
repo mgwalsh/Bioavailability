@@ -24,7 +24,7 @@ The spectral signatures of soils, plants and materials generally are defined by 
 
 * Can we use MIR spectra to predict Zn concentrations in Maize grain and soils reliably?
 
-* Are those predictions *useful enough* to guide Zn deficiency diagnostics?
+* Are those predictions *useful enough* to guide Zn deficiency diagnostics operationally for monitoring?
 
 The notebook is intended for self-learning. It does not go into the details of the [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) itself (and which is well covered in the literature), but instead it focuses on *spectrometry* processes and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures of  (features) relative to their corresponding reference measurements (labels). In this particular example, we shall use topsoil (0-20 cm) and co-located maize grain Zn concentration data that were collected as part of the [GeoNutrition project](http://www.geonutrition.com) in Malawi.
 
