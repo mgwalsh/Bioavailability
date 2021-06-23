@@ -22,9 +22,9 @@ Zinc (Zn) deficiency is among the 5 most widespread MNDs (including iron, vitami
 
 The spectral signatures of soils, plants, animal tissues and materials generally are defined by their reflectance or absorbance as a function of wavelength in the electromagnetic spectrum. Under laboratory conditions, the signatures result from electronic transitions of atoms and vibrational stretching and bending of structural groups of atoms that form molecules or crystals. Spectroscopy has been shown to provide highly repeatable, rapid and low cost measurements of many different soil, plant and animal tissue properties in numerous studies. The amount of light absorbed by a sample can be measured with minimal sample preparation (primarily drying and fine grinding) across a wide range of ultra-violet (UV), visible (VIS), near (NIR) and mid-infrared (MIR) wavelengths to provide a unique spectral signature. An individual measurement can be performed in about 30 seconds, in contrast to more conventional soil and plant tests, which are typically slow, labor-intensive, expensive and/or use hazardous chemicals, which have to be handled carefully. 
 
-In this notebook we shall explore if Zn concentrations in soils and maize grain can be reliably predicted from cheap fast and non-destructive MIR spectral data (features), using [ICP-MS](https://en.wikipedia.org/wiki/Inductively_coupled_plasma_mass_spectrometry) as reference (label) data with standard *machine learning algorithms* ([MLAs](https://en.wikipedia.org/wiki/Machine_learning)).
+In this notebook we shall explore if Zn concentrations in soils and maize grain can be reliably predicted from cheap fast, non-destructive and non-hazardous MIR spectral data (features), using [ICP-MS](https://en.wikipedia.org/wiki/Inductively_coupled_plasma_mass_spectrometry) as reference (label) data with standard *machine learning algorithms* ([MLAs](https://en.wikipedia.org/wiki/Machine_learning)).
 
-The two main empirical questions posed here are:
+The two main empirical questions posed here given a specific dataset are:
 
 * Can Zn concentrations in soils be used to predict Zn concentrations in maize grain? While there should be bio-kinetic links between soils and plants, the differential uptake and bioavailability of soil Zn in food crop tissues are generally complex and are not well quantified or predicted. 
 
