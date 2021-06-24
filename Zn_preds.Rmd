@@ -1,6 +1,6 @@
 ---
 title: Spectrometry workflows for predicting zinc levels in soils and maize grain
-author: M.G. Walsh, P.C. Nalivata, E.K. Towett and M.R. Broadley
+author: M.G. Walsh, P.C. Nalivata, E.K. Towett, R.M. Lark and M.R. Broadley
 date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
 output:
   html_document:
@@ -18,15 +18,15 @@ knitr::opts_chunk$set(message = FALSE)
 
 Micronutrients i.e., the essential vitamins and minerals, are vital for healthy child development as well as morbidity and disease prevention in adults. With the exception of vitamin D, micronutrients are not produced in the body and must be obtained from the diet. Although people only need small amounts of micronutrients, consuming the recommended amount is important, as *micronutrient deficiencies* (MNDs) can have severe consequences to both health and well-being. However, national surveys containing dietary micronutrient intake data are not routinely collected in most developing countries because they are expensive and time consuming to obtain both in the field and the laboratory. Also, the databases that are needed to analyze dietary intakes should be geographically explicit to be effective, but they are often completely lacking and/or not up-to-date in Africa. Similarly, agronomic interventions that focus on plant micronutrients for improving cropland productivity are inadequately supported by spatial and temporal data. Surveillance of MNDs on the basis of biomarkers of status and dietary intakes from national and regional-scale staple food-composition data would be improved using subnational data on the composition of grain micronutrients [Gashu et al (2021)](https://doi.org/10.1038/s41586-021-03559-3).
 
-Zinc (Zn) deficiency is among the 5 most widespread MNDs (including iron, vitamin A, iodine, folate, in addition to zinc) that are of global concern [Bailey et al (2015)](https://doi.org/10.1159/000371618). Diagnosing zinc deficiency in soils and maize grain is the focus of this notebook. Zn is a trace element found in varying concentrations in all soils, plants and animals. It is essential for the normal growth of higher plants, animals and humans. While Zn is needed in only small quantities, if those amounts are inadequate, plants and/or animals will suffer from physiological stress brought about by the dysfunction of several enzyme systems and other metabolic functions in which Zn plays a key role see [Wessels and Brown (2012)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0050568). In Malawi, Zn deficiency prevalence rates of ~60% in people have been reported based on a national survey of serum [biomarker](https://en.wikipedia.org/wiki/Biomarker) Zn concentrations ([Likoswe et al., 2020](https://doi.org/10.3390/nu12061563)). The prevalence may be even higher in rural areas ([Siyame et al., 2013](https://doi.org/10.1024/0300-9831/a000158)).
+Zinc (Zn) deficiency is among the 5 most widespread MNDs (including iron, vitamin A, iodine, folate, in addition to zinc) that are of global concern [Bailey et al (2015)](https://doi.org/10.1159/000371618). Diagnosing zinc deficiency in soils and maize grain is the focus of this notebook. Zn is a trace element found in varying concentrations in all soils, plants and animals. It is essential for the normal growth of higher plants, animals and humans [Noulas et al (2018)](). While Zn is needed in only small quantities, if those amounts are inadequate, plants and/or animals will suffer from physiological stress brought about by the dysfunction of several enzyme systems and other metabolic functions in which Zn plays a key role see [Wessels and Brown (2012)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0050568). In Malawi, Zn deficiency prevalence rates of ~60% in people have been reported based on a national survey of serum [biomarker](https://en.wikipedia.org/wiki/Biomarker) Zn concentrations ([Likoswe et al., 2020](https://doi.org/10.3390/nu12061563)). The prevalence may be even higher in rural areas ([Siyame et al., 2013](https://doi.org/10.1024/0300-9831/a000158)). The main causes of Zn deﬁciencies in food crops are soil-related including: total Zn and clay content, redox potential, activity of soil microorganisms, the presence of other nutrients, and climate conditions, see e.g., [Noulas et al (2018)](https://doi.org/10.1016/j.jtemb.2018.02.009).
 
-The spectral signatures of soils, plants, animal tissues and materials generally are defined by their reflectance or absorbance as a function of wavelength in the electromagnetic spectrum. Under laboratory conditions, the signatures result from electronic transitions of atoms and vibrational stretching and bending of structural groups of atoms that form molecules or crystals. Spectroscopy has been shown to provide highly repeatable, rapid and low cost measurements of many different soil, plant and animal tissue properties in numerous studies. The amount of light absorbed by a sample can be measured with minimal sample preparation (primarily drying and fine grinding) across a wide range of ultra-violet (UV), visible (VIS), near (NIR) and mid-infrared (MIR) wavelengths to provide a unique spectral signature. An individual measurement can be performed in about 30 seconds, in contrast to more conventional soil and plant tests, which are typically slow, labor-intensive, expensive and/or use hazardous chemicals, which have to be handled carefully. 
+Spectral signatures of soils, plants, animal tissues and materials generally are defined by their reflectance or absorbance as a function of wavelength in the electromagnetic spectrum. Under laboratory conditions, the signatures result from electronic transitions of atoms and vibrational stretching and bending of structural groups of atoms that form molecules or crystals. Spectroscopy has been shown to provide highly repeatable, rapid and low cost measurements of many different soil, plant and animal tissue properties in numerous studies. The amount of light absorbed by a sample can be measured with minimal sample preparation (primarily drying and fine grinding) across a wide range of ultra-violet (UV), visible (VIS), near (NIR) and mid-infrared (MIR) wavelengths to provide a unique spectral signature. An individual measurement can be performed in about 30 seconds, in contrast to more conventional soil and plant tests, which are typically slow, labor-intensive, expensive and/or use hazardous chemicals, which have to be handled carefully. 
 
 In this notebook we shall explore if Zn concentrations in soils and maize grain can be reliably predicted from cheap fast, non-destructive and non-hazardous MIR spectral data (features), using [ICP-MS](https://en.wikipedia.org/wiki/Inductively_coupled_plasma_mass_spectrometry) as reference (label) data with standard *machine learning algorithms* ([MLAs](https://en.wikipedia.org/wiki/Machine_learning)).
 
 The two main empirical questions posed here given a specific dataset are:
 
-* Can Zn concentrations in soils be used to predict Zn concentrations in maize grain? While there should be bio-kinetic links between soils and plants, the differential uptake and bioavailability of soil Zn in food crop tissues are generally complex and are not well quantified or predicted. 
+* Can Zn concentrations in soils be used to predict Zn concentrations in maize grain? While there should be strong bio-kinetic links between soils and plants, the differential uptake and bioavailability of soil Zn in food crop tissues are generally complex and are not well quantified or predicted. 
 
 * Can we use MIR spectra to predict Zn concentrations in maize grain and soils reliably? If so, this would advance and enable localized Zn deficiency diagnostics and risk assessments that could potentially be carried out routinely and operationally, at low cost, and across large geographical regions and populations of interest. 
 
@@ -50,15 +50,37 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(packages, library, character.only = TRUE))
 ```
 
-The next chunk downloads the data needed for running this example. It assembles georeferenced soil measurements collected across Africa and links these to [FT-IR](https://www.bruker.com/en/products-and-solutions/infrared-and-raman/ft-ir-routine-spectrometer/alpha-ii-compact-ft-ir-spectrometer.html) spectra. Note that this chunk is Mac or Linux specific and so the directory structures would need to be changed slightly to run on Windows machines.
+The next chunk downloads the data needed for running this example. It assembles the various soil and crop measurements collected across Malawi and links these to [FT-IR](https://www.bruker.com/en/products-and-solutions/infrared-and-raman/ft-ir-routine-spectrometer/alpha-ii-compact-ft-ir-spectrometer.html) spectra. Note that this chunk is Mac or Linux specific and so the directory structures would need to be changed slightly to run on Windows machines.
 
 ```{r}
 # Create a data folder in your current working directory
-dir.create("MW_Zn", showWarnings = F)
-setwd("./MW_Zn")
-dir.create("Results", showWarnings = F)
+dir.create("MW_Zn_data", showWarnings=F)
+setwd("./MW_Zn_data")
+dir.create("./Results")
 
+# Data download
+download("https://osf.io/pdgk6/?raw=1", "MW_Zn_data.zip", mode="wb")
+unzip("MW_Zn_data.zip", overwrite = T)
+wchem <- read.table("MW_Zn_data.csv", header=T, sep=",") 
+sspec <- read.table("soil_MIR_spectra.csv", header=T, sep=",")
+cspec <- read.table("plant_MIR_spectra.csv", header=T, sep=",")
+
+# Merge the wet chemistry reference data frame with the corresponding spectra
+sdata <- merge(wchem, sspec, by = "ssid") ## soil data frame
+cdata <- merge(wchem, cspec, by = "csid") ## crop data frame
 ```
 
-The following chunk then writes out the dataframe `MW_Zn_data.csv` into your `./MW_Zn/Results` directory if you'd like to process those outputs in software other than R. It also generates a location map of where those soil and maize grain samples were obtained.
+The following chunk then writes out the data frames `MW_soil_Zn_data.csv` and `MW_crop_Zn_data.csv` into your `./MW_Zn_data/Results` directory if you'd like to process those outputs in software other than R. It also generates a location map of where those soil and plant samples were obtained.
 
+```{r}
+# Write out reference data frame
+write.csv(sdata, "./MW_Zn_data/Results/MW_soil_Zn_data.csv", row.names = F)
+write.csv(sdata, "./MW_Zn_data/Results/MW_crop_Zn_data.csv", row.names = F)
+
+# Soil sample locations
+w <- leaflet() %>%
+  setView(lng = mean(wchem$lon), lat = mean(wchem$lat), zoom = 8) %>%
+  addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
+  addCircleMarkers(adata$lon, adata$lat, clusterOptions = markerClusterOptions())
+w ## plot widget 
+```
