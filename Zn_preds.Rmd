@@ -52,7 +52,7 @@ invisible(lapply(packages, library, character.only = TRUE))
 
 The next chunk downloads the data needed for running this example. It assembles the various soil and crop measurements collected across Malawi and links these to [FT-IR](https://www.bruker.com/en/products-and-solutions/infrared-and-raman/ft-ir-routine-spectrometer/alpha-ii-compact-ft-ir-spectrometer.html) spectra. Note that this chunk is Mac or Linux specific and so the directory structures would need to be changed slightly to run on Windows machines.
 
-```{r}
+```{r, warning = FALSE}
 # Create a data folder in your current working directory
 dir.create("MW_Zn_data", showWarnings=F)
 setwd("./MW_Zn_data")
