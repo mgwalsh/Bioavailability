@@ -79,8 +79,8 @@ write.csv(sdata, "./MW_Zn_data/Results/MW_crop_Zn_data.csv", row.names = F)
 
 # Soil sample locations
 w <- leaflet() %>%
-  setView(lng = mean(wchem$lon), lat = mean(wchem$lat), zoom = 8) %>%
+  setView(lng = mean(wchem$lon), lat = mean(wchem$lat), zoom = 7) %>%
   addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
-  addCircleMarkers(adata$lon, adata$lat, clusterOptions = markerClusterOptions())
+  addCircleMarkers(wchem$lon, wchem$lat, clusterOptions = markerClusterOptions())
 w ## plot widget 
 ```
