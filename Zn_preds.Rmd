@@ -92,7 +92,7 @@ w ## plot widget
 
 # Predicting maize grain Zn levels from soil properties with MLAs
 
-This section introduces the main MLA workflow of the notebook. It uses topsoil (0-20 cm) reference wet chemistry soil features to predict maize grain Zn concentrations. The heuristics that might be used for diagnosing Zn deficiencies in crop tissues with [gold-standard](https://en.wikipedia.org/wiki/Gold_standard_(test)) reference criteria and measurements for both soils and crops are operationally constrained. Soils are relatively easy to collect and measure in an appropriate laboratory setting over the course of any given year; whereas, the collection and analysis of grain samples is restricted to very short time periods during or immediately after harvest. Both are expensive and time consuming. So, gold standard laboratory measurements will probably be quite hard to achieve in most operational and micronutrient monitoring settings in Africa, given the associated expenses, time constraints and potential lab delays. Nonetheless, they provide a baseline to compare to the spectral models that are developed in the subsequent sections of the notebook.
+This section introduces the main MLA workflow of the notebook. It uses topsoil (0-20 cm) reference wet chemistry soil features to predict maize grain Zn concentrations. The heuristics that might be used for diagnosing Zn deficiencies in crop tissues with [gold-standard](https://en.wikipedia.org/wiki/Gold_standard_(test)) reference criteria and measurements for both soils and crops are operationally constrained. Soils are relatively easy to collect and measure in an appropriate laboratory setting over the course of any given year; whereas, the collection and analysis of grain samples is restricted to very short time periods during or immediately after harvest. Both are expensive and time consuming. So, gold standard laboratory measurements would probably be quite hard to achieve in most operational and micronutrient monitoring settings in Africa, given the associated expense, time constraints and potential lab delays. Nonetheless, they provide a baseline to compare to the spectral models that are developed in the subsequent sections of the notebook.
 
 ```{r training_validation_approach, echo=FALSE, fig.align="center", fig.cap="MLA training, validation and prediction workflow.", out.width = '80%'}
 knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
@@ -101,19 +101,19 @@ knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
 We will be using a machine learning approach, which is *algorithmic*, rather than *data modeling* based (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)). The figure above shows the general workflow of the algorithmic approach that we apply here to predicting maize grain Zn levels. To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
-rm(list=setdiff(ls(), c("sdata", "cdata"))) ## scrubs extraneous objects in memory
+rm(list=setdiff(ls(), c("wchem", "sdata", "cdata"))) ## scrubs extraneous objects in memory
 
 # Set randomization seed
 seed <- 1235813
 set.seed(seed)
 
 # Randomize dataframe
-sdata <- sdata[sample(1:nrow(sdata)), ]
+wchem <- wchem[sample(1:nrow(sdata)), ]
 
 # Split data into calibration and validation sets
 gsIndex <- createDataPartition(wchem$Zn, p = 8/10, list=F, times = 1)
-cal <- sdata[ gsIndex,]
-val <- sdata[-gsIndex,]
+cal <- wchem[ gsIndex,]
+val <- wchem[-gsIndex,]
 
 # Set calibration labels
 labs <- c("Zn")
