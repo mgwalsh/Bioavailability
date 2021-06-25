@@ -199,6 +199,9 @@ summary(wst)
 There are many ways to quantify the uncertainty inherent in these predictions. We take a simple but quite robust approach here using quantile regression with [quantreg](https://cran.r-project.org/web/packages/quantreg/quantreg.pdf). The main interest is in the overall spread of the ensemble predictions; that is, the 90% prediction intervals for the entire dataset.
 
 ```{r}
+sdata$rf <- predict(wlist$rf, sdata)
+sdata$xb <- predict(wlist$xgbTree, sdata)
+sdata$cu <- predict(wlist$cubist, sdata)
 sdata$wst <- predict(wst, sdata)
 
 # quantile regression fit on whole dataset
