@@ -22,7 +22,7 @@ Zinc (Zn) deficiency is among the 5 most widespread MNDs (including iron, vitami
 
 Spectral signatures of soils, plants, animal tissues and materials generally are defined by their reflectance or absorbance as a function of wavelength in the electromagnetic spectrum. Under laboratory conditions, the signatures result from electronic transitions of atoms and vibrational stretching and bending of structural groups of atoms that form molecules or crystals. Spectroscopy has been shown to provide highly repeatable, rapid and low cost measurements of many different soil, plant and animal tissue properties in numerous studies. The amount of light absorbed by a sample can be measured with minimal sample preparation (primarily air-drying and fine grinding) across a wide range of ultra-violet (UV), visible (VIS), near (NIR) and mid-infrared (MIR) wavelengths to provide a unique spectral signature. An individual MIR measurement can be performed in about 30 seconds, in contrast to more conventional soil and plant tests, which are typically slow, labor-intensive, expensive and/or use hazardous chemicals, which have to be handled carefully. 
 
-In this notebook, we shall explore if Zn concentrations in maize grain can be reliably predicted from cheap fast, non-destructive and non-hazardous MIR spectral data (features), using [ICP-MS](https://en.wikipedia.org/wiki/Inductively_coupled_plasma_mass_spectrometry) as reference (label) data. The reference analytical methods are described in [Gashu et al (2021)](https://doi.org/10.1038/s41586-021-03559-3). 
+In this notebook, we shall explore if Zn concentrations in maize grain can be reliably predicted from cheap fast, non-destructive and non-hazardous MIR spectral data (features), using [ICP-MS](https://en.wikipedia.org/wiki/Inductively_coupled_plasma_mass_spectrometry) as reference data. The reference analytical methods are described in [Gashu et al (2021)](https://doi.org/10.1038/s41586-021-03559-3). 
 
 The two main empirical questions posed here are:
 
@@ -30,11 +30,11 @@ The two main empirical questions posed here are:
 
 * Can we use MIR spectra to predict Zn concentrations in maize grain reliably? If so, this would advance and enable localized Zn deficiency diagnostics and risk assessments that could potentially be carried out routinely, at low cost, and across large geographical regions and populations of interest. 
 
-The notebook is also intended as a self-learning exercise in [R](https://www.r-project.org/). It does not go into the details of the underlying [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) that is widely covered in the literature, but instead it focuses on [Chemometrics](https://en.wikipedia.org/wiki/Chemometrics) and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures of (features) relative to their corresponding reference measurements (labels). In this particular example, we shall use maize grain Zn reference data, and MIR spectral (soil and crop) data that were collected as part of the ongoing [GeoNutrition project](http://www.geonutrition.com) in Malawi. The described workflows might also be transferable to diagnosing other MNDs in soils and crops and/or to other geographies via e.g., [transfer learning](https://en.wikipedia.org/wiki/Transfer_learning) and/or other approaches ... tbd.
+The notebook is also intended for self-learning in [R](https://www.r-project.org/). It does not go into the details of the underlying [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) that is widely covered in the literature, but instead it focuses on [Chemometrics](https://en.wikipedia.org/wiki/Chemometrics) and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures of (features) relative to their corresponding reference measurements (labels). Chemometric techniques are are used extensively in analytical chemistry and [metabolomics](https://en.wikipedia.org/wiki/Metabolomics). In this particular example, we shall use maize grain Zn reference data, and MIR spectral (soil and crop) data that were collected as part of the ongoing [GeoNutrition project](http://www.geonutrition.com) in Malawi. The described workflows might also be transferable to diagnosing other MNDs in soils and crops and/or to other geographies via e.g., [transfer learning](https://en.wikipedia.org/wiki/Transfer_learning) and/or other approaches ... tbd.
 
 # General data setup
 
-To actually run this notebook, you will need to load the packages indicated in the chunk directly below. This allows you to assemble the wet chemistry and spectral dataframes, providing a lot of options to generate spectral predictions of Zn concentrations in soils and maize grain. The notebook itself is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/Zn_preds.Rmd), and you can fork and modify it from there as you see fit.
+To actually run this notebook, you will need to load the packages indicated in the chunk directly below. This allows you to assemble the wet chemistry and spectral dataframes, providing a lot of options that generate spectral predictions of Zn concentrations in soils and maize grain. The notebook itself is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/Zn_preds.Rmd), and you can fork and modify it from there as you see fit. Also the html version of this will skip certain repetitive sections, but these are actually included in the markdown script for reference.
 
 ```{r}
 # Package names
@@ -75,12 +75,12 @@ exdir <- "./Figures"
 unzip("figures.zip", exdir = exdir, overwrite = T)
 ```
 
-The following chunk then writes out the data frames `MW_soil_Zn_data.csv` and `MW_crop_Zn_data.csv` into your `./MW_Zn_data/Results` directory if you'd like to process those outputs in software other than R. It also generates a location map of where in Malawi those soil and plant samples were obtained.
+The following chunk then writes out the data frames `MW_soil_Zn_data.csv` and `MW_crop_Zn_data.csv` into your `./MW_Zn_data/Results` directory if you'd like to process those outputs in software other than R. It also generates an overview map of where in Malawi those soil and plant samples were obtained.
 
 ```{r}
 # Write out reference data frame
 write.csv(sdata, "./MW_Zn_data/Results/MW_soil_Zn_data.csv", row.names = F)
-write.csv(sdata, "./MW_Zn_data/Results/MW_crop_Zn_data.csv", row.names = F)
+write.csv(cdata, "./MW_Zn_data/Results/MW_crop_Zn_data.csv", row.names = F)
 
 # Soil sample locations
 w <- leaflet() %>%
@@ -92,7 +92,7 @@ w ## plot widget
 
 # Predicting maize grain Zn levels from soil properties with MLAs
 
-This section introduces the main MLA workflow of the notebook. It uses topsoil (0-20 cm) reference wet chemistry soil features to predict maize grain Zn concentrations. The heuristics that might be used for diagnosing Zn deficiencies in crop tissues with [gold-standard](https://en.wikipedia.org/wiki/Gold_standard_(test)) reference criteria and measurements for both soils and crops are operationally constrained. Soils are relatively easy to collect and measure in an appropriate laboratory setting over the course of any given year; whereas, the collection and analysis of grain samples is restricted to very short time periods during or immediately after harvest. So, gold standard laboratory measurements will probably be quite hard to achieve in most operational and Zn monitoring settings in Africa given the associated expenses, time constraints and potential lab delays. Nonetheless, they provide a baseline to compare to the spectral models that are developed in the subsequent sections of the notebook.
+This section introduces the main MLA workflow of the notebook. It uses topsoil (0-20 cm) reference wet chemistry soil features to predict maize grain Zn concentrations. The heuristics that might be used for diagnosing Zn deficiencies in crop tissues with [gold-standard](https://en.wikipedia.org/wiki/Gold_standard_(test)) reference criteria and measurements for both soils and crops are operationally constrained. Soils are relatively easy to collect and measure in an appropriate laboratory setting over the course of any given year; whereas, the collection and analysis of grain samples is restricted to very short time periods during or immediately after harvest. Both are expensive and time consuming. So, gold standard laboratory measurements will probably be quite hard to achieve in most operational and micronutrient monitoring settings in Africa, given the associated expenses, time constraints and potential lab delays. Nonetheless, they provide a baseline to compare to the spectral models that are developed in the subsequent sections of the notebook.
 
 ```{r training_validation_approach, echo=FALSE, fig.align="center", fig.cap="MLA training, validation and prediction workflow.", out.width = '80%'}
 knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
@@ -111,7 +111,7 @@ set.seed(seed)
 sdata <- sdata[sample(1:nrow(sdata)), ]
 
 # Split data into calibration and validation sets
-gsIndex <- createDataPartition(sdata$Zn, p = 8/10, list=F, times = 1)
+gsIndex <- createDataPartition(wchem$Zn, p = 8/10, list=F, times = 1)
 cal <- sdata[ gsIndex,]
 val <- sdata[-gsIndex,]
 
@@ -125,7 +125,7 @@ wcal <- select(cal, 7:17)
 
 ## Model calibration with `caretEnsemble`
 
-The soil features in this initial case are all wet chemistry based and include: pH, cation exchange capacity, soil organic carbon, metal oxalates and various soil Zn extractions. We calibrate 3 models using the [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package with [k-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics) and default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning). Note that if you would like more control over the model fits, you can also use the respective `tuneList` arguments. All of the calculations can be (are) parallelized to make efficient use of either local, GPU and/or cloud-based computing resources. 
+The soil features in this initial case are all wet chemistry based and include: pH, cation exchange capacity, soil organic carbon, metal oxalates and various soil Zn extractions (see [Gashu et al (2021)]()). We calibrate 3 models using the [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package with [k-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics) and default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning). Note that if you would like more control over the model fits, you can also use the respective `tuneList` arguments. Also note that all of the calculations can be (are) parallelized to make efficient use of either local, GPU and/or cloud-based computing resources. 
 
 ```{r, warning = FALSE}
 # Start doParallel to parallelize model fitting
