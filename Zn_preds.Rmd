@@ -136,14 +136,17 @@ registerDoParallel(mc)
 # Specify model training controls
 tc <- trainControl(method = "cv", number = 10, allowParallel = TRUE, savePredictions="final")
 
-# Fit 3 calibration models using the spectral principal component features
+# Fit 3 calibration models using the soil wet chemistry features
 wlist <- caretList(wcal, lcal,
                    trControl = tc,
                    tuneList = NULL,
                    methodList = c("rf", "xgbTree", "cubist"),
                    preProcess = c("center","scale"),
                    metric = "RMSE")
+
 stopCluster(mc)
+fname <- paste("./MW_Zn_data/Results/", labs, "_wlist.rds", sep = "")
+saveRDS(wlist, fname)
 ```
 
 ## Model stacking with `caret`
@@ -160,7 +163,7 @@ val$xb <- predict(wlist$xgbTree, wval)
 val$cu <- predict(wlist$cubist, wval)
 ```
 
-This next chunk fits the model ensemble with the `glmStepAIC` function from the `MASS` library using the **validation dataframe**. You should explore other options here, but the current stacking option provides a reasonable combination and weighting of the 3 models that were produced in the ensemble training steps.
+This next chunk fits the model ensemble with the `glmStepAIC` function from the `MASS` library using the **validation dataframe**. You should explore other options here, but this current stacking option provides a reasonable combination and weighting of the 3 models that were produced in the previous ensemble training steps.
 
 ```{r, results='hide'}
 lval <- as.vector(t(val[labs]))
@@ -188,7 +191,6 @@ saveRDS(st, fname)
 ```{r, echo = FALSE}
 summary(wst)
 ```
-
 
 ## Ensemble prediction uncertainty estimates
 
