@@ -161,15 +161,15 @@ wval <- select(val, 7:17) ## wet-chem soil features
 
 # Individual model predictions on the validation set
 val$rf <- predict(wlist$rf, wval)
-val$xb <- predict(wlist$xgbTree, wval)
+val$xt <- predict(wlist$xgbTree, wval)
 val$cu <- predict(wlist$cubist, wval)
 ```
 
-This next chunk fits the model ensemble with the `glmStepAIC` function from the `MASS` library using the **validation dataframe**. You should explore other options here, but this current stacking option provides a reasonable combination and weighting of the 3 models that were produced in the previous ensemble training steps.
+This next chunk fits the model ensemble with the `glmStepAIC` function from the `MASS` library using the *validation dataframe*. You should explore other options here, but the current stacking option provides a reasonable combination and weighting of the 3 models that were produced in the previous ensemble training steps.
 
 ```{r, results='hide'}
 lval <- as.vector(t(val[labs]))
-fval <- select(val,rf,xb,cu) ## subset validation models
+fval <- select(val,rf,xt,cu) ## subset validation models
 
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
@@ -200,7 +200,7 @@ There are many ways to quantify the uncertainty inherent in these predictions. W
 
 ```{r}
 sdata$rf <- predict(wlist$rf, sdata)
-sdata$xb <- predict(wlist$xgbTree, sdata)
+sdata$xt <- predict(wlist$xgbTree, sdata)
 sdata$cu <- predict(wlist$cubist, sdata)
 sdata$wst <- predict(wst, sdata)
 
