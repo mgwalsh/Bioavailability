@@ -177,7 +177,7 @@ registerDoParallel(mc)
 
 # Model setup and fitting
 set.seed(seed)
-tc <- trainControl(method="repeatedcv", number=10, repeats=3, allowParallel=T)
+tc <- trainControl(method="repeatedcv", number = 10, repeats = 3, allowParallel=T)
 
 wst <- train(fval, lval,
              method = "glmStepAIC",
@@ -186,7 +186,7 @@ wst <- train(fval, lval,
 
 val$wst <- predict(wst, val) ## stacked predictions
 stopCluster(mc)
-fname <- paste("./MW_Zn_data/Results/", labs, "_st.rds", sep = "")
+fname <- paste("./MW_Zn_data/Results/", labs, "_wst.rds", sep = "")
 saveRDS(wst, fname)
 ```
 
