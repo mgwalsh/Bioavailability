@@ -67,7 +67,9 @@ cspec <- read.table("plant_MIR_spectra.csv", header=T, sep=",")
 
 # Merge the wet chemistry reference data frame with the corresponding spectra
 sdata <- merge(wchem, sspec, by = "ssid") ## soil data frame
+sdata <- sdata[complete.cases(sdata[ ,c(7:3594)]), ] ## removes incomplete cases
 cdata <- merge(wchem, cspec, by = "csid") ## crop data frame
+cdata <- sdata[complete.cases(cdata[ ,c(18:3594)]), ]
 
 # Download figures
 download("https://osf.io/42gry/", "figures.zip", mode = "wb")
@@ -101,22 +103,22 @@ knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
 We will be using a machine learning approach, which is *algorithmic*, rather than *data modeling* based (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)). The figure above shows the general workflow of the algorithmic approach that we apply here to predicting maize grain Zn levels. To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
-rm(list=setdiff(ls(), c("wchem", "sdata", "cdata"))) ## scrubs extraneous objects in memory
+rm(list=setdiff(ls(), c("sdata", "cdata"))) ## scrubs extraneous objects in memory
 
 # Set randomization seed
 seed <- 1235813
 set.seed(seed)
 
 # Randomize dataframe
-wchem <- wchem[sample(1:nrow(sdata)), ]
+wchem <- sdata[sample(1:nrow(sdata)), ]
 
 # Split data into calibration and validation sets
-gsIndex <- createDataPartition(wchem$Zn, p = 8/10, list=F, times = 1)
-cal <- wchem[ gsIndex,]
-val <- wchem[-gsIndex,]
+gsIndex <- createDataPartition(sdata$Zn, p = 8/10, list=F, times = 1)
+cal <- sdata[ gsIndex,]
+val <- sdata[-gsIndex,]
 
 # Set calibration labels
-labs <- c("Zn")
+labs <- c("Zn") ## maize grain label
 lcal <- as.vector(t(cal[labs]))
 
 # Calibration features
@@ -125,7 +127,7 @@ wcal <- select(cal, 7:17)
 
 ## Model calibration with `caretEnsemble`
 
-The soil features in this initial case are all wet chemistry based and include: pH, cation exchange capacity, soil organic carbon, metal oxalates and various soil Zn extractions (see [Gashu et al (2021)]()). We calibrate 3 models using the [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package with [k-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics) and default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning). Note that if you would like more control over the model fits, you can also use the respective `tuneList` arguments. Also note that all of the calculations can be (are) parallelized to make efficient use of either local, GPU and/or cloud-based computing resources. 
+The soil features in this initial case are all wet chemistry based and include: pH, cation exchange capacity, soil organic carbon, metal oxalates and various soil Zn extractions (see [Gashu et al (2021)]()). We calibrate 3 models using the [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package with [k-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics) and default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning). Note that if you would like more control over the model fits, you can also use the respective `tuneList` arguments. Also note that all of the calculations can be (are) parallelized to make efficient use of either local, GPU or cloud-based computing resources. 
 
 ```{r, warning = FALSE}
 # Start doParallel to parallelize model fitting
@@ -151,7 +153,7 @@ saveRDS(wlist, fname)
 
 ## Model stacking with `caret`
 
-The main point here is not to evaluate a *best individual model* but rather to evaluate the combination of the previously fitted models against a 20% [hold-out](https://en.wikipedia.org/wiki/Training,_validation,_and_test_sets) validation dataset. This provides robust statistical estimates of how the different models should be weighted against one-another. This chunk generates the individual model predictions for the validation data frame.
+The point here is not to evaluate a *best individual model* but rather to evaluate the combination of the previously fitted models against a 20% [hold-out](https://en.wikipedia.org/wiki/Training,_validation,_and_test_sets) validation dataset. This provides robust statistical estimates of how the different models should be weighted against one-another. This chunk generates the individual model predictions for the validation data frame.
 
 ```{r, warning = FALSE}
 # Validation features
@@ -185,7 +187,7 @@ wst <- train(fval, lval,
 val$wst <- predict(wst, val) ## stacked predictions
 stopCluster(mc)
 fname <- paste("./MW_Zn_data/Results/", labs, "_st.rds", sep = "")
-saveRDS(st, fname)
+saveRDS(wst, fname)
 ```
 
 ```{r, echo = FALSE}
