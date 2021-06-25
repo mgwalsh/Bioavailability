@@ -1,5 +1,5 @@
 ---
-title: Spectrometry workflows for predicting zinc levels in maize grain
+title: Chemometric workflows for predicting zinc levels in maize grain
 author: M.G. Walsh, P.C. Nalivata, E.K. Towett, S.P. MacGrath, R.M. Lark and M.R. Broadley
 date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
 output:
