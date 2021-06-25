@@ -98,7 +98,7 @@ This section introduces the main MLA workflow of the notebook. It uses topsoil (
 knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
 ```
 
-We will be using a machine learning approach, which is *algorithmic*, rather than *data modeling* based (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)). The figure above shows the basic workflow of the algorithmic approach that we apply here to predicting maize grain Zn. To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
+We will be using a machine learning approach, which is *algorithmic*, rather than *data modeling* based (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)). The figure above shows the general workflow of the algorithmic approach that we apply here to predicting maize grain Zn levels. To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
 rm(list=setdiff(ls(), c("sdata", "cdata"))) ## scrubs extraneous objects in memory
@@ -125,7 +125,7 @@ wcal <- select(cal, 7:17)
 
 ## Model calibration with `caretEnsemble`
 
-The soil features in this initial case are all wet chemistry based and include: pH, cation exchange capacity, soil organic carbon, metal oxalates and various soil Zn extractions. We calibrate 3 models using the [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package with [10-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics) and default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning). Note that if you would like more control over the model fits, you can also use the respective `tuneList` arguments. All of the calculations can be (are) parallelized to make efficient use of either local, GPU and/or cloud-based computing resources. 
+The soil features in this initial case are all wet chemistry based and include: pH, cation exchange capacity, soil organic carbon, metal oxalates and various soil Zn extractions. We calibrate 3 models using the [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package with [k-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics) and default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning). Note that if you would like more control over the model fits, you can also use the respective `tuneList` arguments. All of the calculations can be (are) parallelized to make efficient use of either local, GPU and/or cloud-based computing resources. 
 
 ```{r, warning = FALSE}
 # Start doParallel to parallelize model fitting
