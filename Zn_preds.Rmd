@@ -202,12 +202,12 @@ There are many ways to quantify the uncertainty inherent in these predictions. W
 sdata$wst <- predict(wst, sdata)
 
 # quantile regression fit on whole dataset
-stQ <- rq(Zn~wst, tau=c(0.025,0.5,0.975), data = sdata)
+stQ <- rq(Zn~wst, tau=c(0.05,0.5,0.95), data = sdata)
 
 # plot
 par(pty="s")
 plot(Zn~wst, xlab="Ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.0, 
-     xlim=c(10,50), ylim=c(10,50), samp)
+     xlim=c(10,50), ylim=c(10,50), sdata)
 curve(stQ$coefficients[4]*x+stQ$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
 abline(c(0,1), col="grey", lwd=1)
 ```
