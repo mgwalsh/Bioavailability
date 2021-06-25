@@ -30,7 +30,7 @@ The two main empirical questions posed here are:
 
 * Can we use MIR spectra to predict Zn concentrations in maize grain reliably? If so, this would advance and enable localized Zn deficiency diagnostics and risk assessments that could potentially be carried out routinely, at low cost, and across large geographical regions and populations of interest. 
 
-The notebook is also intended for self-learning in [R](https://www.r-project.org/). It does not go into the details of the underlying [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) that is widely covered in the literature, but instead it focuses on [spectrometry](https://en.wikipedia.org/wiki/Spectrophotometry) and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures of (features) relative to their corresponding reference measurements (labels). In this particular example, we shall use maize grain Zn reference data, and MIR spectral (soil and crop) data that were collected as part of the ongoing [GeoNutrition project](http://www.geonutrition.com) in Malawi. The described workflows might also be transferable to diagnosing other MNDs in soils and crops and/or to other geographies via e.g., [transfer learning](https://en.wikipedia.org/wiki/Transfer_learning) and/or other approaches ... tbd.
+The notebook is also intended as a self-learning exercise in [R](https://www.r-project.org/). It does not go into the details of the underlying [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) that is widely covered in the literature, but instead it focuses on [Chemometrics](https://en.wikipedia.org/wiki/Chemometrics) and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures of (features) relative to their corresponding reference measurements (labels). In this particular example, we shall use maize grain Zn reference data, and MIR spectral (soil and crop) data that were collected as part of the ongoing [GeoNutrition project](http://www.geonutrition.com) in Malawi. The described workflows might also be transferable to diagnosing other MNDs in soils and crops and/or to other geographies via e.g., [transfer learning](https://en.wikipedia.org/wiki/Transfer_learning) and/or other approaches ... tbd.
 
 # General data setup
 
@@ -151,7 +151,7 @@ saveRDS(wlist, fname)
 
 ## Model stacking with `caret`
 
-The main point here is not to evaluate a *best individual model* but rather to evaluate the combination of the previously fitted models against a 20% [hold-out](https://en.wikipedia.org/wiki/Training,_validation,_and_test_sets) validation dataset. This provides robust statistical estimates of how the different models should be weighted against one-another. This chunk generates the individual model predictions for the validation dataframe.
+The main point here is not to evaluate a *best individual model* but rather to evaluate the combination of the previously fitted models against a 20% [hold-out](https://en.wikipedia.org/wiki/Training,_validation,_and_test_sets) validation dataset. This provides robust statistical estimates of how the different models should be weighted against one-another. This chunk generates the individual model predictions for the validation data frame.
 
 ```{r, warning = FALSE}
 # Validation features
