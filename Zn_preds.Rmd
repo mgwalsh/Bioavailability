@@ -38,7 +38,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r}
 # Package names
-packages <- c("downloader", "devtools", "caret", "caretEnsemble", "plyr", "MASS", "randomForest", "gbm", "xgboost", "Cubist", "quantreg", "doParallel")
+packages <- c("downloader", "devtools", "leaflet", "caret", "caretEnsemble", "plyr", "MASS", "randomForest", "gbm", "xgboost", "Cubist", "quantreg", "doParallel")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -103,7 +103,7 @@ knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
 We will be using a machine learning approach, which is *algorithmic*, rather than *data modeling* based (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)). The figure above shows the general workflow of the algorithmic approach that we apply here to predicting maize grain Zn levels. To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
-rm(list=setdiff(ls(), c("sdata", "cdata"))) ## scrubs extraneous objects in memory
+rm(list=setdiff(ls(), c("wchem", "sdata", "cdata"))) ## scrubs extraneous objects in memory
 
 # Set randomization seed
 seed <- 1235813
@@ -119,12 +119,12 @@ labs <- c("Zn") ## maize grain label
 lcal <- as.vector(t(cal[labs]))
 
 # Calibration features
-wcal <- select(cal, 7:17)
+wcal <- cal[ ,7:17]
 ```
 
 ## Model calibration with `caretEnsemble`
 
-The soil features in this initial model are all wet chemistry based and include: pH, cation exchange capacity, soil organic carbon, metal oxalates and various soil Zn extractions (see [Gashu et al (2021)]()). We calibrate 3 models using the [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package with [k-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics) and default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning). Note that if you would like more control over the model fits, you can also use the respective `tuneList` arguments. Also note that all of the calculations can be (are) parallelized to make efficient use of either local, GPU or cloud-based computing resources. 
+The soil features in this initial model are are wet chemistry based and include: pH, cation exchange capacity, soil organic carbon, metal oxalates and various soil Zn extractions (see [Gashu et al (2021)]()). We calibrate 3 models using the [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package with [k-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics) and default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning). Note that if you would like more control over the model fits, you can also use the respective `tuneList` arguments. Also note that all of the calculations can be (are) parallelized to make efficient use of either local, GPU or cloud-based computing resources. 
 
 ```{r, warning = FALSE}
 # Start doParallel to parallelize model fitting
@@ -152,21 +152,17 @@ saveRDS(wlist, fname)
 
 The point here is not to evaluate a *best individual model* but rather to evaluate the combination of the previously fitted models against a 20% [hold-out](https://en.wikipedia.org/wiki/Training,_validation,_and_test_sets) validation dataset. This provides robust statistical estimates of how the different models should be weighted against one-another. This chunk generates the individual model predictions for the validation data frame.
 
-```{r, warning = FALSE}
-# Validation features
-wval <- select(val, 7:17) ## wet-chem soil features
-
-# Individual model predictions on the validation set
-val$rf <- predict(wlist$rf, wval)
-val$gb <- predict(wlist$gbm, wval)
-val$cu <- predict(wlist$cubist, wval)
-```
-
 This next chunk fits the model ensemble with the `glmStepAIC` function from the `MASS` library using the *validation dataframe*. You should explore other options here, but the current stacking option provides a reasonable combination and weighting of the 3 models that were produced in the previous ensemble training steps.
 
-```{r, results='hide'}
+```{r, warning = FALSE}
+# Individual model predictions on the validation set
+val$rf <- predict(wlist$rf, val)
+val$gb <- predict(wlist$gbm, val)
+val$cu <- predict(wlist$cubist, val)
+
+# Set labels and features
 lval <- as.vector(t(val[labs]))
-fval <- select(val,rf,gb,cu) ## subset validation models
+fval <- val[ ,19:21] ## validation features
 
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
