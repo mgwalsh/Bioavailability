@@ -225,7 +225,7 @@ sdata$sw50 <- swQ$coefficients[4]*sdata$sw+swQ$coefficients[3] ## 50% quantile
 sdata$sw90 <- swQ$coefficients[6]*sdata$sw+swQ$coefficients[5] ## 90% quantile
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between debiased predictions (based on soil wet chemistry properties) and measured maize grain zinc (Zn) levels."}
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median debiased predictions (based on soil wet chemistry properties) and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~sw50, xlab="Soil wet-chemistry ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.2,
