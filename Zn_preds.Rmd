@@ -16,7 +16,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Micronutrients i.e., the essential vitamins and minerals, are vital for healthy child development as well as prevention of morbidity and diseases in adults. With the exception of vitamin D, micronutrients are not produced in the body and must be obtained from the diet. Although people only need small amounts of micronutrients, consuming the recommended amounts is important, as *micronutrient deficiencies* (MNDs) can have severe consequences on both health and well-being. However, national surveys containing dietary micronutrient intake data are not routinely collected in most developing countries because they are expensive and time consuming to obtain both in the field and the laboratory. Also, the databases that are needed to analyze dietary intakes should be geographically explicit to be effective, but they are often completely lacking and/or not up-to-date in Africa. Similarly, agronomic interventions that focus on plant micronutrients for improving cropland productivity are inadequately supported by spatial and temporal data.
+Micronutrients i.e., the essential vitamins and minerals, are vital for healthy child development as well as for the prevention of morbidity and diseases in adults. With the exception of vitamin D, micronutrients are not produced in the body and must be obtained from the diet. Although people only need small amounts of micronutrients, consuming the recommended amounts is important, as *micronutrient deficiencies* (MNDs) can have severe consequences on both health and well-being. However, national surveys containing dietary micronutrient intake data are not routinely collected in most developing countries because they are expensive and time consuming to obtain both in the field and the laboratory. Also, the databases that are needed to analyze dietary intakes should be geographically explicit to be effective, but they are often completely lacking and/or not up-to-date in Africa. Similarly, agronomic interventions that focus on plant micronutrients for improving cropland productivity are inadequately supported by spatial and temporal data.
 
 Zinc (Zn) deficiency is among the 5 most widespread MNDs (including iron, vitamin A, iodine, folate, in addition to zinc) that are of global concern ([Bailey et al (2015)](https://doi.org/10.1159/000371618)). Diagnosing zinc deficiency in soils and maize grain is the focus of this notebook. Zn is a trace element found in varying concentrations in all soils, plants and animals. It is essential for the normal growth of higher plants, animals and humans. While Zn is needed in only small quantities, if those amounts are inadequate, plants and/or animals will suffer from physiological stress brought about by the dysfunction of several enzyme systems and other metabolic functions in which Zn plays a key role see [Wessels and Brown (2012)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0050568). In Malawi, Zn deficiency prevalence rates of ~60% in people have been reported based on a national survey of serum [biomarker](https://en.wikipedia.org/wiki/Biomarker) Zn concentrations ([Likoswe et al., 2020](https://doi.org/10.3390/nu12061563)). The prevalence may be even higher in rural areas ([Siyame et al., 2013](https://doi.org/10.1024/0300-9831/a000158)). The main causes of Zn deﬁciencies in food crops are soil-related including: total Zn content, redox potential and pH, mineralogy, the activity of soil microorganisms, presence of other nutrients, and climate conditions, see e.g., [Noulas et al (2018)](https://doi.org/10.1016/j.jtemb.2018.02.009).
 
@@ -205,7 +205,7 @@ swQ <- rq(Zn~sw, tau=c(0.05,0.5,0.95), data = sdata)
 summary(swQ)
 ```
 
-```{r, fig.align = "center", fig.cap = "Relationship between predicted and measured maize grain zinc (Zn) levels."}
+```{r, fig.align = "center", fig.cap = "Relationship between predicted (based on soil wet chemistry properties) and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~sw, xlab="Soil wet-chemistry ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.2, 
@@ -214,6 +214,15 @@ curve(swQ$coefficients[2]*x+swQ$coefficients[1], add=T, from=10, to=50, col="blu
 curve(swQ$coefficients[4]*x+swQ$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
 curve(swQ$coefficients[6]*x+swQ$coefficients[5], add=T, from=10, to=50, col="blue", lwd=2)
 abline(c(0,1), col="grey", lwd=1)
+```
+
+While these predictions are clearly offset we can adjust for the offset by debiasing them using the following chunck. This would adjust the previous graph, but does not alter the notion that indeed soil properties are indeed linked to Zn concentrations in maize grain in Malawi.  
+
+```{r}
+# Debiasing
+sdata$sw05 <- swQ$coefficients[2]*sdata$sw+swQ$coefficients[1]
+sdata$sw50 <- swQ$coefficients[4]*sdata$sw+swQ$coefficients[3]
+sdata$sw90 <- swQ$coefficients[6]*sdata$sw+swQ$coefficients[5]
 ```
 
 # Predicting maize grain Zn from soil and plant spectra
