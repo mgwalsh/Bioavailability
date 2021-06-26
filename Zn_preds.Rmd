@@ -110,7 +110,7 @@ seed <- 1235813
 set.seed(seed)
 
 # Randomize dataframe
-wchem <- sdata[sample(1:nrow(sdata)), ]
+sdata <- sdata[sample(1:nrow(sdata)), ]
 
 # Split data into calibration and validation sets
 gsIndex <- createDataPartition(sdata$Zn, p = 8/10, list=F, times = 1)
