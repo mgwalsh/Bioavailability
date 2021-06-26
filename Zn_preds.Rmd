@@ -109,9 +109,6 @@ rm(list=setdiff(ls(), c("sdata", "cdata"))) ## scrubs extraneous objects in memo
 seed <- 1235813
 set.seed(seed)
 
-# Randomize dataframe
-sdata <- sdata[sample(1:nrow(sdata)), ]
-
 # Split data into calibration and validation sets
 gsIndex <- createDataPartition(sdata$Zn, p = 8/10, list=F, times = 1)
 cal <- sdata[ gsIndex,]
