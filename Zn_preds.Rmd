@@ -103,7 +103,7 @@ knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
 We will be using an *algorithmic* (ML), rather than a *data modeling* based approach (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)). See the figure directly above.  To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
-rm(list=setdiff(ls(), c("wchem", "sdata", "cdata"))) ## scrubs extraneous objects in memory
+rm(list=setdiff(ls(), c("sdata", "cdata"))) ## scrubs extraneous objects in memory
 
 # Set randomization seed
 seed <- 1235813
@@ -198,13 +198,15 @@ sdata$cu <- predict(wlist$cubist, sdata)
 sdata$sw <- predict(sw, sdata)
 
 # quantile regression fit on whole dataset
-stQ <- rq(Zn~sw, tau=c(0.05,0.5,0.95), data = sdata)
+swQ <- rq(Zn~sw, tau=c(0.05,0.5,0.95), data = sdata)
 
 # plot
 par(pty="s")
 plot(Zn~sw, xlab="Ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.0, 
      xlim=c(10,50), ylim=c(10,50), sdata)
-curve(stQ$coefficients[4]*x+stQ$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
+curve(swQ$coefficients[2]*x+swQ$coefficients[1], add=T, from=0, to=5, col="blue", lwd=2)
+curve(swQ$coefficients[4]*x+swQ$coefficients[3], add=T, from=0, to=5, col="red", lwd=2)
+curve(swQ$coefficients[6]*x+swQ$coefficients[5], add=T, from=0, to=5, col="blue", lwd=2)
 abline(c(0,1), col="grey", lwd=1)
 ```
 
