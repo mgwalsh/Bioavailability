@@ -100,7 +100,7 @@ This section introduces the main machine learning workflow of the notebook. It u
 knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
 ```
 
-We will be using a ML approach which is *algorithmic*, rather than *data modeling* based (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)), see the figure directly above.  To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
+We will be using an *algorithmic* (ML), rather than a *data modeling* based approach (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)). See the figure directly above.  To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
 rm(list=setdiff(ls(), c("wchem", "sdata", "cdata"))) ## scrubs extraneous objects in memory
