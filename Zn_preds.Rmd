@@ -50,7 +50,7 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(packages, library, character.only = TRUE))
 ```
 
-The next chunk downloads the data needed for running this example. It assembles the various soil and crop reference measurements collected across Malawi and links these to [Bruker HTS-XT](https://www.bruker.com/en/products-and-solutions/infrared-and-raman/ft-ir-routine-spectrometer/hts-xt-microplate-reader.html) spectra. Note that this chunk is Mac or Linux specific and so the directory structures would need to be changed slightly to run on Windows machines.
+The next chunk downloads the data needed for running this example. It assembles the various soil and crop reference measurements collected across Malawi and links those to [Bruker HTS-XT](https://www.bruker.com/en/products-and-solutions/infrared-and-raman/ft-ir-routine-spectrometer/hts-xt-microplate-reader.html) spectra. Note that this chunk is Mac or Linux specific and so the directory structures would need to be changed slightly to run on Windows machines.
 
 ```{r, warning = FALSE}
 # Create a data folder in your current working directory
@@ -94,13 +94,13 @@ w ## plot widget
 
 # Predicting maize grain Zn levels from soil properties with MLAs
 
-This section introduces the main MLA workflow of the notebook. It uses topsoil (0-20 cm) reference wet chemistry soil features to predict maize grain Zn concentrations. The heuristics that might be used for diagnosing Zn deficiencies in crop tissues with [gold-standard](https://en.wikipedia.org/wiki/Gold_standard_(test)) reference criteria and measurements for both soils and crops are operationally constrained. Soils are relatively easy to collect and measure in an appropriate laboratory setting over the course of any given year; whereas, the collection and analysis of grain samples is restricted to very short time periods during or immediately after harvest. Both are expensive and time consuming. So, gold standard laboratory measurements would probably be quite hard to achieve in most operational and micronutrient monitoring settings in Africa, given the associated expense, time constraints and potential lab delays. Nonetheless, they provide a baseline to compare to the spectral models that are developed in the subsequent sections of the notebook.
+This section introduces the main machine learning workflow of the notebook. It uses topsoil (0-20 cm) reference wet chemistry soil features to predict maize grain Zn concentrations. The heuristics that might be used for diagnosing Zn deficiencies in crop tissues with [gold-standard](https://en.wikipedia.org/wiki/Gold_standard_(test)) reference criteria and measurements for both soils and crops are operationally constrained. Soils are relatively easy to collect and measure in an appropriate laboratory setting over the course of any given year; whereas, the collection and analysis of grain samples is restricted to very short time periods during or immediately after harvest. Both are expensive and time consuming. So, gold standard laboratory measurements would probably be quite hard to achieve in most operational and micronutrient monitoring settings in Africa, given the associated expense, time constraints and potential lab delays. Nonetheless, they provide a baseline to compare to the spectral models that are developed in the subsequent sections of the notebook.
 
 ```{r training_validation_approach, echo=FALSE, fig.align="center", fig.cap="MLA training, validation and prediction workflow.", out.width = '80%'}
 knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
 ```
 
-We will be using a machine learning approach, which is *algorithmic*, rather than *data modeling* based (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)). The figure above shows the general workflow of the algorithmic approach that we apply here to predicting maize grain Zn levels. To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
+We will be using a ML approach which is *algorithmic*, rather than *data modeling* based (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)), see the figure directly above.  To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
 rm(list=setdiff(ls(), c("wchem", "sdata", "cdata"))) ## scrubs extraneous objects in memory
