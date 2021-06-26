@@ -11,7 +11,7 @@ output:
 ---
 
 ```{r, echo=FALSE}
-knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
 # Introduction
@@ -52,7 +52,7 @@ invisible(lapply(packages, library, character.only = TRUE))
 
 The next chunk downloads the data needed for running this example. It assembles the various soil and crop reference measurements collected across Malawi and links those to [Bruker HTS-XT](https://www.bruker.com/en/products-and-solutions/infrared-and-raman/ft-ir-routine-spectrometer/hts-xt-microplate-reader.html) spectra. Note that this chunk is Mac or Linux specific and so the directory structures would need to be changed slightly to run on Windows machines.
 
-```{r, warning = FALSE}
+```{r}
 # Create a data folder in your current working directory
 dir.create("MW_Zn_data", showWarnings=F)
 setwd("./MW_Zn_data")
@@ -100,7 +100,7 @@ This section introduces the main machine learning workflow of the notebook. It u
 knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
 ```
 
-We will be using an *algorithmic* (ML), rather than a *data modeling* based approach (see: [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)). See the figure directly above.  To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
+We will be using an *algorithmic* (ML), rather than a *data modeling* based approach [Breiman (2001)](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf). See the figure directly above. To start the fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
 rm(list=setdiff(ls(), c("sdata", "cdata"))) ## scrubs extraneous objects in memory
@@ -124,7 +124,7 @@ wcal <- cal[ ,7:17]
 
 ## Model calibration with `caretEnsemble`
 
-The soil features in this initial model are are wet chemistry based and include: pH, cation exchange capacity, soil organic carbon, metal oxalates and various soil Zn extractions (see [Gashu et al (2021)]()). We calibrate 3 models using the [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package with [k-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics) and default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning). Note that if you would like more control over the individual model fits, you can also use their respective `tuneList` arguments. Also note that all of the calculations can be (are) parallelized to make efficient use of either local, GPU or cloud-based computing resources. 
+The soil features in this initial model are are wet chemistry based and include: pH, cation exchange capacity, soil organic carbon, metal oxalates and various soil Zn extractions, see [Gashu et al (2021)](https://doi.org/10.1038/s41586-021-03559-3). We calibrate 3 models using the [`caretEnsemble`](https://cran.r-project.org/web/packages/caretEnsemble/index.html) package with [k-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics) and default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning). Note that if you would like more control over the individual model fits, you can also use their respective `tuneList` arguments. Also note that all of the calculations can be (are) parallelized to make efficient use of either local, GPU or cloud-based computing resources. 
 
 ```{r, results = 'hide'}
 # Start doParallel to parallelize model fitting
@@ -191,7 +191,7 @@ summary(sw)
 
 There are many ways to quantify the uncertainty inherent in these predictions. We take a simple but quite robust approach here using quantile regression ([quantreg](https://cran.r-project.org/web/packages/quantreg/quantreg.pdf)). The main interest is in the overall spread of the ensemble predictions; that is, the 90% prediction intervals for the entire dataset.
 
-```{r, warning = FALSE, results = 'hide'}
+```{r, results = 'hide'}
 sdata$rf <- predict(wlist$rf, sdata)
 sdata$gb <- predict(wlist$gbm, sdata)
 sdata$cu <- predict(wlist$cubist, sdata)
@@ -218,7 +218,7 @@ abline(c(0,1), col="grey", lwd=1)
 
 # Predicting maize grain Zn from soil and plant spectra
 
-One potentially problematic factor for many MLAs is the ["Curse of dimensionality"](https://en.wikipedia.org/wiki/Curse_of_dimensionality) that is imposed by the high dimensionality of the spectral data: *w* = 3,575 individual wavebands in this particular case. Moreover, many of those wavebands are strongly collinear (correlated), particularly those proximal to one another on the spectrum. These types of data pose generalization and prediction challenges for MLAs that involve [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and [Deep learning](https://en.wikipedia.org/wiki/Deep_learning) and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) problems. 
+One potentially problematic factor for many MLAs is the ["Curse of dimensionality"](https://en.wikipedia.org/wiki/Curse_of_dimensionality) that is imposed by the high dimensionality of the spectral data: *w* = 3,575 individual wavebands for both the soil and plant spectra in this particular case. Moreover, many of those wavebands are strongly collinear (correlated), particularly those proximal to one another on the spectrum. These types of data pose generalization and prediction challenges for MLAs that involve [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and [Deep learning](https://en.wikipedia.org/wiki/Deep_learning) and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) problems. 
 
 Other algorithms such as [Partial least squares regression (PLS)](https://en.wikipedia.org/wiki/Partial_least_squares_regression), [Ridge regression](https://en.wikipedia.org/wiki/Ridge_regression) and/or [Lasso regression](https://en.wikipedia.org/wiki/Lasso_(statistics)) handle the high dimensional data and collinearities well in a linear context but are frequently not very good at predicting the common non-linear and/or threshold relationships between the spectral signatures and their reference measurements.
 
