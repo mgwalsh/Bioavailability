@@ -216,7 +216,7 @@ curve(swQ$coefficients[6]*x+swQ$coefficients[5], add=T, from=10, to=50, col="blu
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-While these predictions are clearly offset we can adjust for the offset by debiasing them using the following chunck. This would adjust the previous graph, but does not alter the notion that indeed soil properties are indeed linked to Zn concentrations in maize grain in Malawi.  
+While these predictions are clearly offset. We could adjust for the offset by debiasing, but that does not alter the notion that soil properties do indeed appear to be linked to Zn concentrations in maize grain in Malawi ... as expected. See the chunk below.  
 
 ```{r}
 # Debiasing
