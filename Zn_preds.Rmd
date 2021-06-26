@@ -176,19 +176,19 @@ registerDoParallel(mc)
 set.seed(seed)
 tc <- trainControl(method="repeatedcv", number = 10, repeats = 3, allowParallel=T)
 
-wst <- train(fval, lval,
-             method = "glmStepAIC",
-             trControl = tc,
-             metric = "RMSE")
+sw <- train(fval, lval,
+            method = "glmStepAIC",
+            trControl = tc,
+            metric = "RMSE")
 
-val$wst <- predict(wst, val) ## stacked predictions
+val$sw <- predict(sw, val) ## stacked predictions
 stopCluster(mc)
-fname <- paste("./MW_Zn_data/Results/", labs, "_wst.rds", sep = "")
-saveRDS(wst, fname)
+fname <- paste("./MW_Zn_data/Results/", labs, "_sw.rds", sep = "")
+saveRDS(sw, fname)
 ```
 
 ```{r, echo = FALSE}
-summary(wst)
+summary(sw)
 ```
 
 ## Ensemble prediction uncertainty estimates
@@ -197,16 +197,16 @@ There are many ways to quantify the uncertainty inherent in these predictions. W
 
 ```{r}
 sdata$rf <- predict(wlist$rf, sdata)
-sdata$xt <- predict(wlist$xgbTree, sdata)
+sdata$gb <- predict(wlist$gbm, sdata)
 sdata$cu <- predict(wlist$cubist, sdata)
-sdata$wst <- predict(wst, sdata)
+sdata$sw <- predict(sw, sdata)
 
 # quantile regression fit on whole dataset
-stQ <- rq(Zn~wst, tau=c(0.05,0.5,0.95), data = sdata)
+stQ <- rq(Zn~sw, tau=c(0.05,0.5,0.95), data = sdata)
 
 # plot
 par(pty="s")
-plot(Zn~wst, xlab="Ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.0, 
+plot(Zn~sw, xlab="Ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.0, 
      xlim=c(10,50), ylim=c(10,50), sdata)
 curve(stQ$coefficients[4]*x+stQ$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
 abline(c(0,1), col="grey", lwd=1)
