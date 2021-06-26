@@ -216,7 +216,7 @@ curve(swQ$coefficients[6]*x+swQ$coefficients[5], add=T, from=10, to=50, col="blu
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-While these predictions are clearly offset, we can adjust for that by debiasing. That does not alter the notion that soil properties via various lab tests do indeed appear to be quite predictive for maize grain Zn levels in Malawi. See the short example chunk for for debiasing and figure below.  
+The predictions are clearly offset, but we can adjust for that by debiasing the `quantreg` fits. That does not alter the notion that soil properties via various lab tests do indeed appear to be quite useful for predicting maize grain Zn levels in Malawi. See the short example chunk for debiasing and figure below.  
 
 ```{r}
 # Debiasing
