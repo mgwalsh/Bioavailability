@@ -157,7 +157,7 @@ This next chunk fits the model ensemble with the `glmStepAIC` function from the 
 ```{r, warning = FALSE}
 # Individual model predictions on the validation set
 val$rf <- predict(wlist$rf, val)
-val$gb <- predict(wlist$gbm, val)
+val$gb <- predict(wlist$xgbTree, val)
 val$cu <- predict(wlist$cubist, val)
 
 # Set labels and features
