@@ -77,7 +77,7 @@ exdir <- "./Figures"
 unzip("figures.zip", exdir = exdir, overwrite = T)
 ```
 
-The following chunk then writes out the data frames `MW_soil_Zn_data.csv` and `MW_crop_Zn_data.csv` into your `./MW_Zn_data/Results` directory if you'd like to process those outputs in software other than R. It also generates an overview map of where in Malawi those soil and plant samples were obtained.
+The following chunk then writes out the data frames `MW_soil_Zn_data.csv` and `MW_crop_Zn_data.csv` into your `./MW_Zn_data/Results` directory if you'd like to process those outputs in software other than R. It also generates an overview map of where in Malawi those soil and plant samples were obtained. The spatial sampling frame that was used for collecting the samples is described in [Gashu et al (2021)](https://doi.org/10.1038/s41586-021-03559-3).
 
 ```{r}
 # Write out reference data frame
@@ -139,7 +139,7 @@ tc <- trainControl(method = "cv", number = 10, allowParallel = TRUE, savePredict
 wlist <- caretList(wcal, lcal,
                    trControl = tc,
                    tuneList = NULL,
-                   methodList = c("rf", "gbm", "cubist"),
+                   methodList = c("rf", "xgbTree", "cubist"),
                    preProcess = c("center","scale"),
                    metric = "RMSE")
 
@@ -162,7 +162,7 @@ val$cu <- predict(wlist$cubist, val)
 
 # Set labels and features
 lval <- as.vector(t(val[labs]))
-fval <- val[ ,19:21] ## validation features
+fval <- val[ ,3595:3597] ## validation features
 
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
