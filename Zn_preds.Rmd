@@ -205,7 +205,7 @@ swQ <- rq(Zn~sw, tau=c(0.05,0.5,0.95), data = sdata)
 summary(swQ)
 ```
 
-```{r, fig.align = "center", fig.cap = "Relationship between predicted (based on soil wet chemistry properties) and measured maize grain zinc (Zn) levels."}
+```{r, fig.align = "center", fig.cap = "Relationship between predicted (based on soil wet chemistry properties) and measured maize grain zinc (Zn) levels. The blue lines are the 5% and 95% quantile regression estimates. The red line is the regression at the median,"}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~sw, xlab="Soil wet-chemistry ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.2, 
