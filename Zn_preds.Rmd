@@ -236,7 +236,7 @@ curve(sw50Q$coefficients[6]*x+sw50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-**The main takeaway message from this section is that Zn levels in maize grain are well-predicted from *"gold-standard"*, wet chemistry soil properties.** The residual differences may be due external, environmental factors at the time of sample collection, laboratory measurement variability and/or the inability of the MLAs that were used for calibration and validation to capture the underlying bio-kinetics. The `randomForest` model was a clear winner here, but it is unusual for a single MLA to outperform all other contrasting MLAs i.e., generalized boosting and cubist in this case.
+**The main takeaway message from this section is that Zn levels in maize grain are reasonably well-predicted from *"gold-standard"*, wet chemistry soil properties.** The residual differences may be due external, environmental factors at the time of sample collection, laboratory measurement variability and/or the inability of the MLAs that were used for calibration and validation to capture the underlying bio-kinetics. The `randomForest` model was a clear winner here, but it is unusual for a single MLA to outperform all other contrasting MLAs i.e., generalized boosting and cubist in this case.
 
 # Predicting maize grain Zn from soil and plant MIR spectra
 
@@ -380,4 +380,6 @@ plot(sw50~ss50, xlab="Spectral prediction (ppm)", ylab="Wet chemistry prediction
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-## Calibration and prediction with crop spectra
+## Calibration and prediction with crop spectra and `caretEnsemble`
+
+
