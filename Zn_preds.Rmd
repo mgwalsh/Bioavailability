@@ -216,7 +216,7 @@ curve(swQ$coefficients[6]*x+swQ$coefficients[5], add=T, from=10, to=50, col="blu
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-The predictions are clearly offset, but we can adjust for that. This does not alter the notion that wet chemistry soil properties do indeed appear to be quite useful for predicting maize grain Zn levels in Malawi. See the short example chunk for offset adjustment and the associated figure below.  
+The predictions are clearly offset, but we can adjust for that. This does not alter the notion that the wet chemistry soil properties do indeed appear to be quite useful for predicting maize grain Zn levels in Malawi, plus or minus some noise. The next short chunk adjusts for the 50% quantile (median) offset that is used to generate the associated figure below.  
 
 ```{r}
 # Offset adjustments
@@ -225,7 +225,7 @@ sdata$sw50 <- swQ$coefficients[4]*sdata$sw+swQ$coefficients[3] ## 50% quantile
 sdata$sw90 <- swQ$coefficients[6]*sdata$sw+swQ$coefficients[5] ## 90% quantile
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between adjusted predictions (based on soil wet chemistry properties) and measured maize grain zinc (Zn) levels."}
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median adjusted predictions and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~sw50, xlab="Soil wet-chemistry ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.2,
