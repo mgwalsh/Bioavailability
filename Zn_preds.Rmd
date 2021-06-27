@@ -30,11 +30,11 @@ The two main empirical questions posed here are:
 
 * Can we use MIR spectra to predict Zn concentrations in maize grain reliably? If so, this would advance and enable localized Zn deficiency diagnostics and risk assessments that could potentially be carried out routinely, at low cost, and across large geographical regions of interest ([ROI](https://en.wikipedia.org/wiki/Region_of_interest)) and populations of interest. 
 
-The notebook is also intended for self-learning in [R](https://www.r-project.org/). It does not go into the details of the underlying [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) that is widely covered in the literature, but instead it focuses on [Chemometrics](https://en.wikipedia.org/wiki/Chemometrics) and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures of (features) relative to their corresponding reference measurements (labels). Chemometric techniques are are used extensively in [analytical chemistry](https://en.wikipedia.org/wiki/Analytical_chemistry) and [metabolomics](https://en.wikipedia.org/wiki/Metabolomics). In this particular example, we shall use maize grain Zn reference data, and MIR spectral (soil and crop) data that were collected as part of the ongoing [GeoNutrition project](http://www.geonutrition.com) in Malawi. The described workflows might also be transferable to diagnosing other MNDs in soils and crops and/or to other geographies via e.g., [transfer learning](https://en.wikipedia.org/wiki/Transfer_learning) and/or other approaches ... tbd.
+The notebook is also intended for self-learning in [R](https://www.r-project.org/). It does not go into the details of the underlying [spectroscopy](https://en.wikipedia.org/wiki/Spectroscopy) that is widely covered in the literature, but instead it focuses on [Chemometrics](https://en.wikipedia.org/wiki/Chemometrics) and the associated computing workflows that are needed to generate useful predictions from a population of spectral signatures of (features) relative to their corresponding reference measurements (labels). Chemometric techniques are used extensively in [analytical chemistry](https://en.wikipedia.org/wiki/Analytical_chemistry) and [metabolomics](https://en.wikipedia.org/wiki/Metabolomics). In this particular example, we shall use maize grain Zn reference data, and MIR spectral (soil and crop) data that were collected as part of the ongoing [GeoNutrition project](http://www.geonutrition.com) in Malawi. The described workflows might also be transferable to diagnosing other MNDs in soils and crops and/or to other geographies via e.g., [transfer learning](https://en.wikipedia.org/wiki/Transfer_learning) and/or other approaches ... tbd.
 
 # General data setup
 
-To actually run this notebook, you will need to load the packages indicated in the chunk directly below. This allows you to assemble the reference wet chemistry and spectral dataframes, providing a lot of options that generate spectral predictions of Zn concentrations in maize grain and soils. The notebook itself is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/Zn_preds.Rmd), and you can fork and modify it from there as you see fit. Also the html version of this will skip certain repetitive sections, but these are actually included in the markdown script for reference.
+To actually run this notebook, you will need to load the packages indicated in the chunk directly below. This allows you to assemble the reference wet chemistry and spectral data frames, providing a lot of options that generate spectral predictions of Zn concentrations in maize grain and soils. The notebook itself is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/Zn_preds.Rmd), and you can fork and modify it from there as you see fit. Also the html version of this will skip certain repetitive sections, but these are actually included in the markdown script for reference.
 
 ```{r}
 # Package names
@@ -216,13 +216,14 @@ curve(swQ$coefficients[6]*x+swQ$coefficients[5], add=T, from=10, to=50, col="blu
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-The predictions are clearly offset, but we can adjust for that. This does not alter the notion that the wet chemistry soil properties do indeed appear to be quite useful for predicting maize grain Zn levels in Malawi, plus or minus some noise. The next short chunk adjusts for the 50% quantile (median) offset that is used to generate the associated figure below.  
+The predictions are clearly offset, but we can adjust for that. Note that this does not alter the notion that the wet chemistry soil properties do indeed appear to be quite useful for predicting maize grain Zn levels in Malawi, plus or minus some outlier noise. The next short chunk adjusts for the 50% quantile (median) offset that is used to generate the associated figure below.  
 
 ```{r}
-# Offset adjustments
-sdata$sw05 <- swQ$coefficients[2]*sdata$sw+swQ$coefficients[1] ## 5% quantile
+# Offset adjustment
 sdata$sw50 <- swQ$coefficients[4]*sdata$sw+swQ$coefficients[3] ## 50% quantile
-sdata$sw90 <- swQ$coefficients[6]*sdata$sw+swQ$coefficients[5] ## 90% quantile
+
+# Refit quantile regression
+sw50Q <- rq(Zn~sw50, tau=c(0.05,0.5,0.95), data = sdata)
 ```
 
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median adjusted predictions and measured maize grain zinc (Zn) levels."}
@@ -230,6 +231,9 @@ sdata$sw90 <- swQ$coefficients[6]*sdata$sw+swQ$coefficients[5] ## 90% quantile
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~sw50, xlab="Soil wet-chemistry ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.2,
      xlim=c(10,50), ylim=c(10,50), sdata)
+curve(sw50Q$coefficients[2]*x+sw50Q$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
+curve(sw50Q$coefficients[4]*x+sw50Q$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
+curve(sw50Q$coefficients[6]*x+sw50Q$coefficients[5], add=T, from=10, to=50, col="blue", lwd=2)
 abline(c(0,1), col="grey", lwd=1)
 ```
 
@@ -237,8 +241,8 @@ abline(c(0,1), col="grey", lwd=1)
 
 One potentially problematic factor for many MLAs is the [Curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality) that is imposed by the high dimensionality of the spectral data: *w* = 3,575 individual wavebands for both the soil and plant spectra in this particular case. Moreover, many of those wavebands are strongly correlated, particularly those proximal to one another on the NIR/MIR absorbance spectrum. These types of data pose generalization and prediction challenges for MLAs that involve e.g., [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and/or [Neural networks](https://en.wikipedia.org/wiki/Deep_learning), and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) and its consequent model validation/generalization problems. 
 
-Other algorithms such as [Partial least squares regression (PLS)](https://en.wikipedia.org/wiki/Partial_least_squares_regression), [Ridge regression](https://en.wikipedia.org/wiki/Ridge_regression) and/or [Lasso regression](https://en.wikipedia.org/wiki/Lasso_(statistics)) handle the high dimensional data and collinearities well in a linear context but are frequently not very good at predicting common non-linear and/or threshold relationships between the spectral signatures and their reference measurements.
+Other algorithms such as [Partial least squares regression (PLS)](https://en.wikipedia.org/wiki/Partial_least_squares_regression), [Ridge regression](https://en.wikipedia.org/wiki/Ridge_regression) and/or [Lasso regression](https://en.wikipedia.org/wiki/Lasso_(statistics)) handle the high-dimensional data and collinearities reasonably well in a linear context but are frequently not very good at predicting common non-linear and/or threshold relationships between the spectral signatures and their reference measurements.
 
-There are some ways of mitigating these trade-offs. The first is to reduce the dimensionality and collinearity of the spectral data. There are a number of pre-processing techniques that can be applied in that context including: [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis), [Independent components analysis (ICA)](https://en.wikipedia.org/wiki/Independent_component_analysis) as well as other signal processing techniques such as, [Non-negative matrix factorization (NMF)](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization). We use PCA here, and the next chunk appends the resulting spectral principal component scores to the soil reference and spectral data frame, `sdata`.
+There are some ways of mitigating these trade-offs in the data wrangling and conversion steps of the workflow described here. The first is to reduce the dimensionality and collinearity of the spectral data. There are a number of pre-processing techniques that can be applied in that context including: [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis), [Independent components analysis (ICA)](https://en.wikipedia.org/wiki/Independent_component_analysis) as well as other signal processing techniques such as, [Non-negative matrix factorization (NMF)](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization). We use PCA here, and the next chunk appends the resulting spectral principal component scores to the soil reference and spectral data frame, `sdata`.
 
 
