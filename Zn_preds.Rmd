@@ -5,7 +5,7 @@ date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
 output:
   html_document:
     toc: true
-    toc_depth: 1
+    toc_depth: 2
     fig_caption: true
     css: style.css
 ---
@@ -38,7 +38,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r}
 # Package names
-packages <- c("downloader", "devtools", "leaflet", "caret", "caretEnsemble", "plyr", "MASS", "randomForest", "gbm", "xgboost", "Cubist", "quantreg", "doParallel")
+packages <- c("downloader", "devtools", "leaflet", "caret", "caretEnsemble", "plyr", "MASS", "randomForest", "gbm", "xgboost", "Cubist", "pls", "glmnet", "quantreg", "doParallel")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -216,7 +216,7 @@ curve(swQ$coefficients[6]*x+swQ$coefficients[5], add=T, from=10, to=50, col="blu
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-The predictions are clearly offset, but we can adjust for that. Note that this does not distract from the notion that the wet chemistry soil properties do indeed appear to be quite useful for predicting maize grain Zn levels in Malawi, plus or minus some outlier noise. The next short chunk adjusts for the 50% quantile (median) offset that is used to generate the associated figure below.  
+The predictions are clearly offset, but we can adjust for that. Note that this does not distract from the notion that the wet chemistry soil properties do indeed appear to be quite useful for predicting maize grain Zn levels in Malawi, plus or minus some outlier noise. The next short chunk adjusts for the 50% quantile (median) offset and is used to generate the associated figure below.  
 
 ```{r}
 # Offset adjustment
@@ -226,10 +226,10 @@ sdata$sw50 <- swQ$coefficients[4]*sdata$sw+swQ$coefficients[3] ## 50% quantile a
 sw50Q <- rq(Zn~sw50, tau=c(0.05,0.5,0.95), data = sdata)
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median adjusted predictions and measured maize grain zinc (Zn) levels."}
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median adjusted predictions from soil data and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
-plot(Zn~sw50, xlab="Offset adjusted ensemble Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
+plot(Zn~sw50, xlab="Offset adjusted ensemble grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
      xlim=c(10,50), ylim=c(10,50), sdata)
 curve(sw50Q$coefficients[2]*x+sw50Q$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
 curve(sw50Q$coefficients[4]*x+sw50Q$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
@@ -237,12 +237,26 @@ curve(sw50Q$coefficients[6]*x+sw50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-# Predicting maize grain Zn from soil and plant spectra
+# Predicting maize grain Zn from soil and plant MIR spectra
 
-One potentially problematic factor for many MLAs in chemometric applications is the [Curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality) that is imposed by the high dimensionality of the spectral data: *w* = 3,575 individual wavebands for both the soil and plant spectra in this particular case. Moreover, many of those wavebands are strongly correlated, particularly those proximal to one another on the NIR/MIR absorbance spectrum. These types of data pose generalization and prediction challenges for MLAs that involve e.g., [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and/or [Artificial neural networks](https://en.wikipedia.org/wiki/Deep_learning), and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) and its consequent model validation/generalization problems. 
+One potentially problematic factor for many MLAs in chemometric applications is the [Curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality) that is imposed by the high dimensionality of the spectral data: *w* = 3,575 individual wavebands for both the soil and plant spectra in this particular case. Moreover, many of those wavebands are strongly correlated, particularly those proximal to one another on the NIR / MIR reflectance / absorbance spectrum. These types of data pose generalization and prediction challenges for MLAs that involve e.g., [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and/or [Artificial neural networks](https://en.wikipedia.org/wiki/Deep_learning), and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) and its consequent model validation/generalization problems. 
 
 Other algorithms such as [Partial least squares regression (PLS)](https://en.wikipedia.org/wiki/Partial_least_squares_regression), [Ridge regression](https://en.wikipedia.org/wiki/Ridge_regression) and/or [Lasso regression](https://en.wikipedia.org/wiki/Lasso_(statistics)) handle the high-dimensional data and collinearities reasonably well in a linear context but are frequently not very good at predicting common non-linear and/or threshold relationships between the spectral signatures and their reference measurements.
 
-There are some ways of mitigating these trade-offs in the data wrangling and conversion steps of the workflow described here. The first is to reduce the dimensionality and collinearity of the spectral data. There are a number of pre-processing techniques that can be applied in that context including: [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis), [Independent components analysis (ICA)](https://en.wikipedia.org/wiki/Independent_component_analysis) as well as other signal processing techniques such as, [Non-negative matrix factorization (NMF)](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization). We use PCA here, and the next chunk appends the resulting spectral principal component scores to the soil reference and spectral data frame, `sdata`.
+## Spectral feature conversions
 
+There are some ways of mitigating these trade-offs in the data wrangling and conversion steps of the workflow described here. The first is to reduce the dimensionality and collinearity of the spectral data. There are a number of pre-processing techniques that can be applied in that context including: [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis), [Independent components analysis (ICA)](https://en.wikipedia.org/wiki/Independent_component_analysis) as well as other signal processing techniques such as, [Non-negative matrix factorization (NMF)](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization). We use PCA here ... however, feel free to experiment. The next chunk appends the resulting principal component scores to the soil reference and spectral data frame, `sdata`.
 
+```{r, results = 'hide'}
+# Soil spectral principal components
+sspec.pca <- prcomp(sdata[ ,18:3594], center=T, scale=T) ## centered and scaled PCAs
+spcas <- predict(sspec.pca, sdata)
+spcas <- spcas[ ,1:20] ## save the first 20 components, which explain ~95% of the total soil spectral variabilty
+fname <- paste("./MW_Zn_data/Results/", "spec_spcas.rds", sep = "")
+saveRDS(sspec.pca, fname) ## saves soil spectral PCA model
+
+# Merge files
+sdata <- cbind(sdata, spcas)
+```
+
+## Spectral calibration with `caretEnsemble`
