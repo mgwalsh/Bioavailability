@@ -338,7 +338,7 @@ saveRDS(ss, fname)
 summary(ss)
 ```
 
-This is the `slist` prediction plot below. Note that the intermediate chunks are not shown in this html; however, they are in the script should you wish to check.
+This is the `slist` prediction plot below. Note that the intermediate chunks are not shown in this html; however, they are included in the script should you wish to check.
 
 ```{r, echo = FALSE, results = 'hide'}
 sdata$rf_slist <- predict(slist$rf, sdata)
@@ -359,7 +359,7 @@ sdata$ss50 <- ssQ$coefficients[4]*sdata$ss_slist+ssQ$coefficients[3] ## 50% quan
 ss50Q <- rq(Zn~ss50, tau=c(0.05,0.5,0.95), data = sdata)
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median adjusted predictions from soil spectral data and measured maize grain zinc (Zn) levels."}
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~ss50, xlab="Offset adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
@@ -370,6 +370,14 @@ curve(ss50Q$coefficients[6]*x+ss50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
+We can do a comparison between the wet chemistry based and the spectral predictions ...
 
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between offset adjusted wet chemistry and spectral predictions."}
+
+par(pty="s", mar=c(4,4,1,1))
+plot(sw50~ss50, xlab="Spectral prediction (ppm)", ylab="Wet chemistry prediction (ppm)", cex.lab=1.2,
+     xlim=c(10,50), ylim=c(10,50), sdata)
+abline(c(0,1), col="grey", lwd=1)
+```
 
 ## Calibration and prediction with crop spectra
