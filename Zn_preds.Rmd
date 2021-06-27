@@ -370,7 +370,7 @@ curve(ss50Q$coefficients[6]*x+ss50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-We can do a comparison between the wet chemistry based and the spectral predictions ...
+We can compare how the spectral predictions perform relative to the much more expensive and time consuming wet chemistry based predictions. The figure below shows that relationship.
 
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between offset adjusted wet chemistry and spectral predictions."}
 
