@@ -208,8 +208,7 @@ summary(swQ)
 ```{r, fig.align = "center", fig.cap = "Relationship between predicted (based on soil wet chemistry properties) and measured maize grain zinc (Zn) levels. The blue lines are the 5% and 95% quantile regression estimates. The red line is the regression at the median,"}
 
 par(pty="s", mar=c(4,4,1,1))
-plot(Zn~sw, xlab="Soil wet-chemistry ensemble grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2, 
-     xlim=c(10,50), ylim=c(10,50), sdata)
+plot(Zn~sw, xlab="Soil wet-chemistry ensemble grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2, xlim=c(10,50), ylim=c(10,50), sdata)
 curve(swQ$coefficients[2]*x+swQ$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
 curve(swQ$coefficients[4]*x+swQ$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
 curve(swQ$coefficients[6]*x+swQ$coefficients[5], add=T, from=10, to=50, col="blue", lwd=2)
@@ -331,12 +330,35 @@ ss <- train(fval, lval,
 
 val$ss <- predict(ss, val) ## stacked predictions
 stopCluster(mc)
-fname <- paste("./MW_Zn_data/Results/", labs, "_ss.rds", sep = "")
+fname <- paste("./MW_Zn_data/Results/", labs, "_sstack.rds", sep = "")
 saveRDS(ss, fname)
 ```
 
 ```{r, echo = FALSE}
 summary(ss)
+```
+
+This is the `slist` prediction plot below. Note that the intermediate steps are not shown in this html; however, they are in the script should you wish to check.
+
+```{r, echo = FALSE, results = 'hide'}
+sdata$rf_slist <- predict(slist$rf, sdata)
+sdata$gb_slist <- predict(slist$gbm, sdata)
+sdata$cu_slist <- predict(slist$cubist, sdata)
+sdata$ss_slist <- predict(ss, sdata)
+
+# Quantile regression fit on whole dataset
+swQ <- rq(Zn~ss_slist, tau=c(0.05,0.5,0.95), data = sdata)
+summary(swQ)
+```
+
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between predicted (based on soil soil spectral properties) and measured maize grain zinc (Zn) levels. The blue lines are the 5% and 95% quantile regression estimates. The red line is the regression at the median,"}
+
+par(pty="s", mar=c(4,4,1,1))
+plot(Zn~sw, xlab="Soil wet-chemistry ensemble grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2, xlim=c(10,50), ylim=c(10,50), sdata)
+curve(swQ$coefficients[2]*x+swQ$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
+curve(swQ$coefficients[4]*x+swQ$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
+curve(swQ$coefficients[6]*x+swQ$coefficients[5], add=T, from=10, to=50, col="blue", lwd=2)
+abline(c(0,1), col="grey", lwd=1)
 ```
 
 ## Calibration and prediction with crop spectra
