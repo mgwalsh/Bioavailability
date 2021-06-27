@@ -22,7 +22,7 @@ Zinc (Zn) deficiency is among the 5 most widespread MNDs (including iron, vitami
 
 Spectral signatures of soils, plants, animal tissues, and materials generally are defined by their reflectance or absorbance as a function of wavelength in the electromagnetic spectrum. Under laboratory conditions, the signatures result from electronic transitions of atoms and vibrational stretching and bending of structural groups of atoms that form molecules or crystals. Spectroscopy has been shown to provide highly repeatable, rapid and low cost measurements of many different soil, plant and animal tissue properties in numerous studies. The amount of light absorbed by a sample can be measured with minimal sample preparation (primarily drying and fine grinding) across a wide range of ultra-violet (UV), visible (VIS), near (NIR) and mid-infrared (MIR) wavelengths to provide a unique spectral signature of a soil or plant sample. An individual MIR measurement can be performed in about 30 seconds, in contrast to more conventional soil and plant tests, which are typically slow, labor-intensive, expensive and/or use hazardous chemicals, which have to be handled carefully. 
 
-In this notebook, we shall explore if Zn concentrations in maize grain can be reliably predicted from cheap, fast, non-destructive and non-hazardous MIR spectral data (features), using [ICP-MS](https://en.wikipedia.org/wiki/Inductively_coupled_plasma_mass_spectrometry) as reference data. The reference analytical methods are described in [Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3). 
+In this notebook, we shall explore if Zn concentrations in maize grain can be reliably predicted from cheap, fast, non-destructive and non-hazardous MIR spectral data (features), using [ICP-MS](https://en.wikipedia.org/wiki/Inductively_coupled_plasma_mass_spectrometry) as reference data. The reference analytical methods are described in ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)). 
 
 The two main empirical questions posed here are:
 
@@ -77,7 +77,7 @@ exdir <- "./Figures"
 unzip("figures.zip", exdir = exdir, overwrite = T)
 ```
 
-The following chunk then writes out the data frames `MW_soil_Zn_data.csv` and `MW_crop_Zn_data.csv` into your `./MW_Zn_data/Results` directory if you'd like to process those outputs in software other than R. It also generates an overview map of where in Malawi those soil and plant samples were obtained. The spatial sampling frame that was used for collecting the samples is described in [Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3).
+The following chunk then writes out the data frames `MW_soil_Zn_data.csv` and `MW_crop_Zn_data.csv` into your `./MW_Zn_data/Results` directory if you'd like to process those outputs in software other than R. It also generates an overview map of where in Malawi those soil and plant samples were obtained. The spatial sampling frame that was used for collecting the samples is described in [Gashu et al., (2021)](https://doi.org/10.1038/s41586-021-03559-3).
 
 ```{r}
 # Write out reference data frame
