@@ -1,6 +1,6 @@
 ---
 title: Chemometric workflows for predicting zinc levels in maize grain
-author: M.G. Walsh, P.C. Nalivata, E.K. Towett, S.P. MacGrath, R.M. Lark and M.R. Broadley
+author: M.G. Walsh, P.C. Nalivata, D. Gashu, E.K. Towett, S.P. MacGrath, R.M. Lark and M.R. Broadley
 date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
 output:
   html_document:
@@ -216,16 +216,16 @@ curve(swQ$coefficients[6]*x+swQ$coefficients[5], add=T, from=10, to=50, col="blu
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-The predictions are clearly offset, but we can adjust for that by debiasing the `quantreg` fits. That does not alter the notion that soil properties via various lab tests do indeed appear to be quite useful for predicting maize grain Zn levels in Malawi. See the short example chunk for debiasing and figure below.  
+The predictions are clearly offset, but we can adjust for that. This does not alter the notion that wet chemistry soil properties do indeed appear to be quite useful for predicting maize grain Zn levels in Malawi. See the short example chunk for offset adjustment and the associated figure below.  
 
 ```{r}
-# Debiasing
+# Offset adjustments
 sdata$sw05 <- swQ$coefficients[2]*sdata$sw+swQ$coefficients[1] ## 5% quantile
 sdata$sw50 <- swQ$coefficients[4]*sdata$sw+swQ$coefficients[3] ## 50% quantile
 sdata$sw90 <- swQ$coefficients[6]*sdata$sw+swQ$coefficients[5] ## 90% quantile
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median debiased predictions (based on soil wet chemistry properties) and measured maize grain zinc (Zn) levels."}
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between adjusted predictions (based on soil wet chemistry properties) and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~sw50, xlab="Soil wet-chemistry ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.2,
