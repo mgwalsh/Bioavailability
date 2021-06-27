@@ -263,7 +263,7 @@ write.csv(sdata, "./MW_Zn_data/Results/MW_soil_Zn_data.csv", row.names = F)
 
 ## Calibration and prediction with soil spectra and `caretEnsemble`
 
-We initially calibrate 3 MLAs to the soil spectral principal components data with 10-fold cross-validation. Note that the calibration code pattern is similar to the wet-chemistry-based pattern that was generated above. We just substitute the soil spectral principal components for the wet chemistry features but are running the same MLAs for comparison.
+We initially calibrate 3 MLAs to the soil spectral principal components data with 10-fold cross-validation. Note that the calibration code pattern is similar to the wet-chemistry-based pattern that was generated above. We have just substituted the soil spectral principal components for the wet chemistry features but are running the same MLAs for comparison.
 
 ```{r, results = 'hide'}
 # Set randomization seed
@@ -347,13 +347,13 @@ sdata$cu_slist <- predict(slist$cubist, sdata)
 sdata$ss_slist <- predict(ss, sdata)
 
 # Quantile regression fit on whole dataset
-swQ <- rq(Zn~ss_slist, tau=c(0.05,0.5,0.95), data = sdata)
-summary(swQ)
+ssQ <- rq(Zn~ss_slist, tau=c(0.05,0.5,0.95), data = sdata)
+summary(ssQ)
 ```
 
 ```{r, echo = FALSE}
 # Offset adjustment
-sdata$ss50 <- swQ$coefficients[4]*sdata$sw+swQ$coefficients[3] ## 50% quantile adjustment
+sdata$ss50 <- ssQ$coefficients[4]*sdata$ss_slist+ssQ$coefficients[3] ## 50% quantile adjustment
 
 # Refit quantile regression
 ss50Q <- rq(Zn~ss50, tau=c(0.05,0.5,0.95), data = sdata)
@@ -362,7 +362,7 @@ ss50Q <- rq(Zn~ss50, tau=c(0.05,0.5,0.95), data = sdata)
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median adjusted predictions from soil spectral data and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
-plot(Zn~ss50, xlab="Offset adjusted ensemble grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
+plot(Zn~ss50, xlab="Offset adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
      xlim=c(10,50), ylim=c(10,50), sdata)
 curve(ss50Q$coefficients[2]*x+ss50Q$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
 curve(ss50Q$coefficients[4]*x+ss50Q$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
