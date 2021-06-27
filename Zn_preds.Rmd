@@ -237,7 +237,7 @@ curve(sw50Q$coefficients[6]*x+sw50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-**The main takeaway message from this section is that Zn levels in maize grain are well-predicted from *"gold-standard"* soil properties.** The residual differences may be due external, environmental factors at the time of sample collection, laboratory measurement variability and/or the inability of the MLAs that were used for calibration and validation to capture the underlying bio-kinetics. The `randomForest` model was a clear winner here, but it is unusual for a single MLA to outperform all other contrasting MLAs i.e., generalized boosting and cubist in this case.
+**The main takeaway message from this section is that Zn levels in maize grain are well-predicted from *"gold-standard"*, wet chemistry soil properties.** The residual differences may be due external, environmental factors at the time of sample collection, laboratory measurement variability and/or the inability of the MLAs that were used for calibration and validation to capture the underlying bio-kinetics. The `randomForest` model was a clear winner here, but it is unusual for a single MLA to outperform all other contrasting MLAs i.e., generalized boosting and cubist in this case.
 
 # Predicting maize grain Zn from soil and plant MIR spectra
 
@@ -247,7 +247,7 @@ Other algorithms such as [Partial least squares regression (PLS)](https://en.wik
 
 ## Spectral feature conversions / pre-processing
 
-There are some ways of mitigating MLA trade-offs in the data wrangling and conversion steps of the workflow described here. The most common approach is to reduce the dimensionality and collinearity of the (spectral) data. There are a number of pre-processing techniques that can be applied in that context including: [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis), [Independent components analysis (ICA)](https://en.wikipedia.org/wiki/Independent_component_analysis) as well as other signal processing techniques such as [Non-negative matrix factorization (NMF)](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization). We use PCA here ... however, feel free to experiment. The next chunk appends the resulting principal component scores to the soil reference and spectral data frame, `sdata`.
+There are some ways of mitigating MLA prediction trade-offs in the data wrangling and conversion steps of the workflow described here. The most common approach is to reduce the dimensionality and collinearity of the (spectral) data. There are a number of pre-processing techniques that can be applied in that context including: [Principal components analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis), [Independent components analysis (ICA)](https://en.wikipedia.org/wiki/Independent_component_analysis) as well as other signal processing techniques such as [Non-negative matrix factorization (NMF)](https://en.wikipedia.org/wiki/Non-negative_matrix_factorization). We use PCA here ... however, feel free to experiment. The next chunk appends the resulting principal component scores to the soil reference and spectral data frame, `sdata`.
 
 ```{r, results = 'hide'}
 # Soil spectral principal components
@@ -264,7 +264,7 @@ write.csv(sdata, "./MW_Zn_data/Results/MW_soil_Zn_data.csv", row.names = F)
 
 ## Calibration and prediction with soil spectra and `caretEnsemble`
 
-We initially fit 3 calibration MLAs to the soil spectral principal components data with 10-fold cross-validation. Note that the calibration code pattern is similar to the wet-chemistry-based pattern that was generated above. We just substitute the soil spectral principal components for the wet chemistry features but are running the same MLAs for comparison.
+We initially calibrate 3 MLAs to the soil spectral principal components data with 10-fold cross-validation. Note that the calibration code pattern is similar to the wet-chemistry-based pattern that was generated above. We just substitute the soil spectral principal components for the wet chemistry features but are running the same MLAs for comparison.
 
 ```{r, results = 'hide'}
 # Set randomization seed
@@ -303,3 +303,40 @@ stopCluster(mc)
 fname <- paste("./MW_Zn_data/Results/", labs, "_slist.rds", sep = "")
 saveRDS(slist, fname)
 ```
+
+We ensemble the 3 models as before using the fitted `slist` models on the validation data frame ...
+
+```{r, results = 'hide'}
+# Individual model predictions on the validation set
+val$rf_slist <- predict(slist$rf, val)
+val$gb_slist <- predict(slist$gbm, val)
+val$cu_slist <- predict(slist$cubist, val)
+
+# Set labels and features
+lval <- as.vector(t(val[labs]))
+fval <- val[ ,3620:3622] ## validation features
+
+# Start doParallel to parallelize model fitting
+mc <- makeCluster(detectCores())
+registerDoParallel(mc)
+
+# Model setup and fitting
+set.seed(seed)
+tc <- trainControl(method="repeatedcv", number = 10, repeats = 3, allowParallel=T)
+
+ss <- train(fval, lval,
+            method = "glmStepAIC",
+            trControl = tc,
+            metric = "RMSE")
+
+val$ss <- predict(ss, val) ## stacked predictions
+stopCluster(mc)
+fname <- paste("./MW_Zn_data/Results/", labs, "_ss.rds", sep = "")
+saveRDS(ss, fname)
+```
+
+```{r, echo = FALSE}
+summary(ss)
+```
+
+## Calibration and prediction with crop spectra
