@@ -229,7 +229,7 @@ sw50Q <- rq(Zn~sw50, tau=c(0.05,0.5,0.95), data = sdata)
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median adjusted predictions and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
-plot(Zn~sw50, xlab="Soil wet-chemistry ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.2,
+plot(Zn~sw50, xlab="Offset adjusted ensemble Zn prediction (mg/kg)", ylab="Measured grain Zn (mg/kg)", cex.lab=1.2,
      xlim=c(10,50), ylim=c(10,50), sdata)
 curve(sw50Q$coefficients[2]*x+sw50Q$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
 curve(sw50Q$coefficients[4]*x+sw50Q$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
