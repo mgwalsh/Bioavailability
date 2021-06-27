@@ -1,4 +1,4 @@
- ---
+---
 title: Chemometric workflows for predicting zinc levels in maize grain
 author: M.G. Walsh, P.C. Nalivata, D. Gashu, S. Gameda, E.K. Towett, S.P. MacGrath, R.M. Lark and M.R. Broadley
 date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
@@ -239,9 +239,9 @@ abline(c(0,1), col="grey", lwd=1)
 
 # Predicting maize grain Zn from soil and plant MIR spectra
 
-One potentially problematic factor for many MLAs in chemometric applications is the ["Curse of dimensionality"](https://en.wikipedia.org/wiki/Curse_of_dimensionality) that is imposed by the high dimensionality of the spectral data: *w* = 3,575 individual wavebands for both the soil and plant spectra in this particular case. Moreover, many of those wavebands are strongly correlated, particularly those proximal to one another on the NIR / MIR reflectance / absorbance spectrum. These types of data pose generalization and prediction challenges for MLAs that involve e.g., [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and/or [Artificial neural networks](https://en.wikipedia.org/wiki/Deep_learning), and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) and its consequent model validation / generalization problems. Generally, the data would need to be dimensionally reduced and decorrelated to be fit by these types of algorithms.
+One potentially problematic factor for many MLAs in chemometric applications is the ["Curse of dimensionality"](https://en.wikipedia.org/wiki/Curse_of_dimensionality) that is imposed by the high dimensionality of the spectral data: *w* = 3,575 individual wavebands for both the soil and plant spectra in this particular case. Moreover, many of those wavebands are strongly correlated, particularly those proximal to one another on the NIR / MIR reflectance / absorbance spectrum. These types of data pose generalization and prediction challenges for MLAs that involve e.g., [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and/or [Artificial neural networks](https://en.wikipedia.org/wiki/Deep_learning), and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) and its consequent model validation / generalization problems. Generally, the data would need to be dimensionally reduced and decorrelated to be successfully fit by these types of algorithms.
 
-Other algorithms such as [Partial least squares regression (PLS)](https://en.wikipedia.org/wiki/Partial_least_squares_regression), [Ridge regression](https://en.wikipedia.org/wiki/Ridge_regression) and/or [Lasso regression](https://en.wikipedia.org/wiki/Lasso_(statistics)) handle the high-dimensional data and collinearities reasonably well in a linear context but are frequently not very good at predicting the other quite common non-linear and/or threshold relationships between the spectral signatures and their reference measurements. This section of the notebook covers workflows for both types of MLAs and looks at how those might be usefully combined (stacked).
+Other algorithms such as [Partial least squares regression (PLS)](https://en.wikipedia.org/wiki/Partial_least_squares_regression), [Ridge regression](https://en.wikipedia.org/wiki/Ridge_regression) and/or [Lasso regression](https://en.wikipedia.org/wiki/Lasso_(statistics)) handle the high-dimensional data and collinearities reasonably well in a linear context but are frequently not very good at predicting the quite common non-linear and/or threshold relationships between the spectral signatures and their reference measurements. This section of the notebook covers workflows for both types of MLAs and looks at how those might be usefully combined (stacked).
 
 ## Spectral feature conversions / pre-processing
 
@@ -249,7 +249,7 @@ There are some ways of mitigating MLA trade-offs in the data wrangling and conve
 
 ```{r, results = 'hide'}
 # Soil spectral principal components
-sspec.pca <- prcomp(sdata[ ,19:3594], center=T, scale=T) ## centered and scaled PCAs
+sspec.pca <- prcomp(sdata[ ,19:3594], center=T, scale=T) ## centered and scaled soil spectral PCAs
 spcas <- predict(sspec.pca, sdata)
 spcas <- spcas[ ,1:20] ## save the first 20 components, which explain ~95% of the total soil spectral variability
 fname <- paste("./MW_Zn_data/Results/", "spec_spcas.rds", sep = "")
@@ -260,4 +260,4 @@ sdata <- cbind(sdata, spcas)
 write.csv(sdata, "./MW_Zn_data/Results/MW_soil_Zn_data.csv", row.names = F)
 ```
 
-## Calibration with soil spectra and `caretEnsemble`
+## Calibration and prediction with soil spectra and `caretEnsemble`
