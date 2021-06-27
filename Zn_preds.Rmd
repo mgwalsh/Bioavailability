@@ -237,7 +237,7 @@ curve(sw50Q$coefficients[6]*x+sw50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-** The main takeaway message from this section is that Zn levels in maize grain are well-predicted from *"gold-standard"* soil properties.** The residual differences may be due external, environmental factors at the time of sample collection, laboratory measurement variability and/or the inability of the MLAs that were used here for calibration and validation to capture the underlying bio-kinetics. The `randomForest` model was a clear winner here, but it is generally unusual for a single MLA to outperform other contrasting MLAs, e.g., boosting and cubist in this case.
+**The main takeaway message from this section is that Zn levels in maize grain are well-predicted from *"gold-standard"* soil properties.** The residual differences may be due external, environmental factors at the time of sample collection, laboratory measurement variability and/or the inability of the MLAs that were used here for calibration and validation to capture the underlying bio-kinetics. The `randomForest` model was a clear winner here, but it is unusual for a single MLA to outperform other contrasting MLAs, e.g., generalized boosting and cubist in this case.
 
 # Predicting maize grain Zn from soil and plant MIR spectra
 
@@ -264,9 +264,9 @@ write.csv(sdata, "./MW_Zn_data/Results/MW_soil_Zn_data.csv", row.names = F)
 
 ## Calibration and prediction with soil spectra and `caretEnsemble`
 
-We initially fit 3 calibration MLAs to the soil spectral principal components data with 10-fold cross-validation. Note that the calibration pattern is similar to the wet chemistry-based pattern that was generated above. We have just substituted the soil spectral principal components for the wet chemistry features using the same MLAs, for comparison.
+We initially fit 3 calibration MLAs to the soil spectral principal components data with 10-fold cross-validation. Note that the calibration pattern is similar to the wet chemistry-based pattern that was generated above. We just substitute the soil spectral principal components for the wet chemistry features but are running the same MLAs for comparison.
 
-```{r, warning = FALSE, results = 'hide'}
+```{r, results = 'hide'}
 # Set randomization seed
 seed <- 1235813
 set.seed(seed)
@@ -292,7 +292,7 @@ registerDoParallel(mc)
 tc <- trainControl(method = "cv", number = 10, allowParallel = TRUE, savePredictions="final")
 
 # Fit 3 calibration models using the spectral principal component features
-plist <- caretList(scal, lcal,
+slist <- caretList(scal, lcal,
                    trControl = tc,
                    tuneList = NULL,
                    methodList = c("rf", "gbm", "cubist"),
@@ -300,8 +300,6 @@ plist <- caretList(scal, lcal,
                    metric = "RMSE")
 
 stopCluster(mc)
-fname <- paste("./MW_Zn_data/Results/", labs, "_plist.rds", sep = "")
-saveRDS(plist, fname)
+fname <- paste("./MW_Zn_data/Results/", labs, "_slist.rds", sep = "")
+saveRDS(slist, fname)
 ```
-
-
