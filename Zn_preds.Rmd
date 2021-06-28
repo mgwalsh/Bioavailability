@@ -38,7 +38,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r}
 # Package names
-packages <- c("downloader", "devtools", "leaflet", "caret", "caretEnsemble", "plyr", "MASS", "randomForest", "gbm", "xgboost", "Cubist", "pls", "glmnet", "quantreg", "doParallel")
+packages <- c("downloader", "caret", "caretEnsemble", "MASS", "pls", "glmnet", "randomForest", "xgboost", "Cubist", "quantreg", "leaflet", "htmlwidgets", "plyr", "dplyr", "doParallel")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -502,9 +502,9 @@ curve(sc50Q$coefficients[6]*x+sc50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-The initial grain Zn prediction using crop MIR spectra does not look as promising as those derived from the soil data, which is somewhat counterintuitive given that the MIR spectra were measured on the grain itself. So, we will try a variable regularization and selection approach here that fits 3 additional MLAs, `pls`, `glmnet` and `xgbLinear`, and will then re-ensemble all of the available individual predictions. Note that this next calibration step can take up to ~1 hour to run on a normal computer with 8 cores and 16 Gb of RAM ... there are just a lot of spectral features to sort through.
+The initial grain Zn prediction using crop MIR spectra does not look as promising as those derived from the soil data, which is somewhat counterintuitive given that the MIR spectra were measured on the grain itself. So, we will also try a variable regularization and selection approach here that fits 3 additional MLAs, `pls`, `glmnet` and `xgbLinear`, and will then re-ensemble all of the available individual predictions. Note that this next calibration step can take up to ~1 hour to run on a normal computer with 8 cores and 16 Gb of RAM ... there are just a lot of spectral features to sort through. Again, you can the script in the associated markdown document.
 
-```{r, results = 'hide'}
+```{r, echo = FALSE, results = 'hide'}
 # Set randomization seed
 seed <- 1235813
 set.seed(seed)
@@ -543,17 +543,20 @@ saveRDS(rlist, fname)
 ```
 
 ```{r, results = 'hide'}
+fval <- select(val,19:3594) ## full spectral signatures
+pval <- select(val,3595:3614) ## PCA scores
+
 # Individual model predictions on the validation set
-val$rf_clist <- predict(clist$rf, val)
-val$gb_clist <- predict(clist$gbm, val)
-val$cu_clist <- predict(clist$cubist, val)
-val$pl_rlist <- predict(rlist$pls, val)
-val$gl_rlist <- predict(rlist$glmnet, val)
-val$pl_rlist <- predict(rlist$xgbLinear, val)
+val$rf_clist <- predict(clist$rf, pval)
+val$gb_clist <- predict(clist$gbm, pval)
+val$cu_clist <- predict(clist$cubist, pval)
+val$pl_rlist <- predict(rlist$pls, fval)
+val$gl_rlist <- predict(rlist$glmnet, fval)
+val$xl_rlist <- predict(rlist$xgbLinear, fval)
 
 # Set labels and features
 lval <- as.vector(t(val[labs]))
-fval <- val[ ,3615:3617] ## validation features
+fval <- select(val,3615:3617,3620:3622) ## validation features
 
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
@@ -568,10 +571,60 @@ sc <- train(fval, lval,
             trControl = tc,
             metric = "RMSE")
 
-val$sc <- predict(sc, val) ## stacked predictions
 stopCluster(mc)
 fname <- paste("./MW_Zn_data/Results/", labs, "_cstack.rds", sep = "")
 saveRDS(sc, fname)
 ```
 
+```{r, echo = FALSE}
+summary(sc)
+```
+
+```{r, echo = FALSE, results = 'hide'}
+# All features
+fval <- select(cdata,19:3594) ## full spectral signatures
+pval <- select(cdata,3595:3614) ## PCA scores
+
+# Individual model predictions on the validation set
+cdata$rf_clist <- predict(clist$rf, pval)
+cdata$gb_clist <- predict(clist$gbm, pval)
+cdata$cu_clist <- predict(clist$cubist, pval)
+cdata$pl_rlist <- predict(rlist$pls, fval)
+cdata$gl_rlist <- predict(rlist$glmnet, fval)
+cdata$xl_rlist <- predict(rlist$xgbLinear, fval)
+cdata$sc <- predict(sc, cdata)
+
+# Quantile regression fit on whole dataset
+scQ <- rq(Zn~sc, tau=c(0.05,0.5,0.95), data = cdata)
+summary(scQ)
+```
+
+```{r, echo = FALSE, results = 'hide'}
+# Gain and offset adjustment
+cdata$sc50 <- scQ$coefficients[4]*cdata$sc+scQ$coefficients[3] ## 50% quantile adjustment
+
+# Refit quantile regression
+sc50Q <- rq(Zn~sc50, tau=c(0.05,0.5,0.95), data = cdata)
+```
+
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between gain and offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
+
+par(pty="s", mar=c(4,4,1,1))
+plot(Zn~sc50, xlab="Offset adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
+     xlim=c(10,50), ylim=c(10,50), cdata)
+curve(sc50Q$coefficients[2]*x+sc50Q$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
+curve(sc50Q$coefficients[4]*x+sc50Q$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
+curve(sc50Q$coefficients[6]*x+sc50Q$coefficients[5], add=T, from=10, to=50, col="blue", lwd=2)
+abline(c(0,1), col="grey", lwd=1)
+```
+
+**The main takeaway from this section is that the measured Zn levels in maize grain are currently not well predicted by maize grain MIR spectra.** We are not sure about the causes of this but it does not seem to be an underlying problem of the MLAs that were used. One possibility could be that NIR spectra might actually be more useful in this context, but this is certainly an open question. For the time being we essentially appear to be just fitting noise here.
+
+# Takeaways
+
+The main takeaways from this notebook are the following ...
+
+# To-dos
+
+tbc ...
 
