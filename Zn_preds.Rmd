@@ -390,7 +390,7 @@ Again, we initially calibrate 3 MLAs to the soil spectral principal components d
 # Crop spectral principal components
 cspec.pca <- prcomp(sdata[ ,19:3594], center=T, scale=T) ## centered and scaled crop spectral PCAs
 cpcas <- predict(cspec.pca, cdata)
-cpcas <- cpcas[ ,1:20] ## save the first 25 components, which explain ~95% of the total crop spectral variability
+cpcas <- cpcas[ ,1:20] ## save the first 20 components, which explain ~95% of the total crop spectral variability
 fname <- paste("./MW_Zn_data/Results/", "spec_cpcas.rds", sep = "")
 saveRDS(cspec.pca, fname) ## saves crop spectral PCA model
 
@@ -502,7 +502,7 @@ curve(sc50Q$coefficients[6]*x+sc50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-The initial maize grain Zn prediction using crop MIR spectra does not look as promising as those derived from the soil data, which is somewhat counterintuitive given that the MIR spectra were measured on the grain itself. So, we will try a variable regularization and selection approach here that fits 3 additional MLAs, `pls`, `glmnet` and `xgbLinear`, and will then re-ensemble all of the available individual predictions. Note that this next calibration step can take up to ~1 hour to run on a normal computer with 8 cores and 16 Gb of RAM.
+The initial grain Zn prediction using crop MIR spectra does not look as promising as those derived from the soil data, which is somewhat counterintuitive given that the MIR spectra were measured on the grain itself. So, we will try a variable regularization and selection approach here that fits 3 additional MLAs, `pls`, `glmnet` and `xgbLinear`, and will then re-ensemble all of the available individual predictions. Note that this next calibration step can take up to ~1 hour to run on a normal computer with 8 cores and 16 Gb of RAM.
 
 ```{r, echo = FALSE, results = 'hide'}
 # Set randomization seed
