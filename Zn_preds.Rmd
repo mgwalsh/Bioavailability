@@ -225,7 +225,7 @@ sdata$sw50 <- swQ$coefficients[4]*sdata$sw+swQ$coefficients[3] ## 50% quantile a
 sw50Q <- rq(Zn~sw50, tau=c(0.05,0.5,0.95), data = sdata)
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median adjusted predictions from soil data and measured maize grain zinc (Zn) levels."}
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between bias and offset adjusted predictions from soil data and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~sw50, xlab="Offset adjusted ensemble grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
@@ -352,14 +352,14 @@ summary(ssQ)
 ```
 
 ```{r, echo = FALSE}
-# Offset adjustment
+# Gain and offset adjustment
 sdata$ss50 <- ssQ$coefficients[4]*sdata$ss_slist+ssQ$coefficients[3] ## 50% quantile adjustment
 
 # Refit quantile regression
 ss50Q <- rq(Zn~ss50, tau=c(0.05,0.5,0.95), data = sdata)
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between gain and offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~ss50, xlab="Offset adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
@@ -484,14 +484,14 @@ summary(scQ)
 Skipping ahead to the results of the script the below shows the relationship between Zn predictions generated from maize grain MIR spectra and the corresponding reference measurements.
 
 ```{r, echo = FALSE}
-# Offset adjustment
+# Gain and offset adjustment
 cdata$sc50 <- scQ$coefficients[4]*cdata$sc_clist+scQ$coefficients[3] ## 50% quantile adjustment
 
 # Refit quantile regression
 sc50Q <- rq(Zn~sc50, tau=c(0.05,0.5,0.95), data = cdata)
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between gain and offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~sc50, xlab="Offset adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
