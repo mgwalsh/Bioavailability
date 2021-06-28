@@ -359,7 +359,7 @@ sdata$ss50 <- ssQ$coefficients[4]*sdata$ss_slist+ssQ$coefficients[3] ## 50% quan
 ss50Q <- rq(Zn~ss50, tau=c(0.05,0.5,0.95), data = sdata)
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between median offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~ss50, xlab="Offset adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
@@ -370,7 +370,7 @@ curve(ss50Q$coefficients[6]*x+ss50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-We can compare how the spectral predictions perform relative to the much more expensive and time consuming wet chemistry based predictions. The figure below shows that relationship.
+We can also compare how the spectral predictions perform relative to the much more expensive and time consuming soil wet chemistry based predictions. The figure below shows that relationship.
 
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between offset adjusted wet chemistry and spectral predictions."}
 
@@ -379,6 +379,8 @@ plot(sw50~ss50, xlab="Spectral prediction (ppm)", ylab="Wet chemistry prediction
      xlim=c(10,50), ylim=c(10,50), sdata)
 abline(c(0,1), col="grey", lwd=1)
 ```
+
+**The main takeaway from this section is that maize grain Zn levels are reliably predicted using soil MIR spectra and simple, quite fast MLAs for calibration and prediction of co-located maize grain Zn levels.** In this particular case there was actually no need to use to use much slower and/or computationally challenging algorithms such as `pls`, `glmnet` and/or `xgbLinear` that are often used for regulariztion and variable selection in high dimensional, chemometric datasets. So, we have not pursued here. A simple PCA data reduction step of the raw spectra appears to have been quite sufficient in this case.  
 
 ## Calibration and prediction with crop spectra and `caretEnsemble`
 
