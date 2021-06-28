@@ -481,7 +481,7 @@ scQ <- rq(Zn~sc_clist, tau=c(0.05,0.5,0.95), data = cdata)
 summary(scQ)
 ```
 
-So, skipping ahead to the results of the script the below shows the relationship between Zn predictions generated from maize grain MIR spectra and the corresponding reference measurements.
+Skipping ahead to the results of the script the below shows the relationship between Zn predictions generated from maize grain MIR spectra and the corresponding reference measurements.
 
 ```{r, echo = FALSE}
 # Offset adjustment
@@ -501,4 +501,5 @@ curve(sc50Q$coefficients[4]*x+sc50Q$coefficients[3], add=T, from=10, to=50, col=
 curve(sc50Q$coefficients[6]*x+sc50Q$coefficients[5], add=T, from=10, to=50, col="blue", lwd=2)
 abline(c(0,1), col="grey", lwd=1)
 ```
+
 
