@@ -338,7 +338,7 @@ saveRDS(ss, fname)
 summary(ss)
 ```
 
-This is the `slist` prediction plot below. Note that the intermediate chunks are not shown in this html; however, they are included in the script should you wish to check.
+This is the `slist` prediction plot below. Note that the intermediate chunks are not shown in this notebook; however, they are included in the script should you wish to check.
 
 ```{r, echo = FALSE, results = 'hide'}
 sdata$rf_slist <- predict(slist$rf, sdata)
@@ -370,7 +370,7 @@ curve(ss50Q$coefficients[6]*x+ss50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-We can also compare how the spectral predictions perform relative to the much more expensive and time consuming soil wet chemistry based predictions. The figure below shows that relationship.
+We can now also compare how the spectral predictions perform relative to the much more expensive and time consuming soil wet chemistry based predictions. The figure below shows that relationship.
 
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between offset adjusted wet chemistry and spectral predictions."}
 
@@ -380,8 +380,60 @@ plot(sw50~ss50, xlab="Spectral prediction (ppm)", ylab="Wet chemistry prediction
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-**The main takeaway from this section is that maize grain Zn levels are reliably predicted using soil MIR spectra and simple, quite fast MLAs for calibration and prediction of co-located maize grain Zn levels.** In this particular case there was actually no need to use much slower and/or computationally more challenging algorithms such as `pls`, `glmnet` and/or `xgbLinear` that are often used for regulariztion and variable selection with high dimensional, chemometric datasets. So, we have not pursued those here. A simple PCA data reduction step of the raw MIR spectra appears to have been quite sufficient in this case.  
+**The main takeaway from this section is that maize grain Zn levels are reliably predicted using soil MIR spectra and standard, quite fast MLAs.** In this particular case there was actually no need to pursue much slower and/or computationally more challenging algorithms such as `pls`, `glmnet` and/or `xgbLinear` that are often used for regulariztion and variable selection in the analyses of high-dimensional, chemometric datasets. A simple PCA data reduction step of the raw MIR spectra appears to have been quite sufficient for both ensemble model calibration and validation.  
 
 ## Calibration and prediction with crop spectra and `caretEnsemble`
 
+Again, we initially calibrate 3 MLAs to the soil spectral principal components data with 10-fold cross-validation. Note that the calibration and validation code patterns are similar to both the wet-chemistry based and the soil MIR spectral patterns that were generated above. We have just substituted the crop spectral principal components for the soil principal component features but are running the same MLAs for comparison. Because the script is very similar to that in the above sections, most of it is not shown in the notebook. But of course, you can find it in the markdown document on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/Zn_preds.Rmd), should you wish to explore more.
+
+```{r, echo = FALSE, results = 'hide'}
+# Crop spectral principal components
+cspec.pca <- prcomp(sdata[ ,19:3594], center=T, scale=T) ## centered and scaled crop spectral PCAs
+cpcas <- predict(cspec.pca, cdata)
+cpcas <- cpcas[ ,1:25] ## save the first 25 components, which explain ~95% of the total crop spectral variability
+fname <- paste("./MW_Zn_data/Results/", "spec_cpcas.rds", sep = "")
+saveRDS(cspec.pca, fname) ## saves crop spectral PCA model
+
+# Merge files
+cdata <- cbind(cdata, cpcas)
+write.csv(cdata, "./MW_Zn_data/Results/MW_crop_Zn_data.csv", row.names = F)
+```
+
+```{r, echo = FALSE, results = 'hide'}
+# Set randomization seed
+seed <- 1235813
+set.seed(seed)
+
+# Split data into calibration and validation sets
+gsIndex <- createDataPartition(cdata$Zn, p = 8/10, list=F, times = 1)
+cal <- cdata[ gsIndex,]
+val <- cdata[-gsIndex,]
+
+# Set calibration labels
+labs <- c("Zn") ## maize grain label
+lcal <- as.vector(t(cal[labs]))
+
+# Calibration features
+ccal <- cal[ ,3595:3619] ## crop spectral PCAs
+
+# Start doParallel to parallelize model fitting
+set.seed(seed)
+mc <- makeCluster(detectCores())
+registerDoParallel(mc)
+
+# Specify model training controls
+tc <- trainControl(method = "cv", number = 10, allowParallel = TRUE, savePredictions="final")
+
+# Fit 3 calibration models using the spectral principal component features
+clist <- caretList(ccal, lcal,
+                   trControl = tc,
+                   tuneList = NULL,
+                   methodList = c("rf", "gbm", "cubist"),
+                   preProcess = c("center","scale"),
+                   metric = "RMSE")
+
+stopCluster(mc)
+fname <- paste("./MW_Zn_data/Results/", labs, "_clist.rds", sep = "")
+saveRDS(clist, fname)
+```
 
