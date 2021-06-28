@@ -380,7 +380,7 @@ plot(sw50~ss50, xlab="Spectral prediction (ppm)", ylab="Wet chemistry prediction
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-**The main takeaway from this section is that maize grain Zn levels are reliably predicted using soil MIR spectra and simple, quite fast MLAs for calibration and prediction of co-located maize grain Zn levels.** In this particular case there was actually no need to use much slower and/or computationally more challenging algorithms such as `pls`, `glmnet` and/or `xgbLinear` that are often used for regulariztion and variable selection in high dimensional, chemometric datasets. So, we have not pursued those here. A simple PCA data reduction step of the raw MIR spectra appears to have been quite sufficient in this case.  
+**The main takeaway from this section is that maize grain Zn levels are reliably predicted using soil MIR spectra and simple, quite fast MLAs for calibration and prediction of co-located maize grain Zn levels.** In this particular case there was actually no need to use much slower and/or computationally more challenging algorithms such as `pls`, `glmnet` and/or `xgbLinear` that are often used for regulariztion and variable selection with high dimensional, chemometric datasets. So, we have not pursued those here. A simple PCA data reduction step of the raw MIR spectra appears to have been quite sufficient in this case.  
 
 ## Calibration and prediction with crop spectra and `caretEnsemble`
 
