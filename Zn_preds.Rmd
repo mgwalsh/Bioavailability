@@ -626,7 +626,7 @@ The main takeaways from this notebook are the following:
 
 * Maize grain Zn levels could not be reliably predicted from the corresponding maize grain MIR spectra. This is a somewhat surprising and counterintuitive result that should be explored further, given the quite reasonable predictions that were obtained using the soil spectra. As a first check, we recommend that the data are examined again to ensure that the crop Zn labels are properly aligned with their corresponding MIR spectra in the database that was available to us at present.
 
-* There is potential scope within the [GeoNutrition project](http://www.geonutrition.com) to test this approach for other mineral micronutrients (e.g., iron, iodine and selenium) that might of concern in particular regions of interest and/or about other crops.
+* There is potential scope within the [GeoNutrition project](http://www.geonutrition.com) to also test this approach for other mineral micronutrients (e.g., iron, iodine and selenium) that might of concern in particular regions of interest and/or about other crops.
 
-* Computationally, all of the code presented in this notebook runs fast and probably could be automated, such that when a (soil) MIR measurement is received in a laboratory a maize grain Zn prediction could be issued in near-real time. Note that other spectrometer setups and the associated calibration transfer step might need to be taken into account in that regard.   
+* Computationally, all of the code presented in this notebook runs fast and probably could be automated, such that when a (soil) MIR measurement is received in a laboratory a maize grain Zn prediction could be issued in near-real time. Note that other spectrometer setups and the associated calibration transfer steps might need to be taken into account in that regard.   
 
