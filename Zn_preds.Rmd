@@ -624,7 +624,7 @@ The main takeaways from this notebook are the following:
 
 * Maize grain Zn levels are well predicted from both soil wet-chemistry and MIR data with standard MLAs. The main benefit of using MIR in this case is to increase lab throughputs and to reduce the costs of obtaining risk factor data for micronutrient deficiency assessments. This might advance localized Zn deficiency diagnostics and risk assessments that could potentially be carried out routinely, at low cost, and across large geographical regions and populations of interest.
 
-* Maize grain Zn levels could not be reliably predicted from the corresponding maize grain MIR spectra. This is a somewhat surprising and counterintuitive result that should be explored further, given the quite reasonable predictions using the soil spectra. As a first check, we recommend that the data are examined again to ensure that the crop Zn labels are properly aligned with their corresponding MIR spectra in the database that was available to us at present.
+* Maize grain Zn levels could not be reliably predicted from the corresponding maize grain MIR spectra. This is a somewhat surprising and counterintuitive result that should be explored further, given the quite reasonable predictions that were obtained using the soil spectra. As a first check, we recommend that the data are examined again to ensure that the crop Zn labels are properly aligned with their corresponding MIR spectra in the database that was available to us at present.
 
 * There is potential scope within the [GeoNutrition project](http://www.geonutrition.com) to test this approach for other mineral micronutrients (e.g., iron, iodine and selenium) that might of concern in particular regions of interest and/or about other crops.
 
