@@ -370,7 +370,7 @@ abline(c(0,1), col="grey", lwd=1)
 
 We can now also compare how the spectral predictions perform relative to the much more expensive and time consuming soil wet chemistry based predictions. The figure below shows that relationship.
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between offset adjusted wet chemistry and spectral predictions."}
+```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between bias and offset adjusted wet chemistry and spectral predictions."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(sw50~ss50, xlab="Spectral prediction (ppm)", ylab="Wet chemistry prediction (ppm)", cex.lab=1.2,
