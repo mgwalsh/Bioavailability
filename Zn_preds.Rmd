@@ -378,7 +378,7 @@ plot(sw50~ss50, xlab="Spectral prediction (ppm)", ylab="Wet chemistry prediction
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-**The main takeaway from this section is that maize grain Zn levels are reliably predicted using soil MIR spectra and standard, quite fast MLAs.** In this particular case there was actually no need to pursue much slower and/or computationally more challenging algorithms such as `pls`, `glmnet` and/or `xgbLinear` that are often used for regulariztion and variable selection in the analyses of high-dimensional, chemometric datasets. A simple PCA data reduction step of the raw MIR spectra appears to have been quite sufficient for both ensemble model calibration and validation.  
+**The takeaway from this section is that maize grain Zn levels are reliably predicted using soil MIR spectra and standard, quite fast MLAs.** In this particular case there was actually no need to pursue much slower and/or computationally more challenging algorithms such as `pls`, `glmnet` and/or `xgbLinear` that are often used for regulariztion and variable selection in the analyses of high-dimensional, chemometric datasets. A simple PCA data reduction step of the raw MIR spectra appears to have been quite sufficient for both ensemble model calibration and validation.  
 
 ## Calibration and prediction with crop spectra and `caretEnsemble`
 
@@ -485,17 +485,6 @@ cdata$sc50 <- scQ$coefficients[4]*cdata$sc_clist+scQ$coefficients[3] ## 50% quan
 
 # Refit quantile regression
 sc50Q <- rq(Zn~sc50, tau=c(0.05,0.5,0.95), data = cdata)
-```
-
-```{r, echo = FALSE, results = 'hide', fig.align = "center", fig.cap = "Relationship between gain and offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
-
-par(pty="s", mar=c(4,4,1,1))
-plot(Zn~sc50, xlab="Adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
-     xlim=c(10,50), ylim=c(10,50), cdata)
-curve(sc50Q$coefficients[2]*x+sc50Q$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
-curve(sc50Q$coefficients[4]*x+sc50Q$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
-curve(sc50Q$coefficients[6]*x+sc50Q$coefficients[5], add=T, from=10, to=50, col="blue", lwd=2)
-abline(c(0,1), col="grey", lwd=1)
 ```
 
 The initial grain Zn predictions using crop MIR spectra do not look as promising as those derived from the soil data. This is somewhat counterintuitive given that the spectra were measured on the grain itself. So, we will also try a variable regularization and selection approach here that fits 3 additional MLAs, [`pls`](https://www.rdocumentation.org/packages/mixOmics/versions/6.3.2/topics/pls), [`glmnet`](https://www.rdocumentation.org/packages/glmnet/versions/4.1-2/topics/glmnet) and [`xgbLinear`](https://cran.r-project.org/web/packages/xgboost/xgboost.pdf), and will then re-ensemble all of the available individual predictions. Note that this next calibration step can take up to ~1 hour to run on a normal computer with 8 cores and 16 Gb of RAM ... there are just a lot of spectral features to sort through. Again, you can find the script in the associated markdown document on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/Zn_preds.Rmd).
@@ -614,7 +603,7 @@ curve(sc50Q$coefficients[6]*x+sc50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-**The main takeaway from this section is that the measured Zn levels in maize grain are currently not well predicted by maize grain MIR spectra.** We are not sure about the causes of this but it does not seem to be an underlying problem of the MLAs that were used. One possibility could be that VIS / NIR spectra might actually be more useful in this context, but this is certainly an open question. Another possibility is that the data are simply misaligned in the database. For the time being we essentially appear to be just fitting noise here.
+**The takeaway from this section is that the measured Zn levels in maize grain are currently not well predicted by maize grain MIR spectra.** We are not sure about the causes of this but it does not seem to be an underlying problem of the MLAs that were used. One possibility could be that VIS / NIR spectra might actually be more useful in this context, but this is certainly an open question. Another possibility is that the data are simply misaligned in the database. For the time being we essentially appear to be just fitting noise here.
 
 # Takeaways
 
