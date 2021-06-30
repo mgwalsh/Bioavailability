@@ -464,7 +464,7 @@ fname <- paste("./MW_Zn_data/Results/", labs, "_cstack.rds", sep = "")
 saveRDS(sc, fname)
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, results = 'hide'}
 summary(sc)
 ```
 
@@ -479,8 +479,6 @@ scQ <- rq(Zn~sc_clist, tau=c(0.05,0.5,0.95), data = cdata)
 summary(scQ)
 ```
 
-Skipping ahead to the results of the script the below shows the relationship between Zn predictions generated from maize grain MIR spectra and the corresponding reference measurements.
-
 ```{r, echo = FALSE}
 # Gain and offset adjustment
 cdata$sc50 <- scQ$coefficients[4]*cdata$sc_clist+scQ$coefficients[3] ## 50% quantile adjustment
@@ -489,7 +487,7 @@ cdata$sc50 <- scQ$coefficients[4]*cdata$sc_clist+scQ$coefficients[3] ## 50% quan
 sc50Q <- rq(Zn~sc50, tau=c(0.05,0.5,0.95), data = cdata)
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between gain and offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
+```{r, echo = FALSE, results = 'hide', fig.align = "center", fig.cap = "Relationship between gain and offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
 plot(Zn~sc50, xlab="Adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
