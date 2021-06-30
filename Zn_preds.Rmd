@@ -226,7 +226,7 @@ sw50Q <- rq(Zn~sw50, tau=c(0.05,0.5,0.95), data = sdata)
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between bias and offset adjusted predictions from soil data and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
-plot(Zn~sw50, xlab="Offset adjusted ensemble grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
+plot(Zn~sw50, xlab="Adjusted ensemble grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
      xlim=c(10,50), ylim=c(10,50), sdata)
 curve(sw50Q$coefficients[2]*x+sw50Q$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
 curve(sw50Q$coefficients[4]*x+sw50Q$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
@@ -238,7 +238,7 @@ abline(c(0,1), col="grey", lwd=1)
 
 # Predicting maize grain Zn from soil and plant MIR spectra
 
-One potentially problematic factor for many MLAs in spectral chemometric applications is the ["Curse of dimensionality"](https://en.wikipedia.org/wiki/Curse_of_dimensionality). In this case this is imposed by the high dimensionality of the spectral data: *w* = 3,575 individual wavebands for both the soil and plant spectra in this particular case. Many of those wavebands are strongly correlated, particularly those proximal to one another on the NIR / MIR reflectance / absorbance spectrum. These types of data pose generalization and prediction challenges for MLAs that involve e.g., [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and/or [Artificial neural networks](https://en.wikipedia.org/wiki/Deep_learning), and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) and its consequent model validation / generalization problems. Generally, the data would need to be dimensionally reduced and decorrelated to be reliably fit by these types of algorithms.
+One potentially problematic factor for many MLAs in chemometric applications is the ["Curse of dimensionality"](https://en.wikipedia.org/wiki/Curse_of_dimensionality). In this particlar case the *curse* manifests in the high dimensionality of the spectral data: *w* = 3,575 individual wavebands for both the soil and plant spectra. Many of those wavebands are strongly correlated, particularly those proximal to one another on the NIR / MIR reflectance / absorbance spectrum. These types of data pose generalization and prediction challenges for MLAs that involve e.g., [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and/or [Artificial neural networks](https://en.wikipedia.org/wiki/Deep_learning), and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) and its consequent model validation / generalization problems. Generally, the data would need to be dimensionally reduced and decorrelated to be reliably fit by these types of algorithms.
 
 Other algorithms such as [Partial least squares regression (PLS)](https://en.wikipedia.org/wiki/Partial_least_squares_regression), [Ridge regression](https://en.wikipedia.org/wiki/Ridge_regression) and/or [Lasso regression](https://en.wikipedia.org/wiki/Lasso_(statistics)) handle the high-dimensional data and collinearities reasonably well in a linear context but are frequently not very good at predicting the quite common non-linear and/or threshold relationships between the spectral signatures and their reference measurements. This section of the notebook covers workflows for both types of MLAs and looks at how those might be usefully combined (stacked).
 
@@ -336,7 +336,7 @@ saveRDS(ss, fname)
 summary(ss)
 ```
 
-This is the `slist` prediction plot below. Note that the intermediate chunks are not shown in this notebook; however, they are included in the script should you wish to check.
+This is the `slist` prediction plot below. Note that the intermediate chunks are not shown in this notebook; however, they are included in the markdown document  should you wish to check.
 
 ```{r, echo = FALSE, results = 'hide'}
 sdata$rf_slist <- predict(slist$rf, sdata)
@@ -360,7 +360,7 @@ ss50Q <- rq(Zn~ss50, tau=c(0.05,0.5,0.95), data = sdata)
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between gain and offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
-plot(Zn~ss50, xlab="Offset adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
+plot(Zn~ss50, xlab="Adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
      xlim=c(10,50), ylim=c(10,50), sdata)
 curve(ss50Q$coefficients[2]*x+ss50Q$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
 curve(ss50Q$coefficients[4]*x+ss50Q$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
@@ -492,7 +492,7 @@ sc50Q <- rq(Zn~sc50, tau=c(0.05,0.5,0.95), data = cdata)
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between gain and offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
-plot(Zn~sc50, xlab="Offset adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
+plot(Zn~sc50, xlab="Adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
      xlim=c(10,50), ylim=c(10,50), cdata)
 curve(sc50Q$coefficients[2]*x+sc50Q$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
 curve(sc50Q$coefficients[4]*x+sc50Q$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
@@ -608,7 +608,7 @@ sc50Q <- rq(Zn~sc50, tau=c(0.05,0.5,0.95), data = cdata)
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Relationship between gain and offset adjusted spectral predictions and measured maize grain zinc (Zn) levels."}
 
 par(pty="s", mar=c(4,4,1,1))
-plot(Zn~sc50, xlab="Offset adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
+plot(Zn~sc50, xlab="Adjusted grain Zn prediction (ppm)", ylab="Measured grain Zn (ppm)", cex.lab=1.2,
      xlim=c(10,50), ylim=c(10,50), cdata)
 curve(sc50Q$coefficients[2]*x+sc50Q$coefficients[1], add=T, from=10, to=50, col="blue", lwd=2)
 curve(sc50Q$coefficients[4]*x+sc50Q$coefficients[3], add=T, from=10, to=50, col="red", lwd=2)
