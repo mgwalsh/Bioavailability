@@ -576,7 +576,7 @@ saveRDS(sc, fname)
 summary(sc)
 ```
 
-```{r, echo = FALSE, results = 'hide'}
+```{r}
 # All features
 fval <- select(cdata,19:3594) ## full spectral signatures
 pval <- select(cdata,3595:3614) ## PCA scores
