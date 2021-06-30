@@ -336,7 +336,7 @@ saveRDS(ss, fname)
 summary(ss)
 ```
 
-This is the `slist` prediction plot below. Note that the intermediate chunks are not shown in this notebook; however, they are included in the markdown document  should you wish to check.
+This is the `slist` prediction plot below. Note that the intermediate chunks are not shown in this notebook; however, they are included in the markdown document should you wish to check.
 
 ```{r, echo = FALSE, results = 'hide'}
 sdata$rf_slist <- predict(slist$rf, sdata)
