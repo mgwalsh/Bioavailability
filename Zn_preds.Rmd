@@ -597,7 +597,7 @@ summary(scQ)
 
 ```{r, echo = FALSE, results = 'hide'}
 # Gain and offset adjustment
-cdata$sc50 <- scQ$coefficients[4]*cdata$sc+scQ$coefficients[3] ## 50% quantile adjustment
+cdata$sc50 <- scQ$coefficients[4]*cdata$sc+scQ$coefficients[3] ## 50% quantile offset / bias adjustment
 
 # Refit quantile regression
 sc50Q <- rq(Zn~sc50, tau=c(0.05,0.5,0.95), data = cdata)
