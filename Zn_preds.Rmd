@@ -234,7 +234,7 @@ curve(sw50Q$coefficients[6]*x+sw50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-**The main takeaway message from this section is that Zn levels in maize grain are reasonably well-predicted from *"gold-standard"*, wet chemistry soil properties.** The residual differences may be due external, environmental factors at the time of sample collection, laboratory measurement variability and/or the inability of the MLAs that were used for calibration and validation to capture the underlying bio-kinetics. The `randomForest` model was a clear winner here, but it is unusual for a single MLA to outperform all other contrasting MLAs i.e., generalized boosting and cubist in this case.
+**The takeaway message from this section is that Zn levels in maize grain are reasonably well-predicted from *"gold-standard"*, wet chemistry soil properties.** The residual differences may be due external, environmental factors at the time of sample collection, laboratory measurement variability and/or the inability of the MLAs that were used for calibration and validation to capture the underlying bio-kinetics. The `randomForest` model was a clear winner here, but it is unusual for a single MLA to outperform all other contrasting MLAs i.e., generalized boosting and cubist in this case.
 
 # Predicting maize grain Zn from soil and plant MIR spectra
 
@@ -259,7 +259,7 @@ sdata <- cbind(sdata, spcas)
 write.csv(sdata, "./MW_Zn_data/Results/MW_soil_Zn_data.csv", row.names = F)
 ```
 
-## Calibration and prediction with soil spectra and `caretEnsemble`
+## Calibration and prediction with soil spectra
 
 We initially calibrate 3 MLAs to the soil spectral principal components data with 10-fold cross-validation. Note that the calibration code pattern is similar to the wet-chemistry-based pattern that was generated above. We have just substituted the soil spectral principal components for the wet chemistry features but are running the same MLAs for comparison.
 
@@ -380,7 +380,7 @@ abline(c(0,1), col="grey", lwd=1)
 
 **The takeaway from this section is that maize grain Zn levels are reliably predicted using soil MIR spectra and standard, quite fast MLAs.** In this particular case there was actually no need to pursue much slower and/or computationally more challenging algorithms such as `pls`, `glmnet` and/or `xgbLinear` that are often used for regulariztion and variable selection in the analyses of high-dimensional, chemometric datasets. A simple PCA data reduction step of the raw MIR spectra appears to have been quite sufficient for both ensemble model calibration and validation.  
 
-## Calibration and prediction with crop spectra and `caretEnsemble`
+## Calibration and prediction with crop spectra
 
 Again, we initially calibrate 3 MLAs to the soil spectral principal components data with 10-fold cross-validation. Note that the calibration and validation code patterns are similar to both the wet-chemistry based and the soil MIR spectral patterns that were generated above. We have just substituted the crop spectral principal components for the soil principal component features but are running the same MLAs for comparison. Because the script is very similar to that in the above sections, most of it is not shown in the notebook. But of course, you can find everything in the markdown document on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/Zn_preds.Rmd), should you wish to explore more.
 
