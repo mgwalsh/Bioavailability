@@ -603,7 +603,7 @@ curve(sc50Q$coefficients[6]*x+sc50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-**The takeaway from this section is that the measured Zn levels in maize grain are currently not well predicted by maize grain MIR spectra.** We are not sure about the causes of this but it does not seem to be an underlying problem of the MLAs that were used. One possibility could be that VIS / NIR spectra might actually be more useful in this context, but this is certainly an open question. Another possibility is that the data are simply misaligned in the database. For the time being we essentially appear to be just fitting noise here. Useful dignostics in this context would be to cross-check the crop spectra against other elements e.g., phosphorus, calcium, magnesium, iron levels etc.
+**The takeaway from this section is that the measured Zn levels in maize grain are currently not well predicted by maize grain MIR spectra.** We are not sure about the causes of this but it does not seem to be an underlying problem of the MLAs that were used. One possibility could be that VIS / NIR spectra might actually be more useful in this context, but this is certainly an open question. Another possibility is that the data are simply misaligned in the database. For the time being we essentially appear to be just fitting noise here. Useful dignostics in this context would be to cross-check the crop spectra against other elements e.g., grain phosphorus, calcium, magnesium, iron levels etc.
 
 # Takeaways
 
