@@ -38,7 +38,7 @@ To actually run the notebook, you will need to load the packages indicated in th
 
 ```{r}
 # Package names
-packages <- c("downloader", "caret", "caretEnsemble", "MASS", "pls", "glmnet", "randomForest", "xgboost", "Cubist", "quantreg", "leaflet", "htmlwidgets", "plyr", "dplyr", "doParallel")
+packages <- c("downloader", "caret", "caretEnsemble", "MASS", "pls", "glmnet", "randomForest", "gbm", "xgboost", "Cubist", "quantreg", "leaflet", "htmlwidgets", "plyr", "dplyr", "doParallel")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
