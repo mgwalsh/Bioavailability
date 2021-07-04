@@ -60,6 +60,6 @@ w ## plot widget
 
 # Data conversions
 
-This section of the notebook sets up 3 data frames for the subsequnt CoDA. The first focuses on *macro-nutrients* (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), the second on the *trace nutrients* (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo and I), and the third on the combination of both of the macro and trace nutrients. The differentiation between *macro* and *trace* focuses only on the recommended dietary amounts that need to be consumed (by humans).
+This section of the notebook sets up 3 data frames for the subsequnt CoDA. The first focuses on *"macro-nutrients"* (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), the second on the *"trace nutrients"* (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo and I), and the third on the combination of both of the *macro and trace nutrients*. The differentiation between *macro* and *trace* is intended to highlight only the overall recommended dietary amounts that should be consumed (on a daily basis by humans).
 
 
