@@ -1,5 +1,5 @@
 ---
-title: CoDA workflows for evaluating nutrient compositions of food grains
+title: CoDA workflows for evaluating nutrient compositions of cereal grains
 author: M.G. Walsh, R. Rodríguez Iglesias, P.C. Nalivata and M.R. Broadley
 date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
 output:
