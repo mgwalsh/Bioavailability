@@ -38,7 +38,7 @@ To actually run the notebook, you will need to load the packages indicated in th
 
 ```{r}
 # Package names
-packages <- c("downloader", "caret", "caretEnsemble", "MASS", "pls", "glmnet", "randomForest", "gbm", "xgboost", "Cubist", "quantreg", "leaflet", "htmlwidgets", "plyr", "dplyr", "doParallel")
+packages <- c("osfr", "caret", "caretEnsemble", "MASS", "pls", "glmnet", "randomForest", "gbm", "xgboost", "Cubist", "quantreg", "leaflet", "htmlwidgets", "plyr", "dplyr", "doParallel")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -59,7 +59,7 @@ setwd("./MW_Zn_data")
 dir.create("./Results")
 
 # Data download
-download("https://osf.io/pdgk6/?raw=1", "MW_Zn_data.zip", mode="wb")
+osf_retrieve_file("pdgk6") %>% osf_download()
 unzip("MW_Zn_data.zip", overwrite = T)
 wchem <- read.table("MW_Zn_data.csv", header=T, sep=",") 
 sspec <- read.table("soil_MIR_spectra.csv", header=T, sep=",")
