@@ -16,7 +16,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most models of species distribution, photosynthesis, nutrient uptake, yield, and/or trophic dynamics assume no interaction between individual mineral nutrient elements and typically describe the associated processes as a function of only the potentially most limiting ones (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans.
+Most models of species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or dietary requirements assume no interaction between individual mineral nutrient elements and typically describe the associated processes as a function of only the potentially most limiting ones (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans.
 
 Compositional Data Analysis ([CoDA](http://www.compositionaldata.com/)) refers to the analyses of compositional data (CoDa), which are defined as vectors with strictly positive components whose sum is constant (e.g., 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information, including parts per concentration unit (e.g., ppm or mcg), but potentially also their molar equivalents. Arguably, all multivariate concentration data should be treated CoDa because as a whole they must sum to the per unit total of all the constituent parts e.g., in the case of ppm, to 10^6^ mg kg^-1^. The safe assumption with these types of data is that the parts of interest within the unit total cannot be expected to behave completely independently of all the other constituent parts. 
 
@@ -66,7 +66,7 @@ w ## plot widget
 
 ## CoDa conversions
 
-This section of the notebook sets up the CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the difference between *macro* and *micro* here is only intended to reflect the overall recommended daily dietary values (DDV) that should be consumed by people, and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
+This section of the notebook sets up the CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the difference between *macro* and *micro* here is only intended to reflect the recommended daily dietary values (DDV) that should be consumed by people, and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
 
 This next chunk [closes](https://econ-papers.upf.edu/papers/1554.pdf) the CoDa, and calculates *centered logratios* ([CLR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/clr)), which can then be analyzed, summarized and interpreted with conventional univariate, multivariate, and data modeling methods ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)). Note that you could also use other logratios such as the [ALR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/alr), or [ILR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/ilr) and/or different amalgamations here, but we shall leave those possibilities for you to explore. We also write out the resulting data frame to your `./MW_coda/Results` directory should you wish to process it in software other than R.
 
@@ -91,6 +91,6 @@ site <- cbind(locs, combo)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-# Logratio and endmember data reduction
+# Logratio and endmember data selections
 
 
