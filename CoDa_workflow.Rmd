@@ -62,12 +62,19 @@ w ## plot widget
 
 # CoDa conversions
 
-This section of the notebook sets up 3 data frames for the subsequent CoDA. The first focuses on mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), the second on **trace-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I), and the third on the combination of both the **macro and trace nutrients**. Note that the difference between macro and trace here is only intended to reflect the overall recommended daily dietary values (DV) that should be consumed by people, and not their nutritional importance or benefits. The differences may also prove to be useful for spatial mapping and/or soil property and MIR spectral predictions of grain nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
+This section of the notebook sets up 3 data frames for the subsequent CoDA. The first focuses on mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), the second on **trace-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I), and the third on the combination of both the **macro and trace nutrients**. Note that the difference between macro and trace here is only intended to reflect the overall recommended daily dietary values (DDV) that should be consumed by people, and not their nutritional importance or benefits. The differences may also prove to be useful for spatial mapping and/or soil property and MIR spectral predictions of grain nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
 
 This next chunk [closes](https://econ-papers.upf.edu/papers/1554.pdf) the relevant (`macro`, `trace` and `combined`) subcompositional parts of the grain CoDa and calculates *centered logratios* ([CLR](https://rdrr.io/cran/compositions/man/alr.html)), which can then be analyzed, summarized and interpreted with both conventional univariate and multivariate methods ([Greenacre, (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)). We also write out the wrangled data files to your `./MW_coda/Results` directory should you wish to process them in software other than R.
 
 ```{r}
+# Centered log ratio (clr) transforms
+varm <- c("Na", "Mg", "P", "S", "K", "Ca") ## grain macro minerals
+macro <- codat[varm]
 
+macro <- as.data.frame(clr(macro)) ## centered log ratio (clr) transform
+
+# macro <- cbind(wet$SSID, macro)
+# colnames(nbal)[colnames(nbal)=="wet$SSID"] <- "SSID"
 ```
 
 
