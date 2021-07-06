@@ -84,6 +84,6 @@ combo <- cbind(combo, macro)
 write.csv(combo, "./MW_coda/Results/MW_combo_coda.csv", row.names = F)
 ```
 
-## Logratio selection
+# Logratio and endmember selections
 
 
