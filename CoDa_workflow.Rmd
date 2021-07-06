@@ -91,6 +91,6 @@ site <- cbind(locs, combo)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-# Logratio and endmember selections
+# Logratio and endmember data reduction
 
 
