@@ -82,7 +82,7 @@ varm <- c("Na", "Mg", "P", "S", "K", "Ca")
 macro <- rowSums(combo[varm])
 combo <- cbind(combo, macro)
 
-# Attach site meta-data info
+# Attach site data info
 locv <- c("CropSampleID", "SoilSampleID", "lat", "lon", "crop", "fert") 
 locs <- codat[locv]
 site <- cbind(locs, combo)
