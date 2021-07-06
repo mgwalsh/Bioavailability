@@ -16,7 +16,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or dietary requirements assume no interactions between individual mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting, univariate ones (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans.
+Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between individual mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting, univariate ones (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans.
 
 Compositional Data Analysis ([CoDA](http://www.compositionaldata.com/)) refers to the analyses of compositional data (CoDa), which are defined as vectors with strictly positive components whose sum is constant (e.g., 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information, including parts per concentration unit (e.g., ppm or mcg), but potentially also their molar equivalents. Arguably, all multivariate concentration data should be treated CoDa because as a whole they must sum to the per unit total of all the constituent parts e.g., in the case of ppm, to 10^6^ mg kg^-1^. The safe assumption with these types of data is that the parts of interest within the unit total cannot be expected to behave completely independently of all the other constituent parts. 
 
@@ -34,7 +34,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "vegan", "easyCODA", "archetypes")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "vegan", "easyCODA", "archetypes", "arm")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -91,7 +91,7 @@ site <- cbind(locs, combo)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-## CaDa summaries
+## CoDa summaries
 
 # Logratio analysis
 
