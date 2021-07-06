@@ -95,7 +95,7 @@ write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 
 # Logratio analysis
 
-# Endmembers
+# Compositional endmembers
 
 # Takeways
 
