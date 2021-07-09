@@ -110,7 +110,7 @@ macro <- glm(macro~crop+fert, data = site)
 summary(macro)
 ```
 
-Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available dataset that is dominated by maize. An oversample of the less, more locally common millet, rice and sorghum cereals grown in Malawi might be useful in this context. In the interim we fit a main effects model here.
+Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum cereals grown in Malawi might be useful in this context. In the interim we fit a main effects model here.
 
 ```{r}
 # Zn part by crop species and fertilizer / lime use
@@ -118,7 +118,7 @@ Zn <- glm(Zn~macro+crop+fert, data = site)
 summary(Zn)
 ```
 
-# Variable selections for CoDa generalization
+# Variable selection for mineral nutrient CoDa generalization
 
 ## Logratio analysis
 
