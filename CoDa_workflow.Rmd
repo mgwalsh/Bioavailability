@@ -16,9 +16,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between individual mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to explore the mineral nutrient compositions of the main cereal grains (maize, millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)).
+Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to provide starter R-code to explore the mineral nutrient compositions of the main cereal grains (maize, millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)).
 
-Compositional Data Analysis ([CoDA](http://www.compositionaldata.com/)) refers to the analyses of compositional data (CoDa), which are defined as vectors with strictly positive components whose sum is constant (e.g., 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information, including parts per concentration unit (e.g., ppm or mcg), but potentially also their molar equivalents. Arguably, all concentration data should be treated CoDa because as a whole they must sum to the per unit total of all the constituent parts e.g., in the case of ppm, to 10^6^ mg kg^-1^. The safe assumption with these types of data is that the parts of interest within the unit total cannot be expected to behave completely independently of all the other constituent parts. 
+Compositional Data Analysis ([CoDA](http://www.compositionaldata.com/)) refers to the analyses of compositional data (CoDa), which are defined as vectors with strictly positive components whose sum is constant (e.g., 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcomposition*), which carry only relative information, including parts per concentration unit (e.g., in ppm or mcg), but potentially also their molar equivalents. Arguably, all concentration data should be treated CoDa because as a whole they must sum to the respective per unit total of all of the constituent parts e.g., in the case of ppm, to 10^6^ mg kg^-1^. Also, the safe assumption with these types of data is that the parts of interest within the unit total cannot be expected to behave completely independently of all of the other constituent parts. 
 
 The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa. We shall be following and testing Greenacre's pragmatic approach here on a relatively large, mineral nutrient dataset of cereal grains. This notebook is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/CoDa_workflow.Rmd), and you can fork and alter it from there as you see fit.
 
@@ -66,7 +66,7 @@ w ## plot widget
 
 ## CoDa conversions
 
-This section of the notebook sets up the CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the distinction between *macro* and *micro* here is only intended to reflect the recommended daily dietary values (DDV) that should be consumed by people, and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
+This section of the notebook sets up a CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the distinction between *macro* and *micro* here is only intended to reflect the recommended daily dietary values (DDV) that should be consumed by people, and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
 
 This next chunk [closes](https://econ-papers.upf.edu/papers/1554.pdf) the CoDa, and calculates *centered logratios* ([CLR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/clr)). These can then be analyzed, summarized and interpreted with conventional univariate, multivariate, and data modeling methods ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)). Note that you could also use other logratios such as the [ALR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/alr), or [ILR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/ilr) and/or different amalgamations of subcompositions here, but we shall leave those possibilities for you to explore. We also write out the resulting data frame to your `./MW_coda/Results` directory should you wish to process it in software other than R. This concludes the main data wrangling portions of this notebook.
 
@@ -74,7 +74,7 @@ This next chunk [closes](https://econ-papers.upf.edu/papers/1554.pdf) the CoDa, 
 # Calculate the CLRs
 varc <- c("Na", "Mg", "P", "S", "K", "Ca", "Cr", "Mn", "Fe", "Co", "Cu", "Zn", "Se", "Mo", "I")
 combo <- codat[varc]
-combo <- combo / rowSums(combo) ## close composition
+combo <- combo / rowSums(combo) ## close the composition
 combo <- as.data.frame(clr(combo)) ## centered log ratio (clr) transform
 
 # Define the (macro / micro) amalgamation and add it to the overall nutrient composition
@@ -94,6 +94,7 @@ str(site) ## CoDa data frame structure
 
 # Compositional differences between crop species
 
+This section provides data model summaries of the LR parts of the `clr` transformed data. 
 
 ```{r}
 # By crop species
@@ -110,7 +111,7 @@ summary(macro)
 
 
 ```{r}
-# By crop species and fertilizer / lime use
+# Zn by crop species and fertilizer / lime use
 Zn <- glm(Zn~crop+fert, data = site)
 summary(Zn)
 ```
