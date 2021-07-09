@@ -34,7 +34,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "vegan", "MASS", "archetypes")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "vegan", "MASS", "easyCODA", "archetypes")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -102,7 +102,7 @@ m0 <- glm(macro~crop, data = site)
 summary(m0)
 ```
 
-Based on this, there appear to be some clear differences between the macro / micro compositional parts of the 4 cereal crops. Maize appears to have a significantly higher macro nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast imposed here, the proportion of total micro minerals would be expected to be proportionally higher in millet, rice and sorghum than in maize. The next chunk includes the use of fertilizer and/or lime.
+Based on this, there appear to be some clear differences between the macro / micro compositional parts of the 4 cereal crops. Maize appears to have a significantly higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. The next chunk includes the use of fertilizer and/or lime.
 
 ```{r}
 # By crop species and fertilizer / lime use
@@ -114,7 +114,9 @@ summary(m1)
 anova(m0, m1)
 ```
 
-Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate here based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. In the next chunk we fit a main effects model that focuses on the zinc (Zn) concentration part of the micro nutrient subcomposition. Note that we include the macro subcomposition `clr` as a covariate, to retain a link to the overall 15 element composition. Similar analyses could be done for the remaining 14 macro / micro nutrient parts.
+Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate here based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. 
+
+In the next chunk we fit a main effects model that focuses on the zinc (Zn) concentration part of the micro-nutrient subcomposition. Note that we include the macro subcomposition `clr` as a covariate, to retain a link to the overall 15 element composition. Similar analyses could be done easily for the remaining 14 macro / micro nutrient parts.
 
 ```{r}
 # Zn part by crop species and fertilizer / lime use
@@ -132,8 +134,8 @@ summary(Zn)
 
 The main takeaways from this notebook are the following:
 
-* Converting nutrient compositions to logratios is a simple step, but unlike other data transformations it is intended for conserving the integrity of the relevant compositional parts needed to normalize the data for any subsequent univariate, multivariate and/or inferential analyses or statistics.
+* Converting nutrient concentrations to logratios is a simple step, but unlike other data transformations, it is intended for conserving the integrity of the relevant compositional parts needed to normalize the data for any subsequent univariate, multivariate and/or inferential analyses and statistics. Also, the data can always be back transformed into their original units.
 
-* We think that it may be better and more informative to analyze nutrient concentration data as CoDa. The associated LR conversions do not make the data any more computationally difficult, but they could / should improve any data modeling-based inferences where the subcompositional closure principles to which CoDA apply.
+* We think that it may be more informative to analyze nutrient concentration data as CoDa. The associated LR conversions do not make the data any more computationally difficult, but they should improve any data modeling-based inferences where the subcompositional closure principles to which CoDA apply.
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
