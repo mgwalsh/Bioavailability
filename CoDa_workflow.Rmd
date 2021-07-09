@@ -5,7 +5,7 @@ date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
 output:
   html_document:
     toc: true
-    toc_depth: 2
+    toc_depth: 1
     fig_caption: true
     css: style.css
 ---
@@ -51,7 +51,7 @@ setwd("./MW_coda")
 dir.create("Results")
 
 # Data download from OSF at: https://osf.io/btxyc/
-osf_retrieve_file("btxyc") %>% osf_download() ## only do this once, <else> erase ./MW_coda before running again
+osf_retrieve_file("btxyc") %>% osf_download(conflicts = "overwrite")
 codat <- read.table("MW_grain_coda.csv", header=T, sep=",")
 ```
 
@@ -66,7 +66,7 @@ w ## plot widget
 
 ## CoDa conversions
 
-This section of the notebook sets up the CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the difference between *macro* and *micro* here is only intended to reflect the recommended daily dietary values (DDV) that should be consumed by people, and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
+This section of the notebook sets up the CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the distinction between *macro* and *micro* here is only intended to reflect the recommended daily dietary values (DDV) that should be consumed by people, and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
 
 This next chunk [closes](https://econ-papers.upf.edu/papers/1554.pdf) the CoDa, and calculates *centered logratios* ([CLR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/clr)). These can then be analyzed, summarized and interpreted with conventional univariate, multivariate, and data modeling methods ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)). Note that you could also use other logratios such as the [ALR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/alr), or [ILR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/ilr) and/or different amalgamations of subcompositions here, but we shall leave those possibilities for you to explore. We also write out the resulting data frame to your `./MW_coda/Results` directory should you wish to process it in software other than R. This concludes the data set up and main wrangling portions of this notebook.
 
@@ -100,6 +100,4 @@ write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ## Compositional endmembers
 
 # Takeways
-
-# To-dos
 
