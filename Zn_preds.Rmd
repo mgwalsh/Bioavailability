@@ -617,3 +617,4 @@ The main takeaways from this notebook are the following:
 
 * Computationally, all of the code presented in this notebook runs fairly fast and probably could be automated, such that when a (soil) MIR measurement is received in a laboratory, a maize grain Zn prediction could be issued in near-real time. Note that for other spectrometer setups the associated [calibration / validation transfer](https://journals.sagepub.com/doi/full/10.1177/0003702817736064) steps would need to be taken into account. This is also a good reason to properly curate any physical soil reference samples.   
 
+Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
