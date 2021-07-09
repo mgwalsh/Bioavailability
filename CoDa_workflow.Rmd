@@ -1,6 +1,6 @@
 ---
 title: CoDA workflow for modeling mineral nutrient compositions of cereal grains
-author: M.G. Walsh, P.C. Nalivata, D. Gashu, R. Rodríguez Iglesias, R. Manners and M.R. Broadley
+author: M.G. Walsh, R. Rodríguez Iglesias, R. Manners, P.C. Nalivata, and M.R. Broadley
 date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
 output:
   html_document:
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to provide starter R-code to explore the mineral nutrient compositions of the main cereal grains (maize, millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)). 
 
-Compositional Data Analysis ([CoDA](http://www.compositionaldata.com/)) refers to the analyses of compositional data (CoDa), which are defined as vectors with strictly positive components whose sum is constant (e.g., 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcomposition*), which carry only relative information, including parts per concentration unit (e.g., in ppm or mcg), but potentially also their molar equivalents. Arguably, all concentration data should be treated CoDa because as a whole they must sum to the respective per unit total of all of the constituent parts e.g., in the case of ppm, to 10^6^ mg kg^-1^. Also, the safe assumption with these types of data is that the parts of interest within the unit total cannot be expected to behave completely independently of all of the other constituent parts. 
+Compositional Data Analysis ([CoDA](http://www.compositionaldata.com/)) refers to the analyses of compositional data (CoDa), which are defined as vectors with strictly positive components whose sum is constant (e.g., 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcomposition*), which carry only relative information, including parts per concentration unit (e.g., in ppm or mcg), but potentially also their molar equivalents. Arguably, all concentration data should be treated CoDa because as a whole they must sum to the respective per unit totals of all of the constituent parts e.g., in the case of ppm, to 10^6^ mg kg^-1^. Also, the safe assumption with these types of data is that the parts of interest within the unit total cannot be expected to behave completely independently of all of the other constituent parts. 
 
 The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa. We shall be following and testing Greenacre's pragmatic approach here on a relatively large, mineral nutrient dataset of cereal grains. This notebook is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/CoDa_workflow.Rmd), and you can fork and alter it from there as you see fit.
 
@@ -114,7 +114,7 @@ Note that the interactions between crop species and fertilizer / lime applicatio
 
 ```{r}
 # Zn part by crop species and fertilizer / lime use
-Zn <- glm(Zn~macro*crop+fert, data = site)
+Zn <- glm(Zn~macro+crop+fert, data = site)
 summary(Zn)
 ```
 
@@ -128,8 +128,8 @@ summary(Zn)
 
 The main takeaways from this notebook are the following:
 
-* Converting nutrient compositions to logratios is a simple step, much like any other data transformation that maintains the integrity of the relevant parts and normalizes the data for any relevant univariate, multivariate and/or inferential analyses or statistics.
+* Converting nutrient compositions to logratios is a simple step, but unlike other data transformations it is intended for conserving the integrity of the relevant compositional parts needed to normalize the data for any subsequent univariate, multivariate and/or inferential analyses or statistics.
 
-* We think that it is better to analyze nutrient concentration data as CoDa. The associated LR conversions certainly do not make the data any more computationally difficult, but they will tend to improve any data modeling-based inferences instances where subcompositional closure principles might apply.    
+* We think that it may be better to analyze nutrient concentration data as CoDa. The associated LR conversions certainly do not make the data any more computationally difficult, but they will tend to improve any data modeling-based inferences where the subcompositional closure principles of CoDA apply.
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
