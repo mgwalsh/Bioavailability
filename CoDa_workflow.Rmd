@@ -134,6 +134,6 @@ The main takeaways from this notebook are the following:
 
 * Converting nutrient compositions to logratios is a simple step, but unlike other data transformations it is intended for conserving the integrity of the relevant compositional parts needed to normalize the data for any subsequent univariate, multivariate and/or inferential analyses or statistics.
 
-* We think that it may be better to analyze nutrient concentration data as CoDa. The associated LR conversions do not make the data any more computationally difficult, but they could / should improve any data modeling-based inferences where the subcompositional closure principles to which CoDA apply.
+* We think that it may be better and more informative to analyze nutrient concentration data as CoDa. The associated LR conversions do not make the data any more computationally difficult, but they could / should improve any data modeling-based inferences where the subcompositional closure principles to which CoDA apply.
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
