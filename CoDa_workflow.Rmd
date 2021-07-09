@@ -108,7 +108,14 @@ macro <- glm(macro~crop+fert, data = site)
 summary(macro)
 ```
 
-# Variable selections
+
+```{r}
+# By crop species and fertilizer / lime use
+Zn <- glm(Zn~crop+fert, data = site)
+summary(Zn)
+```
+
+# Key CoDa variable selections for generalization
 
 ## Logratio analysis
 
