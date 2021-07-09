@@ -16,7 +16,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between individual mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to investigate the mineral nutrient compositions of the main cereal grains (maize, millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)).
+Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between individual mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to explore the mineral nutrient compositions of the main cereal grains (maize, millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)).
 
 Compositional Data Analysis ([CoDA](http://www.compositionaldata.com/)) refers to the analyses of compositional data (CoDa), which are defined as vectors with strictly positive components whose sum is constant (e.g., 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information, including parts per concentration unit (e.g., ppm or mcg), but potentially also their molar equivalents. Arguably, all concentration data should be treated CoDa because as a whole they must sum to the per unit total of all the constituent parts e.g., in the case of ppm, to 10^6^ mg kg^-1^. The safe assumption with these types of data is that the parts of interest within the unit total cannot be expected to behave completely independently of all the other constituent parts. 
 
@@ -34,7 +34,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "vegan", "easyCODA", "archetypes", "arm")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "vegan", "MASS", "archetypes")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -92,9 +92,23 @@ write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 str(site) ## CoDa data frame structure
 ```
 
-# CoDa summaries
+# Compositional differences between crop species
 
-# Variable selection
+
+```{r}
+# By crop species
+macro <- glm(macro~crop, data = site)
+summary(macro)
+```
+
+
+```{r}
+# By crop species and fertilizer / lime use
+macro <- glm(macro~crop+fert, data = site)
+summary(macro)
+```
+
+# Variable selections
 
 ## Logratio analysis
 
