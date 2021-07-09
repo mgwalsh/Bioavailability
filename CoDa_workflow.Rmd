@@ -1,6 +1,6 @@
 ---
 title: CoDA workflow for modeling mineral nutrient compositions of cereal grains
-author: M.G. Walsh, R. Rodríguez Iglesias, R. Manners, P.C. Nalivata, D. Gashu and M.R. Broadley
+author: M.G. Walsh, P.C. Nalivata, D. Gashu, R. Rodríguez Iglesias, R. Manners and M.R. Broadley
 date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
 output:
   html_document:
@@ -92,9 +92,9 @@ write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 str(site) ## CoDa data frame structure
 ```
 
-# Compositional differences between crop species
+# Compositional mineral nutrient differences between crop species
 
-This section provides data model summaries of the LR parts of the `clr` transformed data. 
+This section provides initial data model summaries of the LR parts of the `clr` transformed data. We focus on the differences of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences in the `macro` nutrient `clr` between the 4 crop species.
 
 ```{r}
 # By crop species
@@ -102,6 +102,7 @@ macro <- glm(macro~crop, data = site)
 summary(macro)
 ```
 
+Based on this, there appear to be some clear differences between the macro / micro compositional parts of the 4 cereal crops. Maize appears to have a significantly higher macro nutrient proportion than those of millet, rice or sorghum. Because of the binary macro / micro contrast imposed here, the proportion of total micro minerals is expected to be higher in millet, rice and sorghum than in maize. 
 
 ```{r}
 # By crop species and fertilizer / lime use
@@ -109,6 +110,7 @@ macro <- glm(macro~crop+fert, data = site)
 summary(macro)
 ```
 
+Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available dataset that is dominated by maize. An oversample of the less, more locally common millet, rice and sorghum crops grown in Malawi might be useful in this context.
 
 ```{r}
 # Zn by crop species and fertilizer / lime use
@@ -116,7 +118,7 @@ Zn <- glm(Zn~crop+fert, data = site)
 summary(Zn)
 ```
 
-# Key CoDa variable selections for generalization
+# CoDa variable selections for generalization
 
 ## Logratio analysis
 
