@@ -64,7 +64,7 @@ w <- leaflet() %>%
 w ## plot widget 
 ```
 
-## CoDa conversions
+## CoDa transforms
 
 This section of the notebook sets up a CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the distinction between *macro* and *micro* here is only intended to reflect the recommended daily dietary values (DDV) that should be consumed by people, and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for measurement outlier screening, spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
 
@@ -93,12 +93,12 @@ write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 
 ```{r}
 # Compile summary table
-table1(~ Na+Mg+P+S+K+Ca+Cr+Mn+Fe+Co+Cu+Zn+Se+Mo+I+macro | crop, caption = "Summary table of CLR transformed data by crop species.", overall = FALSE, data = site)
+table1(~ Na+Mg+P+S+K+Ca+Cr+Mn+Fe+Co+Cu+Zn+Se+Mo+I+macro | crop, caption = "Summary table of the CLR transformed nutrients by crop species.", overall = FALSE, data = site)
 ```
 
 # Compositional mineral nutrient differences between crop species
 
-This section provides initial data model summaries of the LR parts of the `CLR` transformed data. We focus on the differences of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences in the `macro` nutrient `CLR` between the 4 crop species.
+This section provides initial data model summaries of the LR parts of the CLR transformed data. We focus on the differences of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences in the `macro` nutrient `CLR` between the 4 crop species.
 
 ```{r}
 # By crop species
