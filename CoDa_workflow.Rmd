@@ -93,12 +93,12 @@ write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 
 ```{r}
 # Compile summary table
-table1(~ Na+Mg+P+S+K+Ca+Cr+Mn+Fe+Co+Cu+Zn+Se+Mo+I+macro | crop, caption = "Summary table of centered logratios (CLR) by crop species.", overall = FALSE, data = site)
+table1(~ Na+Mg+P+S+K+Ca+Cr+Mn+Fe+Co+Cu+Zn+Se+Mo+I+macro | crop, caption = "Summary table of CLR transformed data by crop species.", overall = FALSE, data = site)
 ```
 
 # Compositional mineral nutrient differences between crop species
 
-This section provides initial data model summaries of the LR parts of the `clr` transformed data. We focus on the differences of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences in the `macro` nutrient `clr` between the 4 crop species.
+This section provides initial data model summaries of the LR parts of the `CLR` transformed data. We focus on the differences of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences in the `macro` nutrient `CLR` between the 4 crop species.
 
 ```{r}
 # By crop species
