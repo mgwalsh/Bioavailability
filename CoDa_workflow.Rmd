@@ -93,7 +93,9 @@ write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 
 ```{r}
 # Compile summary table
-table1(~ Na+Mg+P+S+K+Ca+Cr+Mn+Fe+Co+Cu+Zn+Se+Mo+I+macro | crop, caption = "Summary table of the CLR transformed nutrients by crop species.", overall = FALSE, data = site)
+table1(~ Na+Mg+P+S+K+Ca+Cr+Mn+Fe+Co+Cu+Zn+Se+Mo+I+macro | crop, 
+       caption = "Summary table of the CLR transformed nutrients by crop species.", 
+       overall = FALSE, data = site)
 ```
 
 # Compositional mineral nutrient differences between crop species
@@ -101,7 +103,7 @@ table1(~ Na+Mg+P+S+K+Ca+Cr+Mn+Fe+Co+Cu+Zn+Se+Mo+I+macro | crop, caption = "Summa
 This section provides initial data model summaries of the LR parts of the CLR transformed data. We focus on the differences of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences in the `macro` nutrient `CLR` between the 4 crop species.
 
 ```{r}
-# By crop species
+# Macro-nutrients by crop species
 m0 <- glm(macro~crop, data = site)
 summary(m0)
 ```
@@ -109,14 +111,14 @@ summary(m0)
 Based on this, there appear to be some clear differences between the macro / micro compositional parts of the 4 cereal crops. Maize appears to have a significantly higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. The next chunk includes the use of fertilizer and/or lime.
 
 ```{r}
-# By crop species and fertilizer / lime use
+# Macro-nutrients by crop species and fertilizer / lime use
 m1 <- glm(macro~crop+fert, data = site)
 summary(m1)
 ```
 
 Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate here based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. 
 
-In the next chunk we fit a main effects model that focuses on the zinc (Zn) concentration part of the micro-nutrient subcomposition. Note that we include the macro subcomposition `clr` as a covariate, to retain a link to the overall 15 element composition. Similar analyses could be done easily for the remaining 14 macro / micro nutrient parts.
+In the next chunk we fit a main effects model that focuses on the zinc (Zn) concentration part of the micro-nutrient subcomposition. Note that we include the `macro` subcomposition CLR as a covariate, to retain a link to the overall 15 element composition. Similar analyses could be done easily for the remaining 14 macro / micro nutrient parts.
 
 ```{r}
 # Zn part by crop species and fertilizer / lime use
@@ -124,7 +126,7 @@ Zn <- glm(Zn~macro+crop+fert, data = site)
 summary(Zn)
 ```
 
-Note that the inclusion of the `macro` subcomposition takes care of a lot of the between crop species variation in the Zn `clr` values.  
+Note that the inclusion of the `macro` subcomposition takes care of a lot of the between crop species variation in the Zn CLR values.  
 
 # Variable selection for mineral nutrient CoDa generalization
 
