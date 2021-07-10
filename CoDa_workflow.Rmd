@@ -120,6 +120,8 @@ Zn <- glm(Zn~macro+crop+fert, data = site)
 summary(Zn)
 ```
 
+Note that the inclusion of the `macro` subcomposition takes care of a lot of the between crop species variation in the Zn `clr` values.  
+
 # Variable selection for mineral nutrient CoDa generalization
 
 ## Principal component analysis
