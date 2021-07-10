@@ -5,7 +5,7 @@ date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
 output:
   html_document:
     toc: true
-    toc_depth: 2
+    toc_depth: 1
     fig_caption: true
     css: style.css
 ---
@@ -59,7 +59,7 @@ setwd("./MW_Zn_data")
 dir.create("./Results")
 
 # Data download
-osf_retrieve_file("pdgk6") %>% osf_download()
+osf_retrieve_file("pdgk6") %>% osf_download(conflicts = "overwrite")
 unzip("MW_Zn_data.zip", overwrite = T)
 wchem <- read.table("MW_Zn_data.csv", header=T, sep=",") 
 sspec <- read.table("soil_MIR_spectra.csv", header=T, sep=",")
@@ -72,9 +72,8 @@ cdata <- merge(wchem, cspec, by = "csid") ## crop data frame
 cdata <- cdata[complete.cases(cdata[ ,c(7:3594)]), ]
 
 # Download figures
-download("https://osf.io/42gry/", "figures.zip", mode = "wb")
-exdir <- "./Figures" 
-unzip("figures.zip", exdir = exdir, overwrite = T)
+osf_retrieve_file("42gry") %>% osf_download(conflicts = "overwrite")
+unzip("figures.zip", overwrite = T)
 ```
 
 The following chunk then writes out initial data frames `MW_soil_Zn_data.csv` and `MW_crop_Zn_data.csv` into your `./MW_Zn_data/Results` directory if you'd like to process those outputs in software other than R. They are augmented with other variable and predictions in subsequent sections of the notebook. It also generates an overview map of where in Malawi those soil and plant samples were obtained. The spatial sampling frame that was used for collecting the samples is described in [Gashu et al., (2021)](https://doi.org/10.1038/s41586-021-03559-3).
@@ -97,7 +96,7 @@ w ## plot widget
 This section introduces the main machine learning workflow of the notebook. It uses topsoil (0-20 cm) reference wet chemistry soil features to predict maize grain Zn concentrations. The heuristics that might be used for diagnosing Zn deficiencies in crop tissues with [gold-standard](https://en.wikipedia.org/wiki/Gold_standard_(test)) reference criteria and measurements for both soils and crops are operationally constrained. Soils are more easily collected and measure in an appropriate laboratory setting over the course of any given year. Whereas, the collection and analysis of grain samples is restricted to very short time periods during or immediately after harvest. Both are expensive and time consuming. So, gold standard laboratory measurements would probably be quite hard to achieve in most operational and micronutrient monitoring settings in Africa, given the associated expense, time constraints and potential lab delays. Nonetheless, they provide a baseline to compare to the spectral models that are developed in the subsequent sections.
 
 ```{r training_validation_approach, echo=FALSE, fig.align="center", fig.cap="MLA training, validation and prediction workflow.", out.width = '80%'}
-knitr::include_graphics("./MW_Zn_data/Figures/training_validation.png")
+knitr::include_graphics("./MW_Zn_data/training_validation.png")
 ```
 
 We will be using an *algorithmic* (ML), rather than a *data modeling* based approach ([Breiman, 2001](http://staff.pubhealth.ku.dk/~tag/Teaching/share/material/Breiman-two-cultures.pdf)). See the figure directly above. To start the model fitting processes covered in this section, the next chunk scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
@@ -234,11 +233,11 @@ curve(sw50Q$coefficients[6]*x+sw50Q$coefficients[5], add=T, from=10, to=50, col=
 abline(c(0,1), col="grey", lwd=1)
 ```
 
-**The takeaway message from this section is that Zn levels in maize grain are reasonably well-predicted from *"gold-standard"*, wet chemistry soil properties.** The residual differences may be due external, environmental factors at the time of sample collection, laboratory measurement variability and/or the inability of the MLAs that were used for calibration and validation to capture the underlying bio-kinetics. The `randomForest` model was a clear winner here, but it is unusual for a single MLA to outperform all other contrasting MLAs i.e., generalized boosting and cubist in this case.
+**The takeaway from this section is that Zn levels in maize grain are reasonably well-predicted from *"gold-standard"*, wet chemistry soil properties.** The residual differences may be due external, environmental factors at the time of sample collection, laboratory measurement variability and/or the inability of the MLAs that were used for calibration and validation to capture the underlying bio-kinetics. The `randomForest` model was a clear winner here, but it is unusual for a single MLA to outperform all other contrasting MLAs i.e., generalized boosting and cubist in this case.
 
 # Predicting maize grain Zn from soil and plant MIR spectra
 
-One potentially problematic factor for many MLAs in chemometric applications is the ["Curse of dimensionality"](https://en.wikipedia.org/wiki/Curse_of_dimensionality). In this particlar case the *curse* manifests in the high dimensionality of the spectral data: *w* = 3,575 individual wavebands for both the soil and plant spectra. Many of those wavebands are strongly correlated, particularly those proximal to one another on the NIR / MIR reflectance / absorbance spectrum. These types of data pose generalization and prediction challenges for MLAs that involve e.g., [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and/or [Artificial neural networks](https://en.wikipedia.org/wiki/Deep_learning), and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) and its consequent model validation / generalization problems. Generally, the data would need to be dimensionally reduced and decorrelated to be reliably fit by these types of algorithms.
+One potentially problematic factor for many MLAs in chemometric applications is the ["Curse of dimensionality"](https://en.wikipedia.org/wiki/Curse_of_dimensionality). In this particlar case the *curse* manifests in the high dimensionality of the spectral data: *w* = 3,575 individual wavebands for both the soil and plant spectra. Many of those wavebands are strongly correlated, particularly those proximal to one another on the NIR / MIR reflectance / absorbance spectrum. These types of data pose generalization and prediction challenges for MLAs that involve e.g., [Bagging](https://en.wikipedia.org/wiki/Random_forest), [Boosting](https://en.wikipedia.org/wiki/Boosting_%28machine_learning%29), [Bayesian](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-031219-041110) and/or [Deep learning](https://en.wikipedia.org/wiki/Deep_learning) approaches, and can lead to [overfitting](https://en.wikipedia.org/wiki/Overfitting) and its consequent model validation / generalization problems. Generally, the data would need to be dimensionally reduced and decorrelated to be reliably fit by these types of algorithms.
 
 Other algorithms such as [Partial least squares regression (PLS)](https://en.wikipedia.org/wiki/Partial_least_squares_regression), [Ridge regression](https://en.wikipedia.org/wiki/Ridge_regression) and/or [Lasso regression](https://en.wikipedia.org/wiki/Lasso_(statistics)) handle the high-dimensional data and collinearities reasonably well in a linear context but are frequently not very good at predicting the quite common non-linear and/or threshold relationships between the spectral signatures and their reference measurements. This section of the notebook covers workflows for both types of MLAs and looks at how those might be usefully combined (stacked).
 
