@@ -130,7 +130,7 @@ m1 <- glm(macro~crop+fert, data = site)
 summary(m1)
 ```
 
-Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. In the next chunk we fit a main effects model that looks at the zinc (`Zn`) CLR part of the micro-nutrient subcomposition. Note that we include the `macro` subcomposition CLR as a covariate, to retain a link to the overall 15 element composition. Similar analyses could be done easily for the remaining nutrient parts.
+Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. In the next chunk we fit a main effects model that looks at the zinc (`Zn`) CLR part of the micro-nutrient subcomposition. Note that we include the `macro` subcomposition CLR as a covariate, to retain a link to the overall 15 element composition. Similar analyses could be done easily for the remaining parts.
 
 ```{r}
 # Zn part by crop species and fertilizer / lime use
