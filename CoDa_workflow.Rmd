@@ -1,5 +1,5 @@
 ---
-title: CoDA workflow for modeling mineral nutrient compositions of cereal grains
+title: CoDA workflows for modeling mineral nutrient compositions of cereal grains
 author: M.G. Walsh, R. Rodríguez Iglesias, R. Manners, P.C. Nalivata and M.R. Broadley
 date: "Last compiled on `r format(Sys.time(), '%d, %B, %Y')`"
 output:
@@ -16,9 +16,9 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) to explore the mineral nutrient compositions of the main cereal grains (maize, millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)). 
+Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) to explore and report the mineral nutrient compositions of the main cereal grains (maize, millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)). 
 
-Compositional Data Analysis (CoDA) refers to the analyses of compositional data (CoDa). CoDa are defined as vectors with strictly positive components whose sum is constant (e.g, 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information ([van den Boogaart and Tolosana-Delgado, 2013](https://link.springer.com/book/10.1007/978-3-642-36809-7)). Because a change in any proportion of a whole changes at least one other proportion, CoDa are interdependent. Arguably, all concentration data should be treated CoDa because as a whole they must sum to their respective per unit totals of all constituent parts e.g., in the case of mg kg^-1^ data, to 10^6^ ppm. Therefore, CoDa are intrinsically multivariate, and their components should not be analyzed and interpreted without relating them to one another.
+*Compositional Data Analysis* (CoDA) refers to the analyses of *compositional data* (CoDa). CoDa are defined as vectors with strictly positive components whose sum is constant (e.g, 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information ([van den Boogaart and Tolosana-Delgado, 2013](https://link.springer.com/book/10.1007/978-3-642-36809-7)). Because a change in any proportion of a whole changes at least one other proportion, CoDa are interdependent. Arguably, all concentration data should be treated CoDa because as a whole they must sum to their respective per unit totals of all constituent parts e.g., in the case of mg kg^-1^ data, to 10^6^ ppm. Therefore, CoDa are intrinsically multivariate, and their individual components should not be analyzed and interpreted without relating them to one another.
 
 The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa. This notebook is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/CoDa_workflow.Rmd), and you can fork and alter it from there for your reference and as you see fit.
 
@@ -66,9 +66,9 @@ w ## plot widget
 
 ## CoDa transforms
 
-This section of the notebook sets up a CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the distinction between *macro* and *micro* here is only intended to reflect the recommended daily dietary values (DDV) that should be consumed by people, and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for measurement outlier screening, spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
+This section of the notebook sets up a CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the distinction between *macro* and *micro* here is only intended to reflect the recommended daily dietary values (DDV) that should be consumed by people (with the exception of Co, which should only be consumed as Vit. B12), and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for measurement outlier screening, spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
 
-This next chunk [closes](https://econ-papers.upf.edu/papers/1554.pdf) the CoDa, and calculates *centered logratios* ([CLR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/clr)). It also generates a summary table for the CLR transformed data. These can then be analyzed, summarized and interpreted with conventional univariate, multivariate, and data modeling methods ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)). Note that you could also use other logratios such as the [ALR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/alr), or the [ILR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/ilr) and/or different amalgamations of subcompositions here, but we shall leave those possibilities for you to explore. We also write out the resulting data frame to your `./MW_coda/Results` directory should you wish to process it in software other than R.
+This next chunk [closes](https://econ-papers.upf.edu/papers/1554.pdf) the CoDa, and calculates *centered logratios* ([CLR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/clr)). It also generates a summary table and graphs for the CLR transformed data. These can then be analyzed, summarized and interpreted with conventional univariate, multivariate, and data modeling methods ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)). Note that you could also use other logratios such as the [ALR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/alr), or the [ILR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/ilr) and/or different amalgamations of subcompositions, but we shall leave those possibilities for you to explore. We also write out the resulting data frame to your `./MW_coda/Results` directory should you wish to process it in software other than R.
 
 ```{r}
 # Calculate the CLRs
@@ -96,7 +96,7 @@ table1(~ Na+Mg+P+S+K+Ca+Cr+Mn+Fe+Co+Cu+Zn+Se+Mo+I+macro | crop,
        overall = FALSE, data = site)
 ```
 \
-You can also plot any CLR differences between crop species with e.g., see the next chunk.
+You can also plot any CLR differences between crop species with e.g., the next chunk.
 
 ```{r, fig.align = "center", figures-side, fig.show = 'hold', fig.fullwidth = TRUE, fig.cap = "Boxplots of micro-nutrient CLR differences between crop species."}
 
@@ -130,9 +130,7 @@ m1 <- glm(macro~crop+fert, data = site)
 summary(m1)
 ```
 
-Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate here based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. 
-
-In the next chunk we fit a main effects model that focuses on the zinc (`Zn`) CLR part of the micro-nutrient subcomposition. Note that we include the `macro` subcomposition CLR as a covariate, to retain a link to the overall 15 element composition. Similar analyses could be done easily for the remaining 14 macro / micro nutrient parts.
+Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. In the next chunk we fit a main effects model that looks at the zinc (`Zn`) CLR part of the micro-nutrient subcomposition. Note that we include the `macro` subcomposition CLR as a covariate, to retain a link to the overall 15 element composition. Similar analyses could be done easily for the remaining nutrient parts.
 
 ```{r}
 # Zn part by crop species and fertilizer / lime use
@@ -140,9 +138,11 @@ Zn <- glm(Zn~macro+crop+fert, data = site)
 summary(Zn)
 ```
 
-Note that the inclusion of the `macro` subcomposition here takes care of a lot of the between crop species variation in the Zn CLR values. Similar analyses could be done easily for the remaining nutrient parts.
+Note that the inclusion of the `macro` subcomposition here takes care of a lot of the between crop species variation in the Zn CLR values. Similar analyses could easily be done for the remaining nutrient parts.
 
-# Compositional endmembers
+# Compositional archetypes
+
+*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to cluster analysis. It describes each observation in a dataset set as a mixture of archetypes. Rather than describing average or *typical* observations and measurements, archetypal analysis seeks the extreme points in multidimensional data. The archetypes themselves are generally mixtures of the individual characteristics under consideration. It provides a simple and useful way of looking at multivariate data. Archetypal mixture data are also CoDa, which is why we include them in this notebook.
 
 # Takeways
 
