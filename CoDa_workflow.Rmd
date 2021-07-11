@@ -66,7 +66,7 @@ w ## plot widget
 
 ## CoDa transforms
 
-This section of the notebook sets up a CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the distinction between *macro* and *micro* here is only intended to reflect the recommended daily dietary values (DDV) that should be consumed by people (with the exception of Co, which should only be consumed as Vit. B12), and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for measurement outlier screening, spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
+This section of the notebook sets up a CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the distinction between *macro* and *micro* here is only intended to reflect the recommended daily dietary values (DDV) that should be consumed by people (with the exception of Co, which should only be consumed as vitamin B12), and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for measurement outlier screening, spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
 
 This next chunk [closes](https://econ-papers.upf.edu/papers/1554.pdf) the CoDa, and calculates *centered logratios* ([CLR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/clr)). It also generates a summary table and graphs for the CLR transformed data. These can then be analyzed, summarized and interpreted with conventional univariate, multivariate, and data modeling methods ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)). Note that you could also use other logratios such as the [ALR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/alr), or the [ILR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/ilr) and/or different amalgamations of subcompositions, but we shall leave those possibilities for you to explore. We also write out the resulting data frame to your `./MW_coda/Results` directory should you wish to process it in software other than R.
 
@@ -96,7 +96,7 @@ table1(~ Na+Mg+P+S+K+Ca+Cr+Mn+Fe+Co+Cu+Zn+Se+Mo+I+macro | crop,
        overall = FALSE, data = site)
 ```
 \
-You can also plot any CLR differences between crop species with something like this next chunk.
+You can also plot any CLR differences between crop species with something like in this next chunk.
 
 ```{r, fig.align = "center", figures-side, fig.show = 'hold', fig.fullwidth = TRUE, fig.cap = "Boxplots of micro-nutrient CLR differences between crop species."}
 
