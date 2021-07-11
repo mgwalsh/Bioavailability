@@ -114,7 +114,7 @@ boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 0.7, ce
 
 # Compositional mineral nutrient differences between crop species
 
-This section provides initial data model summaries of the LR parts of the CLR transformed data. We focus on the differences of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences in the `macro` nutrient CLRs between the 4 crop species.
+This section provides initial data model summaries of parts of the CLR transformed data. We focus on the differences of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences in the `macro` nutrient CLRs between the 4 crop species.
 
 ```{r}
 # Macro-nutrients by crop species
