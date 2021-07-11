@@ -96,7 +96,7 @@ table1(~ Na+Mg+P+S+K+Ca+Cr+Mn+Fe+Co+Cu+Zn+Se+Mo+I+macro | crop,
        overall = FALSE, data = site)
 ```
 \
-You can also plot any CLR differences between crop species with e.g., the next chunk.
+You can also plot any CLR differences between crop species with something like the next chunk.
 
 ```{r, fig.align = "center", figures-side, fig.show = 'hold', fig.fullwidth = TRUE, fig.cap = "Boxplots of micro-nutrient CLR differences between crop species."}
 
@@ -142,7 +142,7 @@ Note that the inclusion of the `macro` subcomposition here takes care of a lot o
 
 # Compositional archetypes
 
-*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to cluster analysis. It describes each observation in a dataset set as a mixture of archetypes. Rather than describing the average or *typical* observations and measurements, archetypal analysis seeks the extreme points in multidimensional data, which can provide a simple and useful way of looking at multivariate data. The identified archetypes themselves are generally mixtures of the individual variables under consideration. Archetypal mixture coefficients and projections are also CoDa, which is why we include them in this notebook. We would consider them as subcompositions.
+*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to cluster analysis. It describes each observation in a dataset set as a mixture of archetypes. Rather than describing the average or *typical* observations and measurements, archetypal analysis seeks the extreme points in multidimensional data, which can provide a simple and useful way of looking at multivariate data. The identified archetypes themselves are generally mixtures of the individual variables under consideration. Archetypal mixture coefficients and projections are also CoDa, which is why we include them in this notebook. We will consider them as subcompositions.
 
 # Takeways
 
