@@ -142,7 +142,7 @@ Note that the inclusion of the `macro` subcomposition here takes care of a lot o
 
 # Compositional archetypes
 
-*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to cluster analysis. It describes each observation in a dataset set as a mixture of archetypes. Rather than describing average or *typical* observations and measurements, archetypal analysis seeks the extreme points in multidimensional data. The archetypes themselves are generally mixtures of the individual characteristics under consideration. It provides a simple and useful way of looking at multivariate data. Archetypal mixture data are also CoDa, which is why we include them in this notebook.
+*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to cluster analysis. It describes each observation in a dataset set as a mixture of archetypes. Rather than describing the average or *typical* observations and measurements, archetypal analysis seeks the extreme points in multidimensional data. It provides a simple and useful way of looking at multivariate data. The identified archetypes themselves are generally mixtures of the individual characteristics under consideration.  Archetypal mixture coefficients are also CoDa, which is why we include them in this notebook.
 
 # Takeways
 
