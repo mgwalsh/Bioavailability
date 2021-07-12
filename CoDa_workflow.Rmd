@@ -16,7 +16,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) to explore and report the mineral nutrient compositions of the main cereal grains (maize, (pearl) millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)). 
+Most models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) to explore and report the mineral nutrient compositions of the main cereal grains (maize, pearl-millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)). 
 
 *Compositional Data Analysis* (CoDA) refers to the analyses of *compositional data* (CoDa). CoDa are defined as vectors with strictly positive components whose sum is constant (e.g, 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information ([van den Boogaart and Tolosana-Delgado, 2013](https://link.springer.com/book/10.1007/978-3-642-36809-7)). Because a change in any proportion of a whole changes at least one other proportion, CoDa are interdependent. Arguably, all concentration data should be treated CoDa because as a whole they must sum to their respective per unit totals of all constituent parts e.g., in the case of mg kg^-1^ data, to 10^6^ ppm. CoDa are intrinsically multivariate, and their individual components should probably not be analyzed and interpreted without relating them to one another.
 
@@ -34,7 +34,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "table1", "MASS", "archetypes")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "table1", "arm", "archetypes")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -112,30 +112,33 @@ boxplot(site$Mo ~ site$crop, notch = T, ylab = "Mo", xlab = "", cex.axis = 0.7, 
 boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 0.7, cex.lab = 1.3)
 ```
 
-## Compositional differences between crop species
+## Compositional differences between crop species and fertilizer application
 
 This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences in the `macro` nutrient CLRs between the 4 crop species.
 
 ```{r}
 # Macro-nutrients by crop species
-m0 <- glm(macro~crop, data = site)
+m0 <- lmer(macro~1 + (1|crop), data = site)
 summary(m0)
+ranef(m0)
 ```
 
 Based on this, there appear to be some clear differences between the macro / micro compositional parts of the 4 cereal crops. Maize appears to have a significantly higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. The next chunk includes the use of fertilizer and/or lime.
 
 ```{r}
 # Macro-nutrients by crop species and fertilizer / lime use
-m1 <- glm(macro~crop+fert, data = site)
+m1 <- lmer(macro~1 + (1|crop) + (1|fert), data = site)
 summary(m1)
+ranef(m1)
 ```
 
 Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. In the next chunk we fit a main effects model that looks at the zinc (`Zn`) CLR part of the micro-nutrient subcomposition. Note that we include the `macro` subcomposition CLR as a covariate, to retain a link to the overall 15 element composition. Similar analyses could be done easily for the remaining parts.
 
 ```{r}
 # Zn part by crop species and fertilizer / lime use
-Zn <- glm(Zn~macro+crop+fert, data = site)
+Zn <- lmer(Zn~macro + (1|crop) + (1|fert), data = site)
 summary(Zn)
+ranef(Zn)
 ```
 
 Note that the inclusion of the `macro` subcomposition here takes care of a lot of the between crop species variation in the Zn CLR values. Similar analyses could easily be done for the remaining nutrient parts.
@@ -160,7 +163,7 @@ par(pty="s", mar=c(4,4,1,1))
 screeplot(comp.arc)
 ```
 
-## Post-stratification using archetypes
+## Archetypal classification
 
 Similar to other clustering algorithms, we can use the identified archetypes for unsupervised classification and [post-stratification](https://www.sciencedirect.com/topics/mathematics/poststratification) ...
 
@@ -178,7 +181,7 @@ site <- cbind(site, darc)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-We can generate a similar plot of the micro-nutrient composition presented above (code not shown). Rather than focusing on crop species, the differences in the CLRs are now shown as the differences between the 4 dominant archetypes.
+We can generate a similar plot of the raw micro-nutrient composition presented above (code not shown). Rather than focusing on crop species, the differences in the CLRs are now shown as the differences between the 4 dominant archetypes.
 
 ```{r, echo = FALSE, fig.align = "center", fig.show = 'hold', fig.fullwidth = TRUE, fig.cap = "Boxplots of micro-nutrient CLR differences between dominant archetypes."}
 
@@ -192,6 +195,22 @@ boxplot(site$Zn ~ site$DA, notch = T, ylab = "Zn", xlab = "", cex.axis = 0.9, ce
 boxplot(site$Se ~ site$DA, notch = T, ylab = "Se", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
 boxplot(site$Mo ~ site$DA, notch = T, ylab = "Mo", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
 boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
+```
+
+## Post- stratified differences between crop species and fertilizer application
+
+```{r}
+# Macro-nutrients by DA, crop species, and fertilizer / lime use
+mp <- lmer(macro~1 + (1|DA) + (1|crop) + (1|fert), data = site)
+summary(mp)
+ranef(mp)
+```
+
+```{r}
+# Zn part by crop species and fertilizer / lime use
+pZn <- lmer(Zn~1 + (1|DA) +(1|crop) + (1|fert), data = site)
+summary(pZn)
+ranef(pZn)
 ```
 
 # Takeways
