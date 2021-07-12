@@ -132,16 +132,14 @@ summary(m1)
 ranef(m1)
 ```
 
-Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. In the next chunk we fit a main effects model that looks at the zinc (`Zn`) CLR part of the micro-nutrient subcomposition. Note that we include the `macro` subcomposition CLR as a covariate, to retain a link to the overall 15 element composition. Similar analyses could be done easily for the remaining parts.
+Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. In the next chunk we fit a main effects model that looks at the zinc (`Zn`) CLR part of the micro-nutrient subcomposition. Similar analyses could be done easily for the remaining parts.
 
 ```{r}
 # Zn part by crop species and fertilizer / lime use
-Zn <- lmer(Zn~macro + (1|crop) + (1|fert), data = site)
+Zn <- lmer(Zn~1 + (1|crop) + (1|fert), data = site)
 summary(Zn)
 ranef(Zn)
 ```
-
-Note that the inclusion of the `macro` subcomposition here takes care of a lot of the between crop species variation in the Zn CLR values. Similar analyses could easily be done for the remaining nutrient parts.
 
 # Compositional archetypes
 
@@ -149,7 +147,7 @@ Note that the inclusion of the `macro` subcomposition here takes care of a lot o
 
 ## Identifying archetypes
 
-This next chunk fits the Malawi CLR data using the [`archetypes`](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf) package, which is a reasonably robust implementation of the Cutler and Breiman (1994) algorithm that uses [k-fold cross-validation](https://www.statology.org/k-fold-cross-validation/)
+This next chunk fits the Malawi CLR data using the [`archetypes`](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf) package, which is a robust implementation of Cutler and Breiman's (1994) algorithm that uses [k-fold cross-validation](https://www.statology.org/k-fold-cross-validation/)
 
 ```{r, output = 'hide'}
 # Fit nutrient archetypes with 10-fold cross validation
@@ -197,7 +195,7 @@ boxplot(site$Mo ~ site$DA, notch = T, ylab = "Mo", xlab = "", cex.axis = 0.9, ce
 boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
 ```
 
-## Post- stratified differences between crop species and fertilizer application
+## Post-stratified differences between crop species and fertilizer application
 
 ```{r}
 # Macro-nutrients by DA, crop species, and fertilizer / lime use
@@ -207,8 +205,8 @@ ranef(mp)
 ```
 
 ```{r}
-# Zn part by crop species and fertilizer / lime use
-pZn <- lmer(Zn~1 + (1|DA) +(1|crop) + (1|fert), data = site)
+# Zn part by DA, crop species and fertilizer / lime use
+pZn <- lmer(Zn~1 + (1|DA) + (1|crop) + (1|fert), data = site)
 summary(pZn)
 ranef(pZn)
 ```
@@ -221,6 +219,6 @@ The main takeaways from this notebook are the following:
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult, but they should improve any data modeling based inferences where subcompositional closure principles apply.
 
-* Clustering the CoDa nutrient data in fewer dimensions e.g., using archetypal analysis, provides a framework for post stratifying nutrient survey results ...
+* Clustering the CoDa nutrient data in fewer dimensions, using archetypal analysis, provides a framework and generalization for post-stratifying nutrient survey results that improve the precision and accuracy the national cereal grain mineral nutrient estimates for Malawi.  
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
