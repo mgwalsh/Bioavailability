@@ -178,7 +178,7 @@ site <- cbind(site, darc)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-We can generate a similar plot of the micro-nutrient composition presented above (code not shown). Rather than focusing on crop species, the differences in the CLRs are now shown as differences between the 4 dominant archetypes.
+We can generate a similar plot of the micro-nutrient composition presented above (code not shown). Rather than focusing on crop species, the differences in the CLRs are now shown as the differences between the 4 dominant archetypes.
 
 ```{r, echo = FALSE, fig.align = "center", fig.show = 'hold', fig.fullwidth = TRUE, fig.cap = "Boxplots of micro-nutrient CLR differences between dominant archetypes."}
 
@@ -202,6 +202,6 @@ The main takeaways from this notebook are the following:
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult, but they should improve any data modeling based inferences where subcompositional closure principles apply.
 
-* Clustering the CoDa nutrient data in fewer dimensions e.g., using archetypal analysis, provides ...
+* Clustering the CoDa nutrient data in fewer dimensions e.g., using archetypal analysis, provides a framework for post stratifying nutrient survey results ...
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
