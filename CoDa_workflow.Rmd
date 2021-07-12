@@ -219,6 +219,8 @@ The main takeaways from this notebook are the following:
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult, but they should improve any data modeling based inferences where subcompositional closure principles apply.
 
-* Clustering the CoDa nutrient data in fewer dimensions, using archetypal analysis, provides a framework and generalization for post-stratifying nutrient survey results that improve the precision and accuracy the national cereal grain mineral nutrient estimates for Malawi.  
+* Clustering the CoDa nutrient data in fewer dimensions, using archetypal analysis, provides a framework and generalization for post-stratifying nutrient survey results that improve the precision and accuracy the national cereal grain mineral nutrient estimates in Malawi.
+
+* The results from these analyses can be applied in subsequent workflows, including spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of cereals commonly grown in Malawi.
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
