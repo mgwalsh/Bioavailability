@@ -202,4 +202,6 @@ The main takeaways from this notebook are the following:
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult, but they should improve any data modeling based inferences where subcompositional closure principles apply.
 
+* Clustering the CoDa nutrient data in fewer dimensions e.g., using archetypal analysis, provides ...
+
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
