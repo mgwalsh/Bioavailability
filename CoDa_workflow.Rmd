@@ -157,16 +157,16 @@ screeplot(comp.arc)
 ```
 
 ```{r}
-# Select no. of archetypes, the scree plot above suggests 4-8 ... we use 6 here
-comp.arc6 <- bestModel(comp.arc[[6]])
+# Select no. of archetypes, the scree plot above suggests 4-8 ... we use 4 here
+comp.arc4 <- bestModel(comp.arc[[4]])
 
 # Classify CLRs by "dominant archetypes" (DAs)
-darc <- as.data.frame(predict(comp.arc6, site[,7:21]))
+darc <- as.data.frame(predict(comp.arc4, site[,7:21]))
 darc$DA <- apply(darc, 1, which.max)
-colnames(darc) <- c("A1","A2","A3","A4","A5","A6","DA")
+colnames(darc) <- c("A1","A2","A3","A4","DA")
 site <- cbind(site, darc)
 
-# Overwrite file
+# Overwrite site file
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
