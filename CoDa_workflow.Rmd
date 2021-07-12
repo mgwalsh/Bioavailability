@@ -157,7 +157,7 @@ screeplot(comp.arc)
 ```
 
 ```{r}
-# Select no. of archetypes, the screeplot suggests 5-6 ... we use 6 here
+# Select no. of archetypes, the screeplot suggests 5-7 ... we use 6 here
 comp.arc6 <- bestModel(comp.arc[[6]])
 
 # Classify CLRs by "dominant archetypes" (DAs)
