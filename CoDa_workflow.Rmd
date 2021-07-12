@@ -147,7 +147,7 @@ Note that the inclusion of the `macro` subcomposition here takes care of a lot o
 ```{r, output = 'hide'}
 # Fit nutrient archetypes with 10-fold cross validation
 set.seed(85321)
-comp.arc <- stepArchetypes(data=site[,7:21], k = 1:10, nrep = 10, verbose = TRUE)
+comp.arc <- stepArchetypes(data=site[,7:21], k = 1:10, nrep = 10, verbose = FALSE)
 ```
 
 ```{r, echo = FALSE, fig.align = "center", fig.cap = "Archetype scree-plot showing the no. of archetypes vs the multivariate residual sums of squares (RSS)."}
@@ -157,7 +157,7 @@ screeplot(comp.arc)
 ```
 
 ```{r}
-# Select no. of archetypes, the screeplot suggests 5-7 ... we use 6 here
+# Select no. of archetypes, the scree plot above suggests 4-8 ... we use 6 here
 comp.arc6 <- bestModel(comp.arc[[6]])
 
 # Classify CLRs by "dominant archetypes" (DAs)
@@ -165,6 +165,9 @@ darc <- as.data.frame(predict(comp.arc6, site[,7:21]))
 darc$DA <- apply(darc, 1, which.max)
 colnames(darc) <- c("A1","A2","A3","A4","A5","A6","DA")
 site <- cbind(site, darc)
+
+# Overwrite file
+write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
 # Takeways
