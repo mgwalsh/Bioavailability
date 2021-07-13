@@ -94,31 +94,31 @@ site <- cbind(locs, combo)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-You can plot any CLR differences between crop species with something like in this next chunk.
+You can plot any CLR differences between crop species with something like in this next chunk. There are probably more elegant ways of doing that.
 
 ```{r, fig.align = "center", fig.show = 'hold', fig.height = 12, fig.width = 7.2, fig.cap = "Boxplots of mico-nutrient CLR differences between crop species."}
 
 par(mfrow = c(5,3), pty="s", mar=c(2,4,1,1))
-boxplot(site$Na ~ site$crop, notch = T, ylab = "Na", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Mg ~ site$crop, notch = T, ylab = "Mg", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$P ~ site$crop, notch = T, ylab = "P", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$S ~ site$crop, notch = T, ylab = "S", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$K ~ site$crop, notch = T, ylab = "K", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Ca ~ site$crop, notch = T, ylab = "Ca", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Cr ~ site$crop, notch = T, ylab = "Cr", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Mn ~ site$crop, notch = T, ylab = "Mn", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Fe ~ site$crop, notch = T, ylab = "Fe", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Co ~ site$crop, notch = T, ylab = "Co", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Cu ~ site$crop, notch = T, ylab = "Cu", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Zn ~ site$crop, notch = T, ylab = "Zn", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Se ~ site$crop, notch = T, ylab = "Se", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Mo ~ site$crop, notch = T, ylab = "Mo", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
+boxplot(site$Na ~ site$crop, notch = T, ylab = "Na", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Mg ~ site$crop, notch = T, ylab = "Mg", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$P ~ site$crop, notch = T, ylab = "P", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$S ~ site$crop, notch = T, ylab = "S", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$K ~ site$crop, notch = T, ylab = "K", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Ca ~ site$crop, notch = T, ylab = "Ca", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Cr ~ site$crop, notch = T, ylab = "Cr", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Mn ~ site$crop, notch = T, ylab = "Mn", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Fe ~ site$crop, notch = T, ylab = "Fe", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Co ~ site$crop, notch = T, ylab = "Co", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Cu ~ site$crop, notch = T, ylab = "Cu", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Zn ~ site$crop, notch = T, ylab = "Zn", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Se ~ site$crop, notch = T, ylab = "Se", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Mo ~ site$crop, notch = T, ylab = "Mo", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.lab = 1.3)
 ```
 
 ## Compositional differences between crop species
 
-This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences between the macro nutrient CLRs of millet, rice and sorghum as compared to maize. We will be doing this using quantile regression ([`quantreg`]()) to safeguard against any major outliers in the data.
+This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences between the macro nutrient CLRs of millet, rice and sorghum as compared to maize. We will be doing this using quantile regression ([`quantreg`](https://cran.r-project.org/web/packages/quantreg/index.html)) to safeguard against any major outliers in the data.
 
 ```{r, results = 'asis'}
 # Fit nutrients by crop species with quantile regression
@@ -213,21 +213,21 @@ We can now also generate a similar plot of the raw micro-nutrient composition pr
 ```{r, echo = FALSE, fig.align = "center", fig.show = 'hold', fig.height = 12, fig.width = 7.2, fig.cap = "Boxplots of nutrient CLR differences between dominant archetypes."}
 
 par(mfrow = c(5,3), pty="s", mar=c(2,4,1,1))
-boxplot(site$Na ~ site$DA, notch = T, ylab = "Na", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Mg ~ site$DA, notch = T, ylab = "Mg", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$P ~ site$DA, notch = T, ylab = "P", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$S ~ site$DA, notch = T, ylab = "S", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$K ~ site$DA, notch = T, ylab = "K", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Ca ~ site$DA, notch = T, ylab = "Ca", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Cr ~ site$DA, notch = T, ylab = "Cr", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Mn ~ site$DA, notch = T, ylab = "Mn", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Fe ~ site$DA, notch = T, ylab = "Fe", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Co ~ site$DA, notch = T, ylab = "Co", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Cu ~ site$DA, notch = T, ylab = "Cu", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Zn ~ site$DA, notch = T, ylab = "Zn", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Se ~ site$DA, notch = T, ylab = "Se", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$Mo ~ site$DA, notch = T, ylab = "Mo", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
-boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
+boxplot(site$Na ~ site$DA, notch = T, ylab = "Na", xlab = "", cex.lab = 1.3)
+boxplot(site$Mg ~ site$DA, notch = T, ylab = "Mg", xlab = "", cex.lab = 1.3)
+boxplot(site$P ~ site$DA, notch = T, ylab = "P", xlab = "", cex.lab = 1.3)
+boxplot(site$S ~ site$DA, notch = T, ylab = "S", xlab = "", cex.lab = 1.3)
+boxplot(site$K ~ site$DA, notch = T, ylab = "K", xlab = "", cex.lab = 1.3)
+boxplot(site$Ca ~ site$DA, notch = T, ylab = "Ca", xlab = "", cex.lab = 1.3)
+boxplot(site$Cr ~ site$DA, notch = T, ylab = "Cr", xlab = "", cex.lab = 1.3)
+boxplot(site$Mn ~ site$DA, notch = T, ylab = "Mn", xlab = "", cex.lab = 1.3)
+boxplot(site$Fe ~ site$DA, notch = T, ylab = "Fe", xlab = "", cex.lab = 1.3)
+boxplot(site$Co ~ site$DA, notch = T, ylab = "Co", xlab = "", cex.lab = 1.3)
+boxplot(site$Cu ~ site$DA, notch = T, ylab = "Cu", xlab = "", cex.lab = 1.3)
+boxplot(site$Zn ~ site$DA, notch = T, ylab = "Zn", xlab = "", cex.lab = 1.3)
+boxplot(site$Se ~ site$DA, notch = T, ylab = "Se", xlab = "", cex.lab = 1.3)
+boxplot(site$Mo ~ site$DA, notch = T, ylab = "Mo", xlab = "", cex.lab = 1.3)
+boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.lab = 1.3)
 ```
 
 ## Post-stratified differences between crop species
