@@ -34,7 +34,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "table1", "arm", "stargazer", "archetypes", "quantreg")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "arm", "stargazer", "archetypes", "quantreg")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
