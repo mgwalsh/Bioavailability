@@ -208,19 +208,27 @@ boxplot(site$Mo ~ site$DA, notch = T, ylab = "Mo", xlab = "", cex.axis = 0.9, ce
 boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.axis = 0.9, cex.lab = 1.3)
 ```
 
-## Post-stratified differences between crop species and fertilizer application
+## Post-stratified differences between crop species
 
-```{r}
-# Macro-nutrients by DA, crop species, and fertilizer / lime use
-mp <- lmer(macro~1 + (1|DA) + (1|crop) + (1|fert), data = site)
-```
+```{r, results = 'asis'}
+# Macro-nutrients by DA
+p1 <- lmer(macro~crop + (1|DA), data = site)
+p2 <- lmer(Na~crop + (1|DA), data = site)
+p3 <- lmer(Mg~crop + (1|DA), data = site)
+p4 <- lmer(P~crop + (1|DA), data = site)
+p5 <- lmer(S~crop + (1|DA), data = site)
+p6 <- lmer(K~crop + (1|DA), data = site)
+p7 <- lmer(Ca~crop + (1|DA), data = site)
 
-```{r}
-# Zn part by DA, crop species and fertilizer / lime use
-pZn <- lmer(Zn~1 + (1|DA) + (1|crop) + (1|fert), data = site)
-summary(pZn)
-ranef(pZn)
+# Generate regression summary table
+stargazer::stargazer(p1, p2, p3, p4, p5, p6, p7, type = "html", 
+                     ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 2, 
+                     omit.table.layout = "sn", model.numbers = FALSE,
+                     column.sep.width = "24pt",
+                     covariate.labels = c("Intercept","millet","rice","sorghum"),
+                     title = "Post-stratified regression summary using maize as the reference crop.")
 ```
+\
 
 # Takeways
 
