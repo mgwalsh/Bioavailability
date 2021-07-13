@@ -193,9 +193,9 @@ site <- cbind(site, darc)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-This is an aside, but it gives you an idea what the dominant archetypal sites look like from a [GeoSurvey]() perspective in Malawi. It also demonstrates that there are probably explicit spatial links, which could / should be explored more thoroughly.
+This is an aside, but it gives you an idea what the dominant archetypal sites look like from a [GeoSurvey]() perspective in Malawi. It also reminds of the fact that there are probably explicit spatial links, which could / should be explored more thoroughly.
 
-```{r, echo=FALSE, fig.align = "center", fig.cap = "Archetypal sites in Malawi in GeoSurvey.", out.width = '90%', knitr::include_graphics("./MW_coda/MW_archetypes.png")}
+```{r, echo=FALSE, fig.align = "center", fig.cap = "Archetypal sites in Malawi in GeoSurvey.", out.width = '90%', knitr::include_graphics("MW_archetypes.png")}
 ```
 
 We can now also generate a similar plot of the raw micro-nutrient composition presented above (code not shown). Rather than focusing on crop species, the differences in the CLRs are now shown as the differences between the 4 dominant archetypes.
