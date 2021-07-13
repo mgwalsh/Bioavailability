@@ -135,18 +135,18 @@ Based on this, there appear to be clear differences between the macro compositio
 
 ```{r, echo = FALSE, results = 'asis'}
 # Fit macro-nutrients by crop species and fertilizer use
-m1 <- rq(Cr~crop, data = site)
-m2 <- rq(Mn~crop, data = site)
-m3 <- rq(Fe~crop, data = site)
-m4 <- rq(Co~crop, data = site)
-m5 <- rq(Cu~crop, data = site)
-m6 <- rq(Zn~crop, data = site)
-m7 <- rq(Se~crop, data = site)
-m8 <- rq(Mo~crop, data = site)
-m9 <- rq(I~crop, data = site)
+m7 <- rq(Cr~crop, data = site)
+m8 <- rq(Mn~crop, data = site)
+m9 <- rq(Fe~crop, data = site)
+m10 <- rq(Co~crop, data = site)
+m11 <- rq(Cu~crop, data = site)
+m12 <- rq(Zn~crop, data = site)
+m13 <- rq(Se~crop, data = site)
+m14 <- rq(Mo~crop, data = site)
+m15 <- rq(I~crop, data = site)
 
 # Generate regression summary table
-stargazer::stargazer(m1, m2, m3, m4, m5, m6, m7, m8, m9, type = "html", 
+stargazer::stargazer(m7, m8, m9, m10, m11, m12, m13, m14, m15, type = "html", 
                      ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 1, 
                      omit.table.layout = "sn", model.numbers = FALSE,
                      column.sep.width = "24pt",
