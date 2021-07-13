@@ -34,7 +34,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "table1", "arm", "archetypes")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "table1", "arm", "stargazer", "archetypes")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -116,30 +116,25 @@ boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 0.7, ce
 
 This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences in the `macro` nutrient CLRs between the 4 crop species.
 
-```{r}
-# Macro-nutrients by crop species
-m0 <- lmer(macro~1 + (1|crop), data = site)
-summary(m0)
-ranef(m0)
+```{r, results = 'asis'}
+# Macro-nutrients by crop species and the use of fertilizer and/or lime.
+m0 <- glm(macro~crop, data = site)
+m1 <- glm(macro~crop + fert, data = site)
+m2 <- glm(Na~crop + fert, data = site)
+m3 <- glm(Mg~crop + fert, data = site)
+m4 <- glm(P~crop + fert, data = site)
+m5 <- glm(S~crop + fert, data = site)
+m6 <- glm(K~crop + fert, data = site)
+m7 <- glm(Ca~crop + fert, data = site)
+
+# Generate regression summary table
+stargazer::stargazer(m1, m2, m3, m4, m5, m6, m7, type = "html", 
+                     ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 2, 
+                     column.sep.width = "3pt",
+                     title = "Compositional differences between crop species and fertilizer use")
 ```
-
-Based on this, there appear to be some clear differences between the macro / micro compositional parts of the 4 cereal crops. Maize appears to have a significantly higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. The next chunk includes the use of fertilizer and/or lime.
-
-```{r}
-# Macro-nutrients by crop species and fertilizer / lime use
-m1 <- lmer(macro~1 + (1|crop) + (1|fert), data = site)
-summary(m1)
-ranef(m1)
-```
-
-Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context. In the next chunk we fit a main effects model that looks at the zinc (`Zn`) CLR part of the micro-nutrient subcomposition. Similar analyses could be done easily for the remaining parts.
-
-```{r}
-# Zn part by crop species and fertilizer / lime use
-Zn <- lmer(Zn~1 + (1|crop) + (1|fert), data = site)
-summary(Zn)
-ranef(Zn)
-```
+\
+Based on this, there appear to be some clear differences between the macro / micro compositional parts of the 4 cereal crops. Maize appears to have a significantly higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. Note that the interactions between crop species and fertilizer / lime applications are difficult to estimate based on the available Malawi dataset that is dominated by maize. An oversample of the more locally common millet, rice and sorghum grown with regard to fertilizer use might be useful in this context.
 
 # Compositional archetypes
 
