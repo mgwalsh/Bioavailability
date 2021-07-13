@@ -151,7 +151,7 @@ stargazer::stargazer(m7, m8, m9, m10, m11, m12, m13, m14, m15, type = "html",
                      omit.table.layout = "sn", model.numbers = FALSE,
                      column.sep.width = "24pt",
                      covariate.labels = c("Intercept","millet","rice","sorghum"),
-                     title = "Mico-nutrient regression summary using maize as the reference crop.")
+                     title = "Micro-nutrient regression summary using maize as the reference crop.")
 ```
 \
 
@@ -213,21 +213,43 @@ boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.axis = 0.9, cex.
 
 ```{r, results = 'asis'}
 # Macro-nutrients by DA
-p1 <- lmer(macro~crop + (1|DA), data = site)
-p2 <- lmer(Na~crop + (1|DA), data = site)
-p3 <- lmer(Mg~crop + (1|DA), data = site)
-p4 <- lmer(P~crop + (1|DA), data = site)
-p5 <- lmer(S~crop + (1|DA), data = site)
-p6 <- lmer(K~crop + (1|DA), data = site)
-p7 <- lmer(Ca~crop + (1|DA), data = site)
+p1 <- rq(macro~crop + factor(DA), data = site)
+p2 <- rq(Na~crop + factor(DA), data = site)
+p3 <- rq(Mg~crop + factor(DA), data = site)
+p4 <- rq(P~crop + factor(DA), data = site)
+p5 <- rq(S~crop + factor(DA), data = site)
+p6 <- rq(K~crop + factor(DA), data = site)
+p7 <- rq(Ca~crop + factor(DA), data = site)
 
 # Generate regression summary table
 stargazer::stargazer(p1, p2, p3, p4, p5, p6, p7, type = "html", 
-                     ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 2, 
+                     ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 1, 
                      omit.table.layout = "sn", model.numbers = FALSE,
                      column.sep.width = "24pt",
-                     covariate.labels = c("Intercept","millet","rice","sorghum"),
-                     title = "Post-stratified regression summary using maize as the reference crop.")
+                     covariate.labels = c("Intercept","millet","rice","sorghum","DA2","DA3","DA4"),
+                     title = "Macro-nutrient regression summary using DA1/maize as the reference.")
+```
+\
+
+```{r, echo = FALSE, results = 'asis'}
+# Macro-nutrients by DA
+p8 <- rq(Cr~crop + factor(DA), data = site)
+p9 <- rq(Mn~crop + factor(DA), data = site)
+p10 <- rq(Fe~crop + factor(DA), data = site)
+p11 <- rq(Co~crop + factor(DA), data = site)
+p12 <- rq(Cu~crop + factor(DA), data = site)
+p13 <- rq(Zn~crop + factor(DA), data = site)
+p14 <- rq(Se~crop + factor(DA), data = site)
+p15 <- rq(Mo~crop + factor(DA), data = site)
+p16 <- rq(I~crop + factor(DA), data = site)
+
+# Generate regression summary table
+stargazer::stargazer(p8, p9, p10, p11, p12, p13, p14, p15, p16, type = "html", 
+                     ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 1, 
+                     omit.table.layout = "sn", model.numbers = FALSE,
+                     column.sep.width = "24pt",
+                     covariate.labels = c("Intercept","millet","rice","sorghum","DA2","DA3","DA4"),
+                     title = "Micro-nutrient regression summary using DA1/maize as the reference.")
 ```
 \
 
