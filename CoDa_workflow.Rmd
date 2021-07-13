@@ -131,7 +131,7 @@ stargazer::stargazer(m0, m1, m2, m3, m4, m5, m6, type = "html",
 ```
 \
 
-Based on this, there appear to be clear differences between the macro compositional parts of the 4 cereal crops. Maize appears to have a significantly higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. The corresponding micro-nutrient summary is shown in the table below.
+Based on this, there appear to be clear differences between the macro compositional parts of the 4 cereal crops. Maize appears to have a significantly higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast that is imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. The corresponding micro-nutrient summary is shown in the table below.
 
 ```{r, echo = FALSE, results = 'asis'}
 # Fit macro-nutrients by crop species and fertilizer use
@@ -193,7 +193,12 @@ site <- cbind(site, darc)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-We can generate a similar plot of the raw micro-nutrient composition presented above (code not shown). Rather than focusing on crop species, the differences in the CLRs are now shown as the differences between the 4 dominant archetypes.
+This is an aside, but it gives you an idea what the dominant archetypal sites look like from a [GeoSurvey]() perspective in Malawi. It also demonstrates that there are probably explicit spatial links, which could / should be explored more thoroughly.
+
+```{r, echo=FALSE, fig.align = "center", fig.cap = "Archetypal sites in Malawi in GeoSurvey.", out.width = '90%', knitr::include_graphics("./MW_coda/MW_archetypes.png")}
+```
+
+We can now also generate a similar plot of the raw micro-nutrient composition presented above (code not shown). Rather than focusing on crop species, the differences in the CLRs are now shown as the differences between the 4 dominant archetypes.
 
 ```{r, echo = FALSE, fig.align = "center", fig.show = 'hold', fig.fullwidth = TRUE, fig.cap = "Boxplots of micro-nutrient CLR differences between dominant archetypes."}
 
