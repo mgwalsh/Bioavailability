@@ -196,7 +196,7 @@ site <- cbind(site, darc)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) workflow perspective in Malawi. It should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that could be explored. However, those links are certainly not plainly visible in satellite images, without significant ground data support.
+This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) workflow perspective in Malawi. It should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that could be explored. However, those links are certainly not plainly visible in satellite images without significant ground data support.
 
 ```{r, echo=FALSE, fig.align="center", fig.cap="Dominant archetypal grain nutrient composition sites in Malawi visualized in GeoSurvey.", out.width = '90%'}
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
