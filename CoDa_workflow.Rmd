@@ -278,7 +278,7 @@ stargazer::stargazer(p8, p9, p10, p11, p12, p13, p14, p15, p16, type = "html",
 ```
 \
 
-The second approach to post-stratification is to use multilevel models. The next chunk shows how that might be done ing the [`lme4` and `arm`](https://cran.r-project.org/web/packages/arm/arm.pdf) packages. Note that dominant archetypes are included as random intercept terms. You can explore those further by looking at the `ranef` and `se.ranef` functions in the `lme4` package. 
+The second approach to post-stratification is to use multilevel models. The next chunk shows how that might be done in the [`lme4` and `arm`](https://cran.r-project.org/web/packages/arm/arm.pdf) packages. Note that dominant archetypes are included as random intercept terms. You can explore those further by looking at the `ranef` and `se.ranef` functions in the `lme4` package. 
 
 ```{r, results = 'asis'}
 # Macro-nutrients by crop species and DA with lmer
