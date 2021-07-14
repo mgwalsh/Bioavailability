@@ -324,7 +324,7 @@ stargazer::stargazer(m8, m9, m10, m11, m12, m13, m14, m15, m16, type = "html",
 ```
 \
 
-Based on these initial results, we can't really provide any additional guidance about how to handle post-stratification of the current survey results. Note that one could always both methods. They are quick to calculate.
+Based on these initial results, we can't really provide any additional guidance about how to handle post-stratification and/or for largely analogous small-area estimates ([SAE](https://en.wikipedia.org/wiki/Small_area_estimation)) of the current survey results. Note that one could always use both methods. They are certainly quick to calculate.
 
 # Takeways
 
