@@ -278,7 +278,7 @@ stargazer::stargazer(p8, p9, p10, p11, p12, p13, p14, p15, p16, type = "html",
 ```
 \
 
-The second approach to post-stratification is to use multilevel models. The next chunk shows how that might be done using the [`lme4` and `arm`](https://cran.r-project.org/web/packages/arm/arm.pdf) packages. Note that dominant archetypes are included as random intercept terms.
+The second approach to post-stratification is to use multilevel models. The next chunk shows how that might be done ing the [`lme4` and `arm`](https://cran.r-project.org/web/packages/arm/arm.pdf) packages. Note that dominant archetypes are included as random intercept terms. You can explore those further by looking at the `ranef` and `se.ranef` functions in the `lme4` package. 
 
 ```{r, results = 'asis'}
 # Macro-nutrients by crop species and DA with lmer
@@ -300,7 +300,7 @@ stargazer::stargazer(m1, m2, m3, m4, m5, m6, m7, type = "html",
 ```
 \
 
-The 9 micro-nutrient CLRs are handled in an identical manner (code not shown, but are included in the markdown). The table below displays the results.
+The 9 micro-nutrient CLRs are handled in an identical manner (code not shown, but included in the markdown). The table below displays the results.
 
 ```{r, echo = FALSE, results = 'asis'}
 # Micro-nutrients by crop species and DA with lmer
@@ -324,7 +324,7 @@ stargazer::stargazer(m8, m9, m10, m11, m12, m13, m14, m15, m16, type = "html",
 ```
 \
 
-Based on these initial results, we can't really provide any additional guidance about how to handle post-stratification and/or for the largely analogous small-area estimates ([SAE](https://en.wikipedia.org/wiki/Small_area_estimation)) of the current survey results. Note that one could always use both methods. They are certainly quick to calculate.
+Based on these initial results, we can't really provide any additional guidance about how to handle post-stratification and/or the largely analogous small-area estimates ([SAE](https://en.wikipedia.org/wiki/Small_area_estimation)) of the current survey results. Note that one could always use both methods. They are certainly quick to calculate.
 
 # Takeways
 
