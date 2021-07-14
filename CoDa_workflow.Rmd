@@ -186,7 +186,7 @@ screeplot(comp.arc)
 
 ## Archetypal classification
 
-Similar to other clustering algorithms, we can use the identified archetypes for unsupervised classification and subsequently also for (see e.g., [post-stratification](https://www.sciencedirect.com/topics/mathematics/poststratification)).
+Similar to other clustering algorithms, we can use the identified archetypes for unsupervised classification and subsequently also for e.g., [post-stratification](https://www.sciencedirect.com/topics/mathematics/poststratification).
 
 ```{r}
 # Select no. of archetypes, the scree plot above suggests 4-7 ... we use 4 here
