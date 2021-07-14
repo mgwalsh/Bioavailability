@@ -34,7 +34,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "arm", "stargazer", "archetypes", "quantreg")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -235,7 +235,7 @@ boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.lab = 1.3)
 The main reason for post-stratification is to improve the precision and accuracy of live survey analyses and also to guide future surveys and/or monitoring activities. There are at least a couple of different ways to handle post-stratification of CoDa (and/or any other data). The first way, which we have already explored partially, would use OLS, GLM and/or quantile regression. The second approach uses mixed-effects ([multilevel](https://en.wikipedia.org/wiki/Multilevel_model)) models and is analogous to [instrumental variable regression](https://www.publichealth.columbia.edu/research/population-health-methods/instrumental-variables) approaches that are commonly used in the analyses of e.g., econometric, epidemiological and environmetric surveys. This initial post-stratification chunk uses [`quantreg`]()
 
 ```{r, results = 'asis'}
-# Macro-nutrients by DA
+# Macro-nutrients by DA with quantreg
 p1 <- rq(macro~crop + factor(DA), data = site)
 p2 <- rq(Na~crop + factor(DA), data = site)
 p3 <- rq(Mg~crop + factor(DA), data = site)
@@ -276,7 +276,26 @@ stargazer::stargazer(p8, p9, p10, p11, p12, p13, p14, p15, p16, type = "html",
 ```
 \
 
-The second approach is to use multilevel models for post-stratification. The next chunk shows how that might be done using the [`arm`]() package.
+The second approach is to use multilevel models for post-stratification. The next chunk shows how that might be done using the [`lme4` and `arm`](https://cran.r-project.org/web/packages/arm/arm.pdf) packages. Note that dominant archetypes are included as random intercept terms.
+
+```{r}
+# Macro-nutrients by crop species and DA with lmer
+m1 <- lmer(macro~crop + (1|DA), data = site)
+m2 <- lmer(Na~crop + (1|DA), data = site)
+m3 <- lmer(Mg~crop + (1|DA), data = site)
+m4 <- lmer(P~crop + (1|DA), data = site)
+m5 <- lmer(S~crop + (1|DA), data = site)
+m6 <- lmer(K~crop + (1|DA), data = site)
+m7 <- lmer(Ca~crop + (1|DA), data = site)
+
+# Generate regression summary table
+stargazer::stargazer(m1, m2, m3, m4, m5, m6, m7, type = "html", 
+                     ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 1, 
+                     omit.table.layout = "sn", model.numbers = FALSE,
+                     column.sep.width = "24pt",
+                     covariate.labels = c("Intercept","millet","rice","sorghum"),
+                     title = "Macro-nutrient multilevel regression summary using maize as the reference.")
+```
 
 # Takeways
 
@@ -286,8 +305,8 @@ The main takeaways from this notebook are the following:
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult, but they should improve any data modeling, geostatistical and/or machine learning based predictions where subcompositional closure principles apply.
 
-* Clustering the CoDa nutrient data in fewer dimensions, using archetypal analysis, provides a framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy the national cereal grain mineral nutrient estimates in Malawi.
+* Clustering the CoDa nutrient data in fewer dimensions, e.g., using archetypal analysis, provides a framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy the national cereal grain mineral nutrient estimates in Malawi.
 
-* The results from these analyses can be applied in subsequent workflows, including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
+* The results from these initial analyses can be applied in subsequent workflows, including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
