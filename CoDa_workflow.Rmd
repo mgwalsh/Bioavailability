@@ -34,7 +34,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm", "gRim")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -324,22 +324,24 @@ stargazer::stargazer(m8, m9, m10, m11, m12, m13, m14, m15, m16, type = "html",
 ```
 \
 
-Based on these initial results, we can't really provide any additional guidance about how to handle post-stratification and/or the largely analogous small-area estimates ([SAE](https://en.wikipedia.org/wiki/Small_area_estimation)) of the current survey results. Note that one could always use both methods. They are certainly quick to calculate. The next section covers one multivariate technique, which may be helpful in this context.
+Based on these initial results, we can't really provide any additional guidance about how to handle post-stratification and/or the largely analogous small-area estimates ([SAE](https://en.wikipedia.org/wiki/Small_area_estimation)) of the current survey results. Note that one could always use both methods. They are certainly quick to calculate. The next section covers one multivariate technique, which may be useful in this context.
 
 # Graphical models of nutrient compositional interactions
 
-So far, we have only been dealing with the univariate compositional parts for analyzing CoDa, as is common practice. The aim of this next section is to illustrate an empirical multivariate basis that describes the relevant conditional relationships between the different CoDa parts with graphical models. The types of models that we will be using are well described and illustrated in [Højsgaard, Edwards and Lauritzen (2012)](https://link.springer.com/book/10.1007/978-1-4614-2299-0). There is also an open R tutorial by [Højsgaard, (2012)](https://people.math.aau.dk/~sorenh/misc/2012-Oslo-GMwR/GMwR-notes.pdf) available, which you might want to consult. 
+So far, we have only been dealing with the univariate compositional parts for analyzing CoDa, as is common practice. The aim of this next section is to illustrate an empirical multivariate basis that describes the relevant conditional relationships between the different CoDa parts with graphical models. The types of models that we will be using are well described and illustrated in [Højsgaard, Edwards and Lauritzen (2012)](https://link.springer.com/book/10.1007/978-1-4614-2299-0) and the references therein. There is also an open R tutorial by [Højsgaard, (2012)](https://people.math.aau.dk/~sorenh/misc/2012-Oslo-GMwR/GMwR-notes.pdf) available, which you might want to consult. 
 
 # Takeways
 
 The main takeaways from this notebook are the following:
 
-* Converting nutrient concentrations to logratios is a simple step, but unlike other data transformations it preserves the integrity of the relevant compositional parts needed to normalize the data for any subsequent univariate, multivariate and/or inferential analyses and statistics. Also, the CoDa can always be back-transformed into their original units.
+* Converting nutrient concentrations to multivariate logratios is a simple step, but unlike other data transformations it preserves the integrity of the relevant compositional parts needed to normalize the data for any subsequent univariate, multivariate and/or inferential analyses and statistics. Also, the CoDa can always be back-transformed into their original units.
 
-* We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions where subcompositional closure principles apply.
+* We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult or time consuming, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions in instances where subcompositional closure principles apply.
 
-* Clustering the CoDa nutrient data in fewer dimensions, e.g., using archetypal analysis, provides a framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy the national cereal grain mineral nutrient estimates in Malawi.
+* Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy the national cereal grain mineral nutrient estimates in Malawi.
 
-* The results from these initial analyses can be applied in subsequent workflows, including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
+* Graphical models help to clarify the conditional relationships between the compositional parts ...
+
+* The results from these initial, largely exploratory analyses can be applied in subsequent workflows including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
