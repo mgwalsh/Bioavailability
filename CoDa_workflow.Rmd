@@ -174,7 +174,7 @@ stargazer::stargazer(m7, m8, m9, m10, m11, m12, m13, m14, m15, type = "html",
 
 ## Identifying archetypes
 
-This next chunk fits the Malawi CLR data using the [`archetypes`](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf) package, which is a robust implementation of Cutler and Breiman (1994) algorithm that uses [k-fold validation](https://www.statology.org/k-fold-cross-validation/)
+This next chunk fits the Malawi CLR data using the [`archetypes`](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf) package, which is a robust implementation of the original Cutler and Breiman (1994) algorithm that uses [k-fold validation](https://www.statology.org/k-fold-cross-validation/)
 
 ```{r, output = 'hide'}
 # Fit nutrient archetypes with 10-fold cross validation
@@ -336,7 +336,7 @@ So far, we have largely been dealing with univariate CoDa models, as is common p
 
 ## Package installs
 
-To run this section of the notebook you will initially need to install the relevant packages. This is a bit of an art depending on the version of R that you are currently running. Both the [`gRim`](https://cran.r-project.org/web/packages/gRim/index.html) and [`statnet`](https://statnet.org/) that we shall be using for these analyses have dependencies to other packages, e.g., [bioconductor](http://www.bioconductor.org/install/) which can be a bit tricky depending on their versioning cycle on [CRAN](https://cran.r-project.org/). The next chunks are what worked for us using our current `R.Version()`, but this is likely to change and you may need to adjust accordingly.
+To run this section of the notebook you will initially need to install the relevant packages. This is a bit of an art depending on the version of R that you are currently running. Both the [`gRim`](https://cran.r-project.org/web/packages/gRim/index.html) and [`statnet`](https://statnet.org/) that we shall be using for these analyses and their visulization have dependencies to other packages, e.g., [bioconductor](http://www.bioconductor.org/install/) which can be a bit tricky depending on their versioning cycle on [CRAN](https://cran.r-project.org/). The next chunks are what worked for us using our current `R.Version()`, but this is likely to change and you may need to adjust accordingly.
 
 ```{r, results = 'hide'}
 # Install <bioconductor> first ... see: http://www.bioconductor.org/install/
@@ -359,9 +359,21 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(packages, library, character.only = TRUE))
 ```
 
+Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versions/2019.6) package, which we will use for graphical model visualization currently has some specific installation requirements that you can track on their repository.
+
 ## Fitting graphical interaction models
 
+```{r}
+# Graphical Gaussian interaction model
+nuts <- site[ ,7:21]
 
+cm1 <- cmod(~ .^., data = nuts)
+cm2 <- backward(cm1, k=log(nrow(nuts)))
+
+cmg <- ugList(terms(cm2), result="matrix")
+net <- as.network(x = cmg, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
+plot.network(net, vertex.col = "white", vertex.cex = 8, displaylabels = T, label.pos = 5, mode = "circle")
+```
 
 # Takeways
 
@@ -373,7 +385,7 @@ The main takeaways from this notebook are the following:
 
 * Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy the national cereal grain mineral nutrient estimates in Malawi.
 
-* Graphical models help to clarify the conditional relationships (connections) between compositional parts.
+* Graphical interaction models help to clarify the conditional relationships (connections) between compositional parts. They can also be used ...
 
 * The results from these initial, largely exploratory analyses can be applied in subsequent workflows including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
 
