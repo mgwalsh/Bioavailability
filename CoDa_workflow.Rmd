@@ -332,11 +332,11 @@ Based on these initial results, we can't really provide any additional guidance 
 
 # Graphical models of nutrient interactions
 
-So far, we have largely been dealing with univariate CoDa models, as is common practice. The aim of this next section is to illustrate an empirical multivariate basis that describes the relevant conditional relationships between the different CoDa parts with graphical interaction models. The types of models that we will be using are well described and illustrated in [Højsgaard, Edwards and Lauritzen (2012)](https://link.springer.com/book/10.1007/978-1-4614-2299-0) and the code and references therein. There is also an open R tutorial by [Højsgaard (2012)](https://people.math.aau.dk/~sorenh/misc/2012-Oslo-GMwR/GMwR-notes.pdf) available, which you might want to consult.
+So far, we have largely been dealing with univariate CoDa models, as is common practice. The aim of this next section is to illustrate an empirical multivariate basis that describes the relevant conditional relationships between the different CoDa parts with graphical interaction models. The types of models that we will be using are well described and illustrated in [Højsgaard, Edwards and Lauritzen (2012)](https://link.springer.com/book/10.1007/978-1-4614-2299-0) including the code and references therein. There is also an open R tutorial by [Højsgaard (2012)](https://people.math.aau.dk/~sorenh/misc/2012-Oslo-GMwR/GMwR-notes.pdf) available, which you might want to consult.
 
 ## Package installs
 
-To run this section of the notebook you will initially need to install the relevant packages. This is a bit of an art depending on the version of R that you are currently running. Both the [`gRim`](https://cran.r-project.org/web/packages/gRim/index.html) and [`statnet`](https://statnet.org/) that we shall be using for these analyses have dependencies to other packages, e.g., [bioconductor](http://www.bioconductor.org/install/) which can be a bit tricky depending on their versioning cycle on [CRAN](https://cran.r-project.org/). The next chunks are what worked for us using our current `R.Version()`, but this is likely to change and you may need tno adjust.
+To run this section of the notebook you will initially need to install the relevant packages. This is a bit of an art depending on the version of R that you are currently running. Both the [`gRim`](https://cran.r-project.org/web/packages/gRim/index.html) and [`statnet`](https://statnet.org/) that we shall be using for these analyses have dependencies to other packages, e.g., [bioconductor](http://www.bioconductor.org/install/) which can be a bit tricky depending on their versioning cycle on [CRAN](https://cran.r-project.org/). The next chunks are what worked for us using our current `R.Version()`, but this is likely to change and you may need to adjust accordingly.
 
 ```{r, results = 'hide'}
 # Install <bioconductor> first ... see: http://www.bioconductor.org/install/
@@ -344,8 +344,19 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install(version = "3.13")
 
-# Then install <gRbase> and <gRim>
+# note that this will query you in the console as to whether to update other associated packages ... (a/s/n). Reply with n if all of the listed packages are up to date.
 
+# Then install <gRbase> and <gRim>
+packages <- c("gRbase", "gRim")
+
+# Install packages
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+# Load packages
+invisible(lapply(packages, library, character.only = TRUE))
 ```
 
 ## Fitting graphical interaction models
