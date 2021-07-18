@@ -363,6 +363,8 @@ Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versi
 
 ## Fitting graphical interaction models
 
+The first model that we fit provides a baseline for including other covariates such as crop type and/or dominant archetype.
+
 ```{r}
 # Graphical Gaussian interaction model of the CoDa
 coda <- site[ ,7:21]
@@ -374,9 +376,13 @@ cmg <- ugList(terms(cm2), result="matrix")
 net <- as.network(x = cmg, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.height = 5, fig.width = 5, fig.cap = "Base CoDa nutrient interaction graph."}
+```{r, echo = FALSE, fig.align = "center", fig.height = 5, fig.width = 5, fig.cap = "Baseline CoDa nutrient interaction graph."}
+
+par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
+
+As expected the graph that is shown is fully connected, meaning that a difference in any one of the compositional parts is likely to produce a difference in any of the other parts.
 
 # Takeways
 
