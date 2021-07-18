@@ -336,7 +336,7 @@ So far, we have largely been dealing with univariate CoDa models, as is common p
 
 ## Package installs
 
-To run this section of the notebook you will initially need to install the relevant packages. This is a bit of an art depending on the version of R that you are currently running. Both the [`gRim`](https://cran.r-project.org/web/packages/gRim/index.html) and [`statnet`](https://statnet.org/) that we shall be using for these analyses and their visulization have dependencies to other packages, e.g., [bioconductor](http://www.bioconductor.org/install/) which can be a bit tricky depending on their versioning cycle on [CRAN](https://cran.r-project.org/). The next chunks are what worked for us using our current `R.Version()`, but this is likely to change and you may need to adjust accordingly.
+To run this section of the notebook you will initially need to install the relevant packages. This is a bit of an art form depending on the version of R that you are currently running. Both the [`gRim`](https://cran.r-project.org/web/packages/gRim/index.html) and [`statnet`](https://statnet.org/) that we shall be using for these analyses and their visulization have dependencies to other packages, e.g., [bioconductor](http://www.bioconductor.org/install/) which can be a bit tricky depending on their versioning cycle on [CRAN](https://cran.r-project.org/). The next chunks are what worked for us using our current `R.Version()`, but this is likely to change and you may need to adjust accordingly depending on your setup.
 
 ```{r, results = 'hide'}
 # Install <bioconductor> first ... see: http://www.bioconductor.org/install/
@@ -346,8 +346,8 @@ BiocManager::install(version = "3.13")
 
 # note that this will query you in the console as to whether to update other associated packages ... (a/s/n). Reply with n if all of the listed packages are up to date.
 
-# Then install <gRbase> and <gRim>
-packages <- c("gRbase", "gRim")
+# Then install gRbase, gRim and statnet 
+packages <- c("gRbase", "gRim", "statnet")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -359,20 +359,23 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(packages, library, character.only = TRUE))
 ```
 
-Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versions/2019.6) package, which we will use for graphical model visualization currently has some specific installation requirements that you can track on their repository.
+Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versions/2019.6) package, which we will use for graphical model visualization currently may have some specific installation requirements that you can track on their repository.
 
 ## Fitting graphical interaction models
 
 ```{r}
-# Graphical Gaussian interaction model
-nuts <- site[ ,7:21]
+# Graphical Gaussian interaction model of the raw (ppm) data
+nuts <- codat[ ,7:21]
 
-cm1 <- cmod(~ .^., data = nuts)
-cm2 <- backward(cm1, k=log(nrow(nuts)))
+cm1 <- cmod(~ .^., data = codat)
+cm2 <- backward(cm1, k=log(nrow(codat)))
 
 cmg <- ugList(terms(cm2), result="matrix")
 net <- as.network(x = cmg, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
-plot.network(net, vertex.col = "white", vertex.cex = 8, displaylabels = T, label.pos = 5, mode = "circle")
+```
+
+```{r, echo = FALSE,}
+plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
 # Takeways
