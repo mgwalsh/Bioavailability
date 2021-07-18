@@ -364,17 +364,17 @@ Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versi
 ## Fitting graphical interaction models
 
 ```{r}
-# Graphical Gaussian interaction model of the raw (ppm) data
-nuts <- codat[ ,7:21]
+# Graphical Gaussian interaction model of the CoDa
+coda <- site[ ,7:21]
 
-cm1 <- cmod(~ .^., data = codat)
-cm2 <- backward(cm1, k=log(nrow(codat)))
+cm1 <- cmod(~ .^., data = coda)
+cm2 <- backward(cm1, k=log(nrow(coda)))
 
 cmg <- ugList(terms(cm2), result="matrix")
 net <- as.network(x = cmg, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
-```{r, echo = FALSE,}
+```{r, echo = FALSE, fig.align = "center", fig.height = 5, fig.width = 5, fig.cap = "Base CoDa nutrient interaction graph."}
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
