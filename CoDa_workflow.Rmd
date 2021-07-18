@@ -20,7 +20,7 @@ Most empirical models of biogeography, species distributions, photosynthesis, nu
 
 *Compositional Data Analysis* (CoDA) refers to the analyses of *compositional data* (CoDa). CoDa are defined as vectors with strictly positive components whose sum is constant (e.g, 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information ([van den Boogaart and Tolosana-Delgado, 2013](https://link.springer.com/book/10.1007/978-3-642-36809-7)). Because a change in any proportion of a whole changes at least one other proportion, CoDa are interdependent. Arguably, all concentration data should be treated CoDa because as a whole they must sum to their respective per unit totals of all constituent parts e.g., in the case of mg kg^-1^ data, to 10^6^ ppm. CoDa are intrinsically multivariate, and their individual parts should probably not be analyzed and interpreted without relating them to one another.
 
-The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a CoDa review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa. The notebook presented here is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/CoDa_workflow.Rmd), and you can fork and alter it from there for your reference and as you see fit.
+The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a recent CoDa review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa. The notebook presented here is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/CoDa_workflow.Rmd), and you can fork and alter it from there for your reference and as you see fit.
 
 # General data setup
 
@@ -34,7 +34,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm", "gRim")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm", "gRim", "statnet")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -94,7 +94,7 @@ site <- cbind(locs, combo)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-You can plot any CLR differences between crop species with something like in this next chunk. There are probably more elegant ways of doing that.
+You can plot any CLR differences between crop species with something like in this next ugly chunk. There are probably more elegant ways of doing that.
 
 ```{r, fig.align = "center", fig.show = 'hold', fig.height = 12, fig.width = 7.2, fig.cap = "Boxplots of nutrient CLR differences between crop species."}
 
@@ -202,7 +202,7 @@ site <- cbind(site, darc)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that could be explored. However, those links are certainly not plainly visible in satellite images, without significant ground data support.
+This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that could be explored. However, those links are certainly not plainly visible in satellite images, without significant ground data collection support.
 
 ```{r, echo=FALSE, fig.align="center", fig.cap="Dominant archetypal grain nutrient composition sites in Malawi visualized in GeoSurvey.", out.width = '90%'}
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
@@ -326,9 +326,9 @@ stargazer::stargazer(m8, m9, m10, m11, m12, m13, m14, m15, m16, type = "html",
 
 Based on these initial results, we can't really provide any additional guidance about how to handle post-stratification and/or the largely analogous small-area estimates ([SAE](https://en.wikipedia.org/wiki/Small_area_estimation)) of the current survey results. Note that one could always use both methods. They are certainly quick to calculate. The next section covers one multivariate technique, which may be useful in this context.
 
-# Graphical models of nutrient compositional interactions
+# Graphical models of nutrient interactions
 
-So far, we have only been dealing with the univariate compositional parts for analyzing CoDa, as is common practice. The aim of this next section is to illustrate an empirical multivariate basis that describes the relevant conditional relationships between the different CoDa parts with graphical models. The types of models that we will be using are well described and illustrated in [Højsgaard, Edwards and Lauritzen (2012)](https://link.springer.com/book/10.1007/978-1-4614-2299-0) and the references therein. There is also an open R tutorial by [Højsgaard, (2012)](https://people.math.aau.dk/~sorenh/misc/2012-Oslo-GMwR/GMwR-notes.pdf) available, which you might want to consult. 
+So far, we have only been dealing with univariate CoDa models, as is common practice. The aim of this next section is to illustrate an empirical multivariate basis that describes the relevant conditional relationships between the different CoDa parts with graphical models. The types of models that we will be using are well described and illustrated in [Højsgaard, Edwards and Lauritzen (2012)](https://link.springer.com/book/10.1007/978-1-4614-2299-0) and the references therein. There is also an open R tutorial by [Højsgaard (2012)](https://people.math.aau.dk/~sorenh/misc/2012-Oslo-GMwR/GMwR-notes.pdf) available, which you might want to consult. 
 
 # Takeways
 
@@ -340,7 +340,7 @@ The main takeaways from this notebook are the following:
 
 * Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy the national cereal grain mineral nutrient estimates in Malawi.
 
-* Graphical models help to clarify the conditional relationships between the compositional parts ...
+* Graphical models help to clarify the conditional relationships between compositional parts ...
 
 * The results from these initial, largely exploratory analyses can be applied in subsequent workflows including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
 
