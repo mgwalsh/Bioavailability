@@ -16,7 +16,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most empirical models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., the [Blackman limitation](https://www.biologydiscussion.com/photosynthesis/blackmans-law-of-limiting-factors-and-his-criticism-photosynthesis/23006)). However, the Blackman limitation does not appear to hold generally. In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) to explore and report the mineral nutrient compositions of the main cereal grains (maize, pearl-millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)). 
+Most empirical models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., [Liebig's law](https://en.wikipedia.org/wiki/Justus_von_Liebig)). However, Liebig's law does not appear to hold generally ([Danger et al., 2008]( https://doi.org/10.2134/agronj1993.00021962008500030040x)). In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) to explore and report the mineral nutrient compositions of the main cereal grains (maize, pearl-millet, rice and sorghum) that are grown in Malawi ([Gashu et al., 2021](https://doi.org/10.1038/s41586-021-03559-3)). 
 
 *Compositional Data Analysis* (CoDA) refers to the analyses of *compositional data* (CoDa). CoDa are defined as vectors with strictly positive components whose sum is constant (e.g, 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information ([van den Boogaart and Tolosana-Delgado, 2013](https://link.springer.com/book/10.1007/978-3-642-36809-7)). Because a change in any proportion of a whole changes at least one other proportion, CoDa are interdependent. Arguably, all concentration data should be treated CoDa because as a whole they must sum to their respective per unit totals of all constituent parts e.g., in the case of mg kg^-1^ data, to 10^6^ ppm. CoDa are intrinsically multivariate, and their individual parts should probably not be analyzed and interpreted without relating them to one another.
 
@@ -170,7 +170,7 @@ stargazer::stargazer(m7, m8, m9, m10, m11, m12, m13, m14, m15, type = "html",
 
 # Compositional archetypes and classification
 
-*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to e.g., [K-means clustering](https://towardsdatascience.com/k-means-clustering-explained-4528df86a120). It describes each observation in a dataset as a mixture of archetypes. Rather than describing average or typical observations and measurements, archetypal analysis seeks to identify extreme points on the [convex hull](https://en.wikipedia.org/wiki/Convex_hull) of a data matrix, which can provide a simple and quite useful way of clustering and looking at multivariate data ([Eugster and Leisch, 2009](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf)). The identified archetypes themselves are mixtures of the individual variables under consideration. Archetypal mixture coefficients and projections are also CoDa, which is why we include them in this notebook. Note that clustering algorithms could also be used in this context ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)) .
+*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to e.g., [K-means clustering](https://towardsdatascience.com/k-means-clustering-explained-4528df86a120). It describes each observation in a dataset as a mixture of archetypes. Rather than describing average or typical observations and measurements, archetypal analysis seeks to identify extreme points on the [convex hull](https://en.wikipedia.org/wiki/Convex_hull) of a data matrix, which can provide a simple and quite useful way of clustering and looking at multivariate data ([Eugster and Leisch, 2009](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf)). The identified archetypes themselves are mixtures of the individual variables under consideration. Archetypal mixture coefficients and projections are also CoDa, which is why we include them in this notebook. Note that other clustering algorithms could also be used in this context ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)) .
 
 ## Identifying archetypes
 
@@ -363,7 +363,7 @@ Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versi
 
 ## Fitting graphical interaction models
 
-The first graphical model that we fit provides a baseline for including covariates such as crop type and/or dominant archetype. It is also useful by itself because it can provide predictions of the individual nutrient CoDa parts.
+The first graphical model that we fit provides a baseline for including covariates such as crop type and/or dominant archetype.
 
 ```{r}
 # Graphical Gaussian interaction model of the CoDa
@@ -384,7 +384,7 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-As might be expected the graph that is shown is fully connected, meaning that a difference in any one of the compositional parts is likely to produce a difference in any of the other parts. You can also use this to produce a prediction for e.g. the Zn (or any other) part of the composition with the next chunk.
+As might be expected, the graph that is shown is fully connected, meaning that a difference in any one of the compositional parts will produce a difference in any of the other parts.
 
 ```{r}
 
