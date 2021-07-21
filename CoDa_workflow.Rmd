@@ -336,7 +336,7 @@ So far, we have largely been dealing with univariate CoDa models, as is common p
 
 ## Package installs
 
-To run this section of the notebook you will initially need to install the relevant packages. This is a bit of an art form depending on the version of R that you are currently running. Both the [`gRim`](https://cran.r-project.org/web/packages/gRim/index.html) and [`statnet`](https://statnet.org/) that we shall be using for these analyses and their visulization have dependencies to other packages, e.g., [bioconductor](http://www.bioconductor.org/install/), which can be a bit tricky depending on their versioning cycle on [CRAN](https://cran.r-project.org/). The next chunks are what worked for us using our current `R.Version()`, but this is likely to change and you may need to adjust accordingly depending on your setup.
+To run this section of the notebook you will initially need to install the relevant packages. This is a bit of an art form depending on the version of R that you are currently running. Both the [`gRim`](https://cran.r-project.org/web/packages/gRim/index.html) and [`statnet`](https://statnet.org/) that we shall be using for these analyses and their visualization have dependencies to other packages, e.g., [bioconductor](http://www.bioconductor.org/install/), which can be a bit tricky depending on their versioning cycle on [CRAN](https://cran.r-project.org/). The next chunks are what worked for us using our current `R.Version()`, but this is likely to change and you may need to adjust accordingly depending on your setup.
 
 ```{r, results = 'hide'}
 # Install <bioconductor> first ... see: http://www.bioconductor.org/install/
@@ -385,21 +385,20 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-We can do the same using a combination of crop species and dominant archetypes, which produces the following graph that might be useful in further investigations including how soils affect nutrient compositions of cereal grains and how those might be predicted both spectrally and spatially.
+We can do the same using both the macro and micro-nutrient interactions, which produces the following graphs that might be useful in further explorations including e.g., in how soils affect nutrient compositions of cereal grains and how those might be predicted both spectrally and spatially.
 
 ```{r, echo = FALSE, results = 'hide'}
-# CoDa interactions by crop type
-coda <- site[ ,c(5,27,7:21)]
-coda$DA <- paste("A",) 
+# CoDa marco-nutrient interactions by crop type
+coda <- site[ ,c(5,7:12)]
 
 # Forward selection
 mm3 <- mmod(~.^1, data = coda)
-mm4 <- forward(mm1)
+mm4 <- forward(mm3)
 mmf <- ugList(terms(mm4), result="matrix")
 net <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
-```{r, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "CoDa nutrient interaction graph by crop species and dominant archetypes (DA)."}
+```{r, echo = FALSE, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "CoDa macro and micro-nutrient interaction graphs by crop species."}
 
 par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
@@ -415,7 +414,7 @@ The main takeaways from this notebook are the following:
 
 * Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy the national cereal grain mineral nutrient estimates in Malawi.
 
-* Graphical interaction models help to clarify the conditional relationships (connections) between compositional parts. They can also be used ...
+* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used ...
 
 * The results from these initial, largely exploratory analyses can be applied in subsequent workflows including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
 
