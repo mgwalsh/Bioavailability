@@ -340,6 +340,7 @@ To run this section of the notebook you will initially need to install the relev
 
 ```{r, results = 'hide'}
 # Install <bioconductor> first ... see: http://www.bioconductor.org/install/
+# do this only once
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install(version = "3.13")
@@ -367,12 +368,12 @@ The first graphical model that we fit provides a baseline for including covariat
 
 ```{r}
 # Graphical Gaussian interaction model of the CoDa
-coda <- site[ ,7:21]
+coda <- site[ ,c(5,7:21)]
 
-cm1 <- cmod(~ .^., data = coda)
-cm2 <- stepwise(cm1)
+mm1 <- mmod(~ .^., data = coda)
+mm2 <- stepwise(mm1)
 
-cmg <- ugList(terms(cm2), result="matrix")
+cmg <- ugList(terms(mm2), result="matrix")
 net <- as.network(x = cmg, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
