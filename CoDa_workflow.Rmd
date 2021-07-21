@@ -364,31 +364,31 @@ Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versi
 
 ## Fitting graphical interaction models
 
-The first graphical model that we fit provides a baseline for including covariates such as crop type and/or dominant archetype.
+The first graphical models that we fit provide a baselines for describing nutrient interactions by crop species.
 
 ```{r}
-# Graphical Gaussian interaction model of the CoDa
+# CoDa interactions with forward and backward selection by crop type
 coda <- site[ ,c(5,7:21)]
 
-mm1 <- mmod(~ .^., data = coda)
-mm2 <- stepwise(mm1)
+# Forward selection
+mm1 <- mmod(~ .^1, data = coda)
+mm2 <- forward(mm1)
+mmf <- ugList(terms(mm2), result="matrix")
+netf <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 
-cmg <- ugList(terms(mm2), result="matrix")
-net <- as.network(x = cmg, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
+# Backward selection
+mm3 <- mmod(~ .^., data = coda)
+mm4 <- backward(mm3)
+mmb <- ugList(terms(mm2), result="matrix")
+netb <- as.network(x = mmb, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
-This next chunk produces the associated CoDa interaction graph.
+This next chunk produces the associated CoDa interaction graphs.
 
-```{r, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "Baseline CoDa nutrient interaction graph."}
+```{r, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "Baseline CoDa nutrient interaction graphs by crop species with forward and backward selection."}
 
 par(mar=c(1,1,1,1))
-plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
-```
-
-As might be expected, the graph that is shown is fully connected, meaning that a difference in any one of the compositional parts will produce a difference in any of the other parts.
-
-```{r}
-
+plot.network(netf, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
 # Takeways
