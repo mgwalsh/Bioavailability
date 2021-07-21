@@ -341,13 +341,13 @@ To run this section of the notebook you will initially need to install the relev
 ```{r, results = 'hide'}
 # Install <bioconductor> first ... see: http://www.bioconductor.org/install/
 # do this only once
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install(version = "3.13")
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+# BiocManager::install(version = "3.13")
 
 # note that this will query you in the console as to whether to update other associated packages ... (a/s/n). Reply with n if all of the listed packages are up to date.
 
-# Then install gRbase, gRim and statnet 
+# Then install and load gRbase, gRim and statnet 
 packages <- c("gRbase", "gRim", "statnet")
 
 # Install packages
@@ -360,35 +360,49 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(packages, library, character.only = TRUE))
 ```
 
-Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versions/2019.6) package, which we will use for graphical model visualization currently may have some specific installation requirements that you can track on their repository.
+Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versions/2019.6) package, which we will use for graphical model visualization currently may have some specific installation requirements that you can track on their [Github repository](https://statnet.org/).
 
 ## Fitting graphical interaction models
 
-The first graphical models that we fit provide a baselines for describing nutrient interactions by crop species.
+The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species. We start with a model that contains no CoDa variables and then adds the most significant interactions sequentially (i.e., with [foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
 
-```{r}
-# CoDa interactions with forward and backward selection by crop type
+```{r, results = 'hide'}
+# CoDa interactions by crop type
 coda <- site[ ,c(5,7:21)]
 
 # Forward selection
-mm1 <- mmod(~ .^1, data = coda)
+mm1 <- mmod(~.^1, data = coda)
 mm2 <- forward(mm1)
 mmf <- ugList(terms(mm2), result="matrix")
-netf <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
-
-# Backward selection
-mm3 <- mmod(~ .^., data = coda)
-mm4 <- backward(mm3)
-mmb <- ugList(terms(mm2), result="matrix")
-netb <- as.network(x = mmb, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
+net <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
-This next chunk produces the associated CoDa interaction graphs.
+This next chunk produces the associated CoDa interaction graph.
 
-```{r, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "Baseline CoDa nutrient interaction graphs by crop species with forward and backward selection."}
+```{r, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "Baseline CoDa nutrient interaction graph by crop species."}
 
 par(mar=c(1,1,1,1))
-plot.network(netf, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
+plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
+```
+
+We can do the same using a combination of crop species and dominant archetypes, which produces the following graph that might be useful in further investigations including how soils affect nutrient compositions of cereal grains and how those might be predicted both spectrally and spatially.
+
+```{r, echo = FALSE, results = 'hide'}
+# CoDa interactions by crop type
+coda <- site[ ,c(5,27,7:21)]
+coda$DA <- paste("A",) 
+
+# Forward selection
+mm3 <- mmod(~.^1, data = coda)
+mm4 <- forward(mm1)
+mmf <- ugList(terms(mm4), result="matrix")
+net <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
+```
+
+```{r, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "CoDa nutrient interaction graph by crop species and dominant archetypes (DA)."}
+
+par(mar=c(1,1,1,1))
+plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
 # Takeways
