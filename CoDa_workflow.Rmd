@@ -389,19 +389,26 @@ We can do the same using both the macro and micro-nutrient interactions, which p
 
 ```{r, echo = FALSE, results = 'hide'}
 # CoDa marco-nutrient interactions by crop type
-coda <- site[ ,c(5,7:12)]
-
-# Forward selection
-mm3 <- mmod(~.^1, data = coda)
+codam <- site[ ,c(5,7:12)]
+mm3 <- mmod(~.^1, data = codam)
 mm4 <- forward(mm3)
 mmf <- ugList(terms(mm4), result="matrix")
-net <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
+mnet <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
+
+# Micro-nutrient interactions by crop type
+codat <- site[ ,c(5,13:22)]
+mm5 <- mmod(~.^1, data = codaf)
+mm6 <- forward(mm6)
+tmf <- ugList(terms(mm6), result="matrix")
+tnet <- as.network(x = tmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "CoDa macro and micro-nutrient interaction graphs by crop species."}
+```{r, echo = FALSE, fig.align = "center", fig.align = "center", figures-side, fig.show='hold', out.width="50%", fig.cap = "CoDa macro and micro-nutrient interaction graphs by crop species."}
 
-par(mar=c(1,1,1,1))
-plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
+par(mar=c(4,4,1,1))
+plot.network(mnet, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
+
+plot.network(tnet, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
 # Takeways
