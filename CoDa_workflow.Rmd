@@ -366,7 +366,7 @@ Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versi
 
 ## Fitting graphical interaction models
 
-The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species. We start with a model that contains no CoDa variables and then adds the most significant interactions sequentially (i.e., with [foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
+The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species. We start with a model that contains no variables and then adds the most significant interactions sequentially (i.e., with [foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
 
 ```{r, results = 'hide'}
 # CoDa interactions by crop type
@@ -379,7 +379,7 @@ mmf <- ugList(terms(mm2), result="matrix")
 net <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
-This next chunk produces the associated CoDa interaction graph.
+This next chunk produces the associated interaction graph.
 
 ```{r, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "Baseline CoDa nutrient interaction graph by crop species."}
 
@@ -387,30 +387,20 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-We can do the same using both the macro and micro-nutrient interactions, which produces the following graphs that might be useful in further explorations including e.g., in how soil characteristics affect nutrient compositions of cereal grains and how those might be predicted both spectrally and spatially.
+We can fit a similar model by restricting the interactions to macro and micro-nutrient.
 
-```{r, echo = FALSE, results = 'hide'}
-# Marco-nutrient interactions by crop type
-codam <- site[ ,c(5,7:12)]
-mm3 <- mmod(~.^1, data = codam)
-mm4 <- forward(mm3)
+```{r, results = 'hide'}
+# Marco and micro-nutrient interactions by crop type
+mm3 <- mmod(~crop:Na:Mg:P:S:K:Ca+crop:Cr:Mn:Fe:Co:Cu:Zn:Se:Mo:I, data = coda)
+mm4 <- backward(mm3)
 mmf <- ugList(terms(mm4), result="matrix")
-mnet <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
-
-# Micro-nutrient interactions by crop type
-codat <- site[ ,c(5,13:21)]
-mm5 <- mmod(~.^1, data = codat)
-mm6 <- forward(mm5)
-tmf <- ugList(terms(mm6), result="matrix")
-tnet <- as.network(x = tmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
+net <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.align = "center", figures-side, fig.show='hold', out.width="50%", fig.cap = "CoDa macro and micro-nutrient interaction graphs by crop species."}
+```{r, echo = FALSE, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "CoDa macro and micro-nutrient interaction graph by crop species."}
 
 par(mar=c(1,1,1,1))
-plot.network(mnet, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
-
-plot.network(tnet, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
+plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
 # Takeways
