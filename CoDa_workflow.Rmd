@@ -423,9 +423,9 @@ The main takeaways from this notebook are the following:
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult or time consuming, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions in instances where subcompositional closure principles (sensu [Aitchison geometry](https://laboratoriomatematicas.uniandes.edu.co/cursocoda/04-Vera-geometry.pdf)) apply.
 
-* Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple univariate framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi.
+* Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi.
 
-* The results from these initial EDAs can be applied to subsequent workflows including generating spectral and spatial predictions for developing diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
+* The results from these initial EDAs can be applied to subsequent workflows including generating spectral and spatial predictions for developing diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere. Other EDAs e.g., [Ordination techniques](https://en.wikipedia.org/wiki/Ordination_(statistics)) could/should also be explored for CoDa analyses (see [Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
 
 * Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA approach** in terms of developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies. We will follow these topics up in subsequent notebooks. 
 
