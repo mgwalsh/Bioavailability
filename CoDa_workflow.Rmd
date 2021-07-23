@@ -409,19 +409,19 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-Under the given assumptions, the corresponding maximal cliques are:
+Under the given model assumptions, the corresponding maximal cliques are:
 
 ```{r, echo = FALSE}
 getCliques(mmf4)
 ```
 
-This halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and could be considered as a minimal CoDa interaction model.
+Note that this halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and therefore could be considered as a minimal CoDa interaction model relative to the main cereal crop species in Malawi.
 
 # Takeways
 
 The main takeaways from this notebook are the following:
 
-* Converting nutrient concentrations to multivariate logratios is a simple step, but unlike other data transformations it preserves the integrity of the relevant compositional parts needed to normalize the data for any subsequent univariate, multivariate and/or inferential analyses and the associated statistics. Also, the CoDa can always be back-transformed into their original units.
+* Converting nutrient concentrations to multivariate logratios is a simple step, but unlike other data transformations it preserves the integrity of the relevant compositional parts that are needed to normalize the data for any subsequent univariate, multivariate and/or inferential analyses and the associated statistics. Also, the CoDA can always be back-transformed into their original units.
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult or time consuming, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions in instances where subcompositional closure principles (sensu [Aitchison geometry](https://laboratoriomatematicas.uniandes.edu.co/cursocoda/04-Vera-geometry.pdf)) apply.
 
@@ -429,6 +429,6 @@ The main takeaways from this notebook are the following:
 
 * The results from these initial EDAs can be applied to subsequent workflows including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
 
-* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This would be our **preferred approach** in terms of developing e.g., reproducible spatial diagnostics of nutrient deficiencies. We will follow these topics up in subsequent notebooks. 
+* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This would be our **preferred approach** in terms of developing e.g., reproducible spatial diagnostics of nutrient deficiencies. We will follow these topics up with subsequent notebooks. 
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
