@@ -366,7 +366,7 @@ Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versi
 
 ## Fitting graphical interaction models
 
-The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species. We start with a model that contains no variables and then adds the most significant interactions sequentially (i.e., with [foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
+The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species. We start with a model that contains no interactions and then adds only the most significant ones sequentially (i.e., with [foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
 
 ```{r, results = 'hide'}
 # CoDa interactions by crop type
@@ -387,7 +387,7 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-We can fit a similar model by restricting the interactions to macro and micro-nutrient.
+We can fit a similar model by separating the interactions by crop species by macro and micro-nutrient subcompositions. The `mm3` base model specification sets that up. We can then use [backward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf) to retain only the most significant interactions in the corresponding `mm4` fit, which also produces the associated graph.
 
 ```{r, results = 'hide'}
 # Marco and micro-nutrient interactions by crop type
@@ -403,6 +403,14 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
+The two graphs (or any others) can also be compared to one another quantitatively with [gRbase](https://cran.r-project.org/web/packages/gRbase/index.html). The next one-liner chunk compares the baseline model (i.e., `mm2`, above) to the subsequent and possibly oversimplified `mm4` interaction graph, based on [AIC](https://en.wikipedia.org/wiki/Akaike_information_criterion) and [BIC](https://en.wikipedia.org/wiki/Bayesian_information_criterion) statistics.
+
+```{r}
+compareModels(mm2, mm4)
+```
+
+Finally, you can also write out the associated interaction equations. These may be helpful for further, and potentially expert guided, explorations of CoDa interactions.
+
 # Takeways
 
 The main takeaways from this notebook are the following:
@@ -413,7 +421,7 @@ The main takeaways from this notebook are the following:
 
 * Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi.
 
-* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select ...
+* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts.
 
 * The results from these initial exploratory analyses can be applied in subsequent workflows including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
 
