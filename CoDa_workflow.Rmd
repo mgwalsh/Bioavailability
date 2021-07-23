@@ -260,7 +260,7 @@ stargazer::stargazer(p1, p2, p3, p4, p5, p6, p7, type = "html",
 ```
 \
 
-The micro-nutrient CLRs are handled in a similar manner (code not shown, but in the markdown). The table below displays the results.
+The micro-nutrient CLRs are handled in a similar manner (code not shown, but are included in the markdown). The table below displays the results.
 
 ```{r, echo = FALSE, results = 'asis'}
 # Macro-nutrients by DA
