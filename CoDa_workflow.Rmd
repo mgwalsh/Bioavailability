@@ -393,7 +393,7 @@ You can also obtain the [Maximal cliques](https://www.sciencedirect.com/topics/m
 getCliques(mmf2)
 ```
 
-We can fit a similar model by separating the interactions by macro and micro-nutrient subcompositions by crop species. The `mm3` base model specification sets that up. We can then use [Backward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf) to retain only the most significant interactions in the corresponding `mm4` fit, which also produces the associated graph.
+We can fit a similar model by separating the interactions by macro and micro-nutrient subcompositions, and by crop species. The `mm3` base model specification sets that up. We can then use [Backward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf) to retain only the most significant interactions in the corresponding `mm4` fit, which also produces the associated graph.
 
 ```{r, results = 'hide'}
 # Marco and micro-nutrient interactions by crop type
@@ -429,6 +429,6 @@ The main takeaways from this notebook are the following:
 
 * The results from these initial EDAs can be applied to subsequent workflows including generating spectral and spatial predictions for developing diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
 
-* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This would be our **preferred approach** in terms of developing e.g., reproducible soil or spatial diagnostics of potential nutrient deficiencies. We will follow these topics up with subsequent notebooks. 
+* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This would be our **preferred approach** in terms of developing e.g., reproducible soil or spatial diagnostics of potential nutrient deficiencies. We will follow these topics up in subsequent notebooks. 
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
