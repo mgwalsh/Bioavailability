@@ -409,7 +409,7 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-Under the given model assumptions, the corresponding maximal cliques are:
+Under the given model assumptions, the corresponding maximal cliques (subcompositions) are identified as:
 
 ```{r, echo = FALSE}
 getCliques(mmf4)
