@@ -387,7 +387,7 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-You can also obtain the [Maximal cliques](https://www.sciencedirect.com/topics/mathematics/maximal-clique) of this graph. In [Graph theory](https://en.wikipedia.org/wiki/Graph_theory) and in statistics, a clique is a complete subset of a graph, and a maximal clique is a clique which can not be enlarged. In this particular case, maximal cliques can be interpreted as specific grain nutrient subcompositions that may warrant further exploration for any subsequent diagnostic modeling.
+You can also obtain the [Maximal cliques](https://www.sciencedirect.com/topics/mathematics/maximal-clique) of this graph. In [Graph theory](https://en.wikipedia.org/wiki/Graph_theory) and in statistics, a clique is a complete subset of a graph, and a maximal clique is a clique which cannot be enlarged. In this particular case, *"maximal cliques"* can be interpreted as specific grain nutrient subcompositions that may warrant further exploration for any subsequent diagnostic modeling.
 
 ```{r}
 getCliques(mmf2)
@@ -421,7 +421,7 @@ Note that this halves the number of subcompositions that might need to be consid
 
 The main takeaways from this notebook are the following:
 
-* Converting nutrient concentrations to multivariate logratios is a simple step, but unlike other data transformations it preserves the integrity of the relevant compositional parts that are needed to normalize the data for any subsequent univariate, multivariate and/or inferential analyses and the associated statistics. Also, CoDA estimates can always be back-transformed into their original units.
+* Converting nutrient concentrations to multivariate logratios is a simple step, but unlike other data transformations it preserves the integrity of the relevant compositional parts that are needed to normalize the data for most subsequent univariate, multivariate and/or inferential analyses and the associated statistics. Also, CoDA estimates can always be back-transformed into their original units.
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult or time consuming, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions in instances where subcompositional closure principles (sensu [Aitchison geometry](https://laboratoriomatematicas.uniandes.edu.co/cursocoda/04-Vera-geometry.pdf)) apply.
 
