@@ -387,7 +387,7 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-You can also obtain the [Maximal cliques](https://www.sciencedirect.com/topics/mathematics/maximal-clique) of this graph. In [Graph theory](https://en.wikipedia.org/wiki/Graph_theory) and in statistics, a clique is a complete subset of a graph, and a maximal clique is a clique which can not be enlarged. In this particular case, maximal cliques can be interpreted as specific subcompositions that may warrant further exploration for subsequent diagnostic modeling.
+You can also obtain the [Maximal cliques](https://www.sciencedirect.com/topics/mathematics/maximal-clique) of this graph. In [Graph theory](https://en.wikipedia.org/wiki/Graph_theory) and in statistics, a clique is a complete subset of a graph, and a maximal clique is a clique which can not be enlarged. In this particular case, maximal cliques can be interpreted as specific grain nutrient subcompositions that may warrant further exploration for any subsequent diagnostic modeling.
 
 ```{r}
 getCliques(mmf2)
@@ -427,8 +427,8 @@ The main takeaways from this notebook are the following:
 
 * Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple univariate framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi.
 
-* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. *This would be our preferred approach* in terms of developing e.g., empirical spatial diagnostics. 
+* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This would be our **preferred approach** in terms of developing e.g., empirical spatial diagnostics. We will followup in subsequent notebooks. 
 
-* The results from these initial exploratory analyses can be applied in subsequent workflows including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
+* The results from these initial EDAs can be applied to workflows including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
 
 Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
