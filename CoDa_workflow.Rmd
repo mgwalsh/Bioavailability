@@ -429,4 +429,4 @@ The main takeaways from this notebook are the following:
 
 * Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA approach** in terms of developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies. We will follow these topics up in subsequent notebooks. 
 
-Any questions or comments about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
+Any questions, comments or corrections about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
