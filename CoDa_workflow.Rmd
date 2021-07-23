@@ -366,7 +366,7 @@ Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versi
 
 ## Fitting graphical interaction models
 
-The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species. We start with a model that contains no interactions and then adds only the most significant ones sequentially (i.e., with [foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
+The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species. We start with a model that initially contains no interactions and then adds only the most significant ones sequentially (i.e., with [Foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
 
 ```{r, results = 'hide'}
 # CoDa interactions by crop type
@@ -375,8 +375,8 @@ coda <- site[ ,c(5,7:21)]
 # Forward selection
 mm1 <- mmod(~.^1, data = coda)
 mm2 <- forward(mm1)
-mmf <- ugList(terms(mm2), result="matrix")
-net <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
+mmf2 <- ugList(terms(mm2), result="matrix")
+net <- as.network(x = mmf2, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
 This next chunk produces the associated interaction graph.
@@ -387,14 +387,20 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-We can fit a similar model by separating the interactions by crop species by macro and micro-nutrient subcompositions. The `mm3` base model specification sets that up. We can then use [backward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf) to retain only the most significant interactions in the corresponding `mm4` fit, which also produces the associated graph.
+You can also obtain the [Maximal cliques](https://www.sciencedirect.com/topics/mathematics/maximal-clique) of this graph. In [Graph theory](https://en.wikipedia.org/wiki/Graph_theory) and in statistics, a clique is a complete subset of a graph, and a maximal clique is a clique which can not be enlarged. In this particular case, maximal cliques can be interpreted as specific subcompositions that may warrant further exploration for subsequent diagnostic modeling.
+
+```{r}
+getCliques(mmf2)
+```
+
+We can fit a similar model by separating the interactions by macro and micro-nutrient subcompositions by crop species. The `mm3` base model specification sets that up. We can then use [Backward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf) to retain only the most significant interactions in the corresponding `mm4` fit, which also produces the associated graph.
 
 ```{r, results = 'hide'}
 # Marco and micro-nutrient interactions by crop type
 mm3 <- mmod(~crop:Na:Mg:P:S:K:Ca+crop:Cr:Mn:Fe:Co:Cu:Zn:Se:Mo:I, data = coda)
 mm4 <- backward(mm3)
-mmf <- ugList(terms(mm4), result="matrix")
-net <- as.network(x = mmf, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
+mmf4 <- ugList(terms(mm4), result="matrix")
+net <- as.network(x = mmf4, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
 ```{r, echo = FALSE, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "CoDa macro and micro-nutrient interaction graph by crop species."}
@@ -403,13 +409,11 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-The two graphs (or any others) can also be compared to one another quantitatively with [gRbase](https://cran.r-project.org/web/packages/gRbase/index.html). The next one-liner chunk compares the baseline model (i.e., `mm2`, above) to the subsequent and possibly oversimplified `mm4` interaction graph, based on [AIC](https://en.wikipedia.org/wiki/Akaike_information_criterion) and [BIC](https://en.wikipedia.org/wiki/Bayesian_information_criterion) statistics.
+Under the given assumptions, the corresponding maximal cliques are:
 
 ```{r}
-compareModels(mm2, mm4)
+getCliques(mmf4)
 ```
-
-Finally, you can also write out the associated interaction equations. These may be helpful for further, and potentially expert guided, explorations of CoDa interactions.
 
 # Takeways
 
