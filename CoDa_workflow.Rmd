@@ -284,7 +284,7 @@ stargazer::stargazer(p8, p9, p10, p11, p12, p13, p14, p15, p16, type = "html",
 ```
 \
 
-The second approach to post-stratification is to use multilevel models. The next chunk shows how that might be done in the [`lme4` and `arm`](https://cran.r-project.org/web/packages/arm/arm.pdf) packages. Note that dominant archetypes are included as random intercept terms. You can explore those further by looking at the `ranef` and `se.ranef` functions in the `lme4` package. 
+The second approach to post-stratification is to use multilevel models. The next chunk shows how that might be done in the [`arm`](https://cran.r-project.org/web/packages/arm/arm.pdf) package. Note that dominant archetypes are included as random intercept terms. You can explore those further by looking at the `ranef` and `se.ranef` functions in the `lme4` package. 
 
 ```{r, results = 'asis'}
 # Macro-nutrients by crop species and DA with lmer
@@ -338,7 +338,7 @@ So far, we have largely been dealing with univariate CoDa models, as is common p
 
 ## Package installs
 
-To run this section of the notebook you will initially need to install the relevant packages. This is a bit of an art form depending on the version of R that you are currently running. Both the [`gRim`](https://cran.r-project.org/web/packages/gRim/index.html) and [`statnet`](https://statnet.org/) packages that we shall be using for these analyses and their visualization have dependencies to other packages, e.g., [`bioconductor`](http://www.bioconductor.org/install/), which can be a bit tricky depending on their versioning cycle on [CRAN](https://cran.r-project.org/). The next chunks are what worked for us using our current `R.Version()`, but this is likely to change and you may need to adjust accordingly depending on your setup.
+To run this section of the notebook you will initially need to install the relevant packages. This is a bit of an art form depending on the version of R that you are currently running. Both the [`gRim`](https://cran.r-project.org/web/packages/gRim/index.html) and [`statnet`](https://statnet.org/) packages that we shall be using for these analyses and their visualization have dependencies to other packages e.g., [`bioconductor`](http://www.bioconductor.org/install/), which can be a bit tricky depending on their versioning cycle on [CRAN](https://cran.r-project.org/). The next chunks are what worked for us using our current `R.Version()`, but this is likely to change and you may need to adjust accordingly depending on your setup.
 
 ```{r, results = 'hide'}
 # Install <bioconductor> first ... see: http://www.bioconductor.org/install/
