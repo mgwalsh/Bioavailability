@@ -427,7 +427,7 @@ The main takeaways from this notebook are the following:
 
 * Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple univariate framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi.
 
-* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This would be our **preferred approach** in terms of developing e.g., empirical spatial diagnostics. We will followup in subsequent notebooks. 
+* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This would be our **preferred approach** in terms of developing e.g., spatial diagnostics. We will follow these topics up in subsequent notebooks. 
 
 * The results from these initial EDAs can be applied to workflows including generating spectral and spatial predictions for developing enhanced diagnostics for assessing mineral nutrient deficiencies of the commonly grown cereals in Malawi and elsewhere.
 
