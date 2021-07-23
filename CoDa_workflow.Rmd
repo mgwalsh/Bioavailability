@@ -415,7 +415,7 @@ Under the given assumptions, the corresponding maximal cliques are:
 getCliques(mmf4)
 ```
 
-This halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and could be considered as a minimal interaction model.
+This halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and could be considered as a minimal CoDa interaction model.
 
 # Takeways
 
