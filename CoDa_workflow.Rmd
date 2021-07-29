@@ -20,7 +20,9 @@ Most empirical models of biogeography, species distributions, photosynthesis, nu
 
 *The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) for exploratory data analyses ([EDA](https://en.wikipedia.org/wiki/Exploratory_data_analysis)) and reporting of the mineral nutrient compositions of the main cereal grains (maize, pearl-millet, rice and sorghum) that are grown in Malawi. The markdown notebook presented here is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/CoDa_workflow.Rmd), and you can fork and alter it from there for your reference and as you see fit.*
 
-*Compositional Data Analysis* (CoDA) refers to the analyses of *compositional data* (CoDa). CoDa are defined as vectors with strictly positive components whose sum is constant (e.g, 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information ([van den Boogaart and Tolosana-Delgado, 2013](https://link.springer.com/book/10.1007/978-3-642-36809-7)). Because a change in any proportion of a whole changes at least one other proportion, CoDa are interdependent. Arguably, all concentration data should be treated as CoDa because as a whole they must sum to their respective per unit totals of all constituent parts e.g., in the case of mg kg^-1^ data, to 10^6^ ppm. CoDa are intrinsically multivariate, and their individual parts should probably not be analyzed and interpreted without relating them to one another. The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a recent CoDa review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa.
+*Compositional Data Analysis* (CoDA) refers to the analyses of *compositional data* (CoDa). CoDa are defined as vectors with strictly positive components whose sum is constant (e.g, 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information ([van den Boogaart and Tolosana-Delgado, 2013](https://link.springer.com/book/10.1007/978-3-642-36809-7)). Because a change in any proportion of a whole changes at least one other proportion, CoDa are interdependent. Arguably, all concentration data should be treated as CoDa because as a whole they must sum to their respective unit totals of all the constituent parts e.g., in the case of plants and animals as compositions of water, organic and inorganic materials. The individual subcompositions should probably also not be analyzed and interpreted without relating them to one another. 
+
+The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a recent CoDa review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa. There is also an open paper available that treats genomic survey data in an analogous fashion and uses some of the graphical modeling techniques that we will be applying here, see [Friedman and Alm (2012)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002687).
 
 # General data setup
 
@@ -34,7 +36,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm")
+packages <- c("osfr", "dplyr", "leaflet", "plotly", "compositions", "stargazer", "archetypes", "quantreg", "arm")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -98,7 +100,7 @@ site <- cbind(locs, combo)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-You can plot any CLR differences between crop species with something like in this next ugly chunk ... there are probably more elegant ways of doing this.
+You can plot any CLR differences between crop species with something like in this next ugly chunk ...
 
 ```{r, fig.align = "center", fig.show = 'hold', fig.height = 12, fig.width = 7.2, fig.cap = "Boxplots of nutrient CLR differences between crop species."}
 
