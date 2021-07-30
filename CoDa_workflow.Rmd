@@ -417,9 +417,25 @@ getCliques(mmf4)
 
 Note that this halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and therefore could be considered as a minimal CoDa interaction model relative to the main cereal crop species that are reported in Malawi.
 
-# Source tracking
+# Grain source tracking and labeling
 
-To assess the likelihood of where and under what circumstances the CoDa originated (see the motivation and explanation at: [Source tracking](https://www.youtube.com/watch?v=sDevHMuYJ28)).
+To assess the likelihood of where and under what circumstances the CoDa originated (see the motivation and explanation for this at: [Source tracking](https://www.youtube.com/watch?v=sDevHMuYJ28)). The main reason for including this section is that where and from which sources the samples were obtained usually makes a big difference as to how those data should be used and interpreted for diagnostics.
+
+## Package installs
+
+```{r}
+# Package names
+packages <- c("caret", "caretEnsemble", "randomForest")
+
+# Install packages
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+# Load packages
+invisible(lapply(packages, library, character.only = TRUE))
+```
 
 # Takeways
 
@@ -431,7 +447,7 @@ The main takeaways from this notebook are the following:
 
 * Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi. Other clustering and [Ordination techniques](https://en.wikipedia.org/wiki/Ordination_(statistics)) could / should also be explored in this context (see [Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
 
-* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** in terms of developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies.
+* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** in terms of developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies and data permitting.
 
 * Source tracking with machine learning can help with locating and predicting where and under what circumstances the CoDa were obtained. This broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
 
