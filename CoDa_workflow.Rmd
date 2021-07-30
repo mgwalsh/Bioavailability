@@ -393,17 +393,17 @@ You can also obtain the [Maximal cliques](https://www.sciencedirect.com/topics/m
 getCliques(mmf2)
 ```
 
-We can fit a similar model by separating the interactions by macro and micro-nutrient subcompositions, and by crop species. The `mm3` base model specification sets that up. We can then use [Backward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf) to retain only the most significant interactions in the corresponding `mm4` fit, which also produces the associated graph.
+We can fit a similar model by separating the interactions by macro and micro-nutrient subcompositions, by crop species. The `mm3` base model specification sets that up. We can then use [Backward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf) to retain only the most significant interactions in the corresponding `mm4` fit, which also produces the associated graph.
 
 ```{r, results = 'hide'}
 # Marco and micro-nutrient interactions by crop type
-mm3 <- mmod(~crop:Na:Mg:P:S:K:Ca+crop:Cr:Mn:Fe:Co:Cu:Zn:Se:Mo:I, data = coda)
+mm3 <- mmod(~crop:Na:Mg:P:S:K:Ca+source:Cr:Mn:Fe:Co:Cu:Zn:Se:Mo:I, data = coda)
 mm4 <- backward(mm3)
 mmf4 <- ugList(terms(mm4), result="matrix")
 net <- as.network(x = mmf4, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "CoDa macro and micro-nutrient interaction graph by crop species."}
+```{r, echo = FALSE, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "CoDa macro and micro-nutrient interaction graph by cop species."}
 
 par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
@@ -417,7 +417,7 @@ getCliques(mmf4)
 
 Note that this halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and therefore could be considered as a minimal CoDa interaction model relative to the main cereal crop species that are reported in Malawi.
 
-# Source environment predictions and labeling
+# Source tracking
 
 To assess the likelihood of where and under what circumstances the CoDa originated (see the motivation and explanation at: [Source tracking](https://www.youtube.com/watch?v=sDevHMuYJ28)).
 
@@ -433,6 +433,6 @@ The main takeaways from this notebook are the following:
 
 * Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** in terms of developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies.
 
-* Source tracking with machine learning can help with locating and predicting where and under what circumstances the CoDa were obtained. This broaches the subject of generating operational, deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
+* Source tracking with machine learning can help with locating and predicting where and under what circumstances the CoDa were obtained. This broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
 
 Any questions, comments or corrections about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
