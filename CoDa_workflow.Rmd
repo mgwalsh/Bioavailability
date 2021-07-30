@@ -48,7 +48,7 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(packages, library, character.only = TRUE))
 ```
 
-There will be additional packages that will be need to be installed to run the graphical models presented in a later section of this notebook, which require more customized procedures for installation depending on the R version that you are running. We'll deal with those in the relevant section below. This next chunk downloads the Malawi data.
+There will be additional packages that will be need to be installed to run the graphical models presented in a later section of this notebook, which require more customized procedures for installation depending on the R version that you are running. We'll deal with those in the relevant sections below. This next chunk downloads the Malawi data.
 
 ```{r, results = 'hide'}
 # Create a data folder in your current working directory
@@ -92,7 +92,7 @@ macro <- rowSums(combo[varm])
 combo <- cbind(combo, macro)
 
 # Attach site data info
-locv <- c("CropSampleID", "SoilSampleID", "lat", "lon", "source", "crop", "fert") 
+locv <- c("CropSampleID", "SoilSampleID", "lat", "lon", "crop", "source", "fert") 
 locs <- codat[locv]
 site <- cbind(locs, combo)
 
@@ -181,7 +181,7 @@ This next chunk fits the Malawi CLR data using the [`archetypes`](https://cran.r
 ```{r, output = 'hide'}
 # Fit nutrient archetypes with 10-fold cross validation
 set.seed(85321)
-comp.arc <- stepArchetypes(data=site[,7:21], k = 1:10, nrep = 10, verbose = FALSE)
+comp.arc <- stepArchetypes(data=site[,8:22], k = 1:10, nrep = 10, verbose = FALSE)
 ```
 
 ```{r, echo = FALSE, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "Archetype scree-plot showing the no. of archetypes vs the multivariate residual sums of squares (RSS)."}
@@ -199,7 +199,7 @@ Similar to other clustering and ordination algorithms, we can use the identified
 comp.arc4 <- bestModel(comp.arc[[4]])
 
 # Classify CLRs by "dominant archetypes" (DA)
-darc <- as.data.frame(predict(comp.arc4, site[,7:21]))
+darc <- as.data.frame(predict(comp.arc4, site[,8:22]))
 darc$DA <- apply(darc, 1, which.max)
 colnames(darc) <- c("A1","A2","A3","A4","DA")
 site <- cbind(site, darc)
@@ -370,7 +370,7 @@ The first graphical model that we fit provides a baseline for describing nutrien
 
 ```{r, results = 'hide'}
 # CoDa interactions by crop type
-coda <- site[ ,c(5,7:21)]
+coda <- site[ ,c(5,8:22)]
 
 # Forward selection
 mm1 <- mmod(~.^1, data = coda)
@@ -419,8 +419,7 @@ Note that this halves the number of subcompositions that might need to be consid
 
 # Source environment tracking
 
-To assess the likelihood of where and how the CoDa originated ...  [Source tracking](https://www.youtube.com/watch?v=sDevHMuYJ28)
-
+To assess the likelihood of where and how the CoDa originated ... See the motivation and explanation at: [Source tracking](https://www.youtube.com/watch?v=sDevHMuYJ28).
 
 # Takeways
 
@@ -434,7 +433,7 @@ The main takeaways from this notebook are the following:
 
 * Graphical interaction models help to clarify the conditional relationships between (sub)compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** in terms of developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies. We will follow these topics up in subsequent notebooks.
 
-* Source tracking using machine learning helps with locating
+* Source tracking using machine learning helps with locating the where and under what circumstances the data were obtained. 
 
 * The results from these initial EDAs can be applied to subsequent workflows including those for generating spectral and spatial predictions for developing diagnostics for assessing mineral nutrient deficiencies in the commonly grown cereals in Malawi and elsewhere.
 
