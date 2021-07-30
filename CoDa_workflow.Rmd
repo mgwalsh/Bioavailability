@@ -417,7 +417,7 @@ getCliques(mmf4)
 
 Note that this halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and therefore could be considered as a minimal CoDa interaction model relative to the main cereal crop species that are reported in Malawi.
 
-# Source environment predictions
+# Source environment predictions and labeling
 
 To assess the likelihood of where and under what circumstances the CoDa originated (see the motivation and explanation at: [Source tracking](https://www.youtube.com/watch?v=sDevHMuYJ28)).
 
@@ -431,10 +431,10 @@ The main takeaways from this notebook are the following:
 
 * Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi. Other clustering and [Ordination techniques](https://en.wikipedia.org/wiki/Ordination_(statistics)) could / should also be explored in this context (see [Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
 
-* Graphical interaction models help to clarify the conditional relationships between (sub)compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** in terms of developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies. We will follow these topics up in subsequent notebooks.
+* Graphical interaction models help to clarify the conditional relationships between (sub)compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** in terms of developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies.
 
-* Source tracking using machine learning helps with describing and locating where and under what circumstances the data were obtained. This already broaches the subject of generating spatial nutrient predictions using machine learning and/or geostatistics.
+* Source tracking using machine learning helps with describing and locating where and under what circumstances the CoDa were obtained. This broaches the subject of generating spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. However, these additional topics will be covered in more detail in subsequent notebooks.
 
-* The results from these initial EDAs can be applied to subsequent workflows including those for generating spectral and spatial predictions for developing diagnostics for assessing mineral nutrient deficiencies in the commonly grown cereals in Malawi and elsewhere.
+* The results from these initial EDAs can be applied to subsequent workflows for assessing mineral nutrient deficiencies in the commonly grown cereals in Malawi and elsewhere.
 
 Any questions, comments or corrections about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
