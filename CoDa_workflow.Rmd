@@ -443,9 +443,9 @@ r <- leaflet() %>%
 r ## plot widget 
 ```
 
-## Reference sample tracking
+## CoDa differences between reference and non-reference data
 
-
+The next chunks address if there are discernible compositional differences between reference and non-reference samples. Put another way, can we distinguish between the two on the basis of the associated CoDa? If yes, we should take this into account for diagnostics and future surveys.
 
 # Takeways
 
