@@ -421,7 +421,9 @@ Note that this halves the number of subcompositions that might need to be consid
 
 The main reason for including this section is that where and from which sources the grain samples were obtained can make a big difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly in the field, from harvested stacks in the field, or from household grain stores. The corresponding fields from which the samples were obtained may also have been fertilized and/or treated with lime. The combination of these factors could influence reported survey results e.g., via contamination by soil and/or other overall sample treatment differences. They should also be useful for locating future reference samples.
 
-The next chunks provide an example of reference sample tagging and tracking using machine learning and prediction. We initially differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your high-value targets in future surveys and monitoring activities. 
+## Reference sample tagging
+
+The next chunks provide an example of reference sample tagging. We differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your high-value targets in future surveys because they define a consistent baseline for monitoring diagnostic changes. 
 
 ```{r}
 # Tag reference samples with <dplyr>
@@ -440,6 +442,8 @@ r <- leaflet() %>%
   addCircleMarkers(rloc$lon, rloc$lat, clusterOptions = markerClusterOptions())
 r ## plot widget 
 ```
+
+## Reference sample tracking
 
 
 
