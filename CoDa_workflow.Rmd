@@ -417,11 +417,21 @@ getCliques(mmf4)
 
 Note that this halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and therefore could be considered as a minimal CoDa interaction model relative to the main cereal crop species that are reported in Malawi.
 
-# Reference sample tracking and tagging
+# Reference sample tagging and tracking
 
-The main reason for including this section is that where and from which sources the grain samples were obtained can make a big difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly in the field, from harvested stacks in the field, or from household grain stores. The corresponding fields from which the samples were obtained may also have been fertilized and/or treated with lime. The combination of these factors could influence reported survey results e.g., via contamination by soil and/or other overall sample treatment differences.
+The main reason for including this section is that where and from which sources the grain samples were obtained can make a big difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly in the field, from harvested stacks in the field, or from household grain stores. The corresponding fields from which the samples were obtained may also have been fertilized and/or treated with lime. The combination of these factors could influence reported survey results e.g., via contamination by soil and/or other overall sample treatment differences. They should also be useful for detecting outliers in future samples.
 
-The next chunks provide an example of reference sample tracking and tagging using machine learning and prediction.
+The next chunks provide an example of reference sample tagging and tracking using machine learning and prediction. We initially differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change or expand the rules for this.
+
+```{r}
+# Tag reference samples with <dplyr>
+rsite <- site %>% mutate(ref = case_when(source == 'crop' & fert == 'n' ~ 'y',
+                         TRUE ~ 'n'))
+
+# Reference sample/site file write out
+write.csv(rsite, "./MW_coda/Results/MW_ref_coda.csv", row.names = F)
+```
+
 
 
 # Takeways
@@ -436,6 +446,6 @@ The main takeaways from this notebook are the following:
 
 * Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** for developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies ... data permitting.
 
-* Reference sample tracking can help with locating where and under what circumstances the CoDa were obtained. This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
+* Reference sample tracking and labeling can help with locating where and under what circumstances the CoDa were obtained. This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
 
 Any questions, comments or corrections about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
