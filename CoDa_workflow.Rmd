@@ -36,7 +36,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "plotly", "compositions", "stargazer", "archetypes", "quantreg", "arm", "caret", "randomForest")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm", "caret", "randomForest")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -419,9 +419,9 @@ Note that this halves the number of subcompositions that might need to be consid
 
 # Reference sample tagging and tracking
 
-The main reason for including this section is that where and from which sources the grain samples were obtained can make a big difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly in the field, from harvested stacks in the field, or from household grain stores. The corresponding fields from which the samples were obtained may also have been fertilized and/or treated with lime. The combination of these factors could influence reported survey results e.g., via contamination by soil and/or other overall sample treatment differences. They should also be useful for detecting outliers in future samples.
+The main reason for including this section is that where and from which sources the grain samples were obtained can make a big difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly in the field, from harvested stacks in the field, or from household grain stores. The corresponding fields from which the samples were obtained may also have been fertilized and/or treated with lime. The combination of these factors could influence reported survey results e.g., via contamination by soil and/or other overall sample treatment differences. They should also be useful for locating future reference samples.
 
-The next chunks provide an example of reference sample tagging and tracking using machine learning and prediction. We initially differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change or expand the rules for this.
+The next chunks provide an example of reference sample tagging and tracking using machine learning and prediction. We initially differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your high-value targets in future surveys and monitoring activities. 
 
 ```{r}
 # Tag reference samples with <dplyr>
@@ -430,6 +430,15 @@ rsite <- site %>% mutate(ref = case_when(source == 'crop' & fert == 'n' ~ 'y',
 
 # Reference sample/site file write out
 write.csv(rsite, "./MW_coda/Results/MW_ref_coda.csv", row.names = F)
+
+# Reference sample location map
+rloc <- rsite[ which(rsite$ref == 'y'), ]
+
+r <- leaflet() %>%
+  setView(lng = mean(rloc$lon), lat = mean(rloc$lat), zoom = 7) %>%
+  addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
+  addCircleMarkers(rloc$lon, rloc$lat, clusterOptions = markerClusterOptions())
+r ## plot widget 
 ```
 
 
@@ -446,6 +455,6 @@ The main takeaways from this notebook are the following:
 
 * Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** for developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies ... data permitting.
 
-* Reference sample tracking and labeling can help with locating where and under what circumstances the CoDa were obtained. This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
+* Reference sample tagging and tracking can help with locating where and under what circumstances the CoDa were obtained. This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
 
 Any questions, comments or corrections about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
