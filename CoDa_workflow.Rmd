@@ -423,7 +423,7 @@ The main reason for including this section is that where and from which sources 
 
 ## Reference sample tagging
 
-The next chunks provide an example of reference sample tagging. We differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your high-value targets in future surveys because they define a consistent baseline for monitoring diagnostic changes. 
+The next chunk provides an example of reference sample tagging. We differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your high-value targets in future surveys because they define a consistent baseline for monitoring diagnostic changes. 
 
 ```{r}
 # Tag reference samples with <dplyr>
@@ -445,7 +445,7 @@ r ## plot widget
 
 ## CoDa differences between reference and non-reference data
 
-The next chunks address if there are discernible compositional differences between reference and non-reference samples. Put another way, can we distinguish between the two on the basis of the associated CoDa? If yes, we should take this into account for diagnostics and future surveys.
+The next chunks address if there are discernible compositional differences between the reference and the non-reference samples. Put another way, can we distinguish between the two on the basis of the associated CoDa? If yes, those differences should be taken into account for diagnostics and in any future monitoring surveys.
 
 # Takeways
 
