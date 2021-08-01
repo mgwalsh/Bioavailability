@@ -16,7 +16,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most empirical models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., [Liebig's law](https://en.wikipedia.org/wiki/Justus_von_Liebig)). However, Liebig's law does not appear to hold consistently ([Danger et al., 2008]( https://doi.org/10.2134/agronj1993.00021962008500030040x)). In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. 
+Most empirical models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., [Liebig's law](https://en.wikipedia.org/wiki/Justus_von_Liebig)). However, Liebig's law does not appear to hold consistently (see e.g., [Danger et al., 2008]( https://doi.org/10.2134/agronj1993.00021962008500030040x)). In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. 
 
 *The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) for exploratory data analyses ([EDA](https://en.wikipedia.org/wiki/Exploratory_data_analysis)) and reporting of the mineral nutrient compositions of the main cereal grains (maize, pearl-millet, rice and sorghum) that are grown in Malawi. The markdown notebook presented here is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/CoDa_workflow.Rmd), and you can fork and alter it from there for your reference and as you see fit.*
 
@@ -36,7 +36,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm", "caret", "randomForest")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm", "caret", "caretEnsemble")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -443,9 +443,32 @@ r <- leaflet() %>%
 r ## plot widget 
 ```
 
-## CoDa differences between reference and non-reference data
+## CoDa differences between reference and background data
 
-The next chunks address if there are discernible compositional differences between the reference and the non-reference samples. Put another way, can we distinguish between the two on the basis of the associated CoDa? If yes, those differences should be taken into account for diagnostics and in any future monitoring surveys.
+The next chunks address if there are discernible compositional differences between the reference and the background samples. Put another way, can we distinguish between the two on the basis of the associated CoDa? If yes, those differences should certainly be taken into account for diagnostics and in any future monitoring surveys. We will use the `caretEnsemble` package to assess this. 
+
+To start the fitting process, the next chunk initially scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
+
+```{r}
+# Remove extraneous objects
+rm(list=setdiff(ls(), c("rsite"))) ## scrub extraneous objects in memory
+
+# Set calibration/validation set randomization seed
+seed <- 12358
+set.seed(seed)
+
+# Split data into calibration and validation sets
+gsIndex <- createDataPartition(rsite$ref, p = 4/5, list = F, times = 1)
+gs_cal <- rsite[ gsIndex,]
+gs_val <- rsite[-gsIndex,]
+
+# Reference sample calibration labels
+labs <- c("ref")
+lcal <- as.vector(t(gs_cal[labs]))
+
+# CoDa calibration features
+fcal <- gs_cal[ ,c(3:5,8:22,28)]
+```
 
 # Takeways
 
