@@ -491,7 +491,7 @@ lcal <- as.vector(t(gs_cal[labs]))
 fcal <- gs_cal[ ,c(3:4,8:22)]
 ```
 
-This chunk generates the (cross-validated) predictions on the validation set.
+This chunk generates the predictions on the validation set.
 
 ```{r, warning = FALSE, results='hide'}
 # Start doParallel to parallelize model fitting
