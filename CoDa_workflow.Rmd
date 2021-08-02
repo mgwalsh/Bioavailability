@@ -513,7 +513,7 @@ clist <- caretList(fcal, lcal,
                    metric = "ROC")
 
 # Generate predictions on validation set
-fval <- select(gs_val,3:4,8:22)
+fval <- gs_val[ ,c(3:4,8:22)]
 
 gl.pred <- predict(clist$glmStepAIC, gs_val, type = "prob")
 rf.pred <- predict(clist$rf, gs_val, type = "prob")
@@ -525,7 +525,7 @@ fname <- paste("./MW_coda/Results/", labs, "_clist.rds", sep = "")
 saveRDS(clist, fname)
 ```
 
-The final chunk in this section generates the stacked predictions on the validation set.
+The final chunk in this section generates the stacked (ensemble) predictions on the unseen validation set.
 
 # Takeways
 
