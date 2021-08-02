@@ -447,10 +447,10 @@ r ## plot widget
 
 The next chunks address if there are discernible compositional differences between the sampled reference and their background environments. Put another way, can we distinguish between the two on the basis of the associated CoDa? If yes, those differences should certainly be taken into account for diagnostics and in any future monitoring surveys. We will use the [`caretEnsemble`]() package to assess this. 
 
-To start the fitting process, the next chunks initially scrub some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
+To start the fitting process, the next chunks initially scrub some of the extraneous objects in memory, sets-up labels and features, and create a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
-# Detach packages ... as they can interfere with calls to the next packages
+# Detach packages ... as they can interfere with calls to the next packages depending on you R version
 detach("package:stargazer")
 detach("package:compositions")
 detach("package:archetypes")
