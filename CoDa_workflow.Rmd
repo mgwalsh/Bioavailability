@@ -512,20 +512,22 @@ clist <- caretList(fcal, lcal,
                    methodList = c("glmStepAIC", "rf", "xgbTree", "nnet", "nb"),
                    metric = "ROC")
 
-# Generate predictions on validation set
-fval <- gs_val[ ,c(3:4,8:22)]
-
-gl.pred <- predict(clist$glmStepAIC, gs_val, type = "prob")
-rf.pred <- predict(clist$rf, gs_val, type = "prob")
-xt.pred <- predict(clist$xgbTree, gs_val, type = "prob")
-nn.pred <- predict(clist$nnet, gs_val, type = "prob")
-nb.pred <- predict(clist$nb, gsval, type = "prob")
+gs_val$gl <- predict(clist$glmStepAIC, gs_val, type = "prob")
+gs_val$rf <- predict(clist$rf, gs_val, type = "prob")
+gs_val$xt <- predict(clist$xgbTree, gs_val, type = "prob")
+gs_val$nn <- predict(clist$nnet, gs_val, type = "prob")
+gs_val$nb <- predict(clist$nb, gs_val, type = "prob")
 stopCluster(mc)
 fname <- paste("./MW_coda/Results/", labs, "_clist.rds", sep = "")
 saveRDS(clist, fname)
 ```
 
-The final chunk in this section generates the stacked (ensemble) predictions on the unseen validation set.
+The final chunk in this section generates the stacked (ensemble) predictions on the previously unseen validation set using the 5 model predictions.
+
+```{r}
+# Validation features
+fval <- gs_val[ ,c(3:4,8:22)]
+```
 
 # Takeways
 
