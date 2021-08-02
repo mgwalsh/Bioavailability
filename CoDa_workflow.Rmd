@@ -36,7 +36,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm", "caret", "caretEnsemble")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -423,7 +423,7 @@ The main reason for including this section is that where and from which sources 
 
 ## Reference sample tagging
 
-The next chunk provides an example of reference sample tagging. We differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your high-value targets in future surveys because they define a consistent baseline for monitoring diagnostic changes. 
+The next chunk provides an example of reference sample tagging. We differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your high-value targets in future surveys because they define a consistent baseline for monitoring diagnostic changes. Also they are fairly hard to achieve in the field because they have to be sampled at a specific time, immediately before harvest.
 
 ```{r}
 # Tag reference samples with <dplyr>
@@ -443,16 +443,37 @@ r <- leaflet() %>%
 r ## plot widget 
 ```
 
-## CoDa differences between reference and background data
+## CoDa differences between reference and background environments
 
-The next chunks address if there are discernible compositional differences between the reference and the background samples. Put another way, can we distinguish between the two on the basis of the associated CoDa? If yes, those differences should certainly be taken into account for diagnostics and in any future monitoring surveys. We will use the `caretEnsemble` package to assess this. 
+The next chunks address if there are discernible compositional differences between the sampled reference and their background environments. Put another way, can we distinguish between the two on the basis of the associated CoDa? If yes, those differences should certainly be taken into account for diagnostics and in any future monitoring surveys. We will use the [`caretEnsemble`]() package to assess this. 
 
-To start the fitting process, the next chunk initially scrubs some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
+To start the fitting process, the next chunks initially scrub some of the extraneous objects in memory, sets-up labels and features, and creates a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
+# Detach packages ... as they can interfere with calls to the next packages
+detach("package:stargazer")
+detach("package:compositions")
+detach("package:archetypes")
+detach("package:gRbase")
+detach("package:gRim")
+detach("package:statnet")
+
+# Attach new packages
+packages <- c("caret", "caretEnsemble", "doParallel", "MASS", "randomForest", "xgboost", "klaR", "nnet")
+
+# Install packages
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+# Load packages
+invisible(lapply(packages, library, character.only = TRUE))
 # Remove extraneous objects
 rm(list=setdiff(ls(), c("rsite"))) ## scrub extraneous objects in memory
+```
 
+```{r}
 # Set calibration/validation set randomization seed
 seed <- 12358
 set.seed(seed)
@@ -467,14 +488,48 @@ labs <- c("ref")
 lcal <- as.vector(t(gs_cal[labs]))
 
 # CoDa calibration features
-fcal <- gs_cal[ ,c(3:5,8:22,28)]
+fcal <- gs_cal[ ,c(3:5,8:22)]
 ```
+
+This chunk generates the (cross-validated) predictions on the validation set.
+
+```{r, warning = FALSE, results='hide'}
+# Start doParallel to parallelize model fitting
+set.seed(seed)
+mc <- makeCluster(detectCores())
+registerDoParallel(mc)
+
+# Specify model training controls
+tc <- trainControl(method = "cv", number = 10, classProbs = T,
+                   summaryFunction = twoClassSummary, allowParallel = TRUE,
+                   savePredictions = 'final')
+
+# Fit 5 calibration models using all of the CoDa features
+clist <- caretList(fcal, lcal,
+                   trControl = tc,
+                   tuneList = NULL,
+                   methodList = c("rf", "xgbTree", "nnet", "nb"),
+                   metric = "ROC")
+
+# Generate predictions on validation set
+fval <- select(gs_val,3:5,8:22,28)
+
+gl.pred <- predict(clist$glmStepAIC, gs_val, type = "prob")
+rf.pred <- predict(clist$rf, gs_val, type = "prob")
+xt.pred <- predict(clist$xgbTree, gs_val, type = "prob")
+nn.pred <- predict(clist$nnet, gs_val, type = "prob")
+nb.pred <- predict(clist$nb, gsval, type = "prob")
+stopCluster(mc)
+fname <- paste("./MW_coda/Results/", labs, "_clist.rds", sep = "")
+saveRDS(clist, fname)
+```
+
 
 # Takeways
 
 The main takeaways from this notebook are the following:
 
-* Converting nutrient concentrations to multivariate logratios is a simple step, but unlike other data transformations it preserves the integrity of the relevant compositional parts that are needed to normalize the data for most subsequent univariate, multivariate and/or inferential analyses and the associated statistics. Also, CoDA estimates can always be back-transformed into their original units.
+* Converting nutrient concentrations to multivariate logratios is a simple step, but unlike other data transformations it preserves the integrity of the relevant compositional parts that are needed to normalize the data for most subsequent univariate, multivariate and/or inferential analyses and the associated statistics. Also, CoDA estimates can always be back-transformed into their original units given total concentration sums.
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult or time consuming, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions in instances where subcompositional closure principles (*sensu* [Aitchison geometry](https://laboratoriomatematicas.uniandes.edu.co/cursocoda/04-Vera-geometry.pdf)) apply.
 
@@ -482,6 +537,6 @@ The main takeaways from this notebook are the following:
 
 * Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** for developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies ... data permitting.
 
-* Reference sample tagging and tracking can help with locating where and under what circumstances the CoDa were obtained and identifies high value survey targets for future surveys. This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
+* Reference sample tagging and tracking can help with locating where and under what circumstances the CoDa were obtained and identifies high value targets for future surveys. This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
 
 Any questions, comments or corrections about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
