@@ -16,7 +16,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most empirical models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., [Liebig's law](https://en.wikipedia.org/wiki/Justus_von_Liebig)). However, Liebig's law does not appear to hold consistently (see e.g., [Danger et al., 2008]( https://doi.org/10.2134/agronj1993.00021962008500030040x)). In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. 
+Most empirical models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., [Liebig's law](https://en.wikipedia.org/wiki/Justus_von_Liebig)). However, the law of the minimum does not appear to hold consistently (see e.g., [Danger et al., 2008]( https://doi.org/10.2134/agronj1993.00021962008500030040x)). In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. 
 
 *The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) for exploratory data analyses ([EDA](https://en.wikipedia.org/wiki/Exploratory_data_analysis)) and reporting of the mineral nutrient compositions of the main cereal grains (maize, pearl-millet, rice and sorghum) that are grown in Malawi. The markdown notebook presented here is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/CoDa_workflow.Rmd), and you can fork and alter it from there for your reference and as you see fit.*
 
@@ -423,7 +423,7 @@ The main reason for including this section is that where and from which sources 
 
 ## Reference sample tagging
 
-The next chunk provides an example of reference sample tagging. We differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your high-value targets in future surveys because they define a consistent baseline for monitoring diagnostic changes. Also they are fairly hard to achieve in the field because they have to be sampled at a specific time, immediately before harvest.
+The next chunk provides an example of reference sample tagging. We differentiate reference samples obtained from standing crop samples on unfertilized fields, from all other survey samples. Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your high-value targets in future surveys because they should define a consistent baseline for monitoring diagnostic changes. Also they are fairly hard to achieve in the field because they have to be sampled at a specific time, immediately before harvest.
 
 ```{r}
 # Tag reference samples with <dplyr>
@@ -450,11 +450,10 @@ The next chunks address if there are discernible compositional differences betwe
 To start the fitting process, the next chunks initially scrub some of the extraneous objects in memory, sets-up labels and features, and create a randomized (80 / 20%) partition between the training and validation dataframes.
 
 ```{r}
-# Detach packages ... as they can interfere with calls to the next packages depending on you R version
+# Detach packages ... as they can interfere with calls to the next packages depending on your R version
 detach("package:stargazer")
 detach("package:compositions")
 detach("package:archetypes")
-detach("package:gRbase")
 detach("package:gRim")
 detach("package:statnet")
 
@@ -469,13 +468,14 @@ if (any(installed_packages == FALSE)) {
 
 # Load packages
 invisible(lapply(packages, library, character.only = TRUE))
+
 # Remove extraneous objects
 rm(list=setdiff(ls(), c("rsite"))) ## scrub extraneous objects in memory
 ```
 
 ```{r}
 # Set calibration/validation set randomization seed
-seed <- 12358
+seed <- 123581
 set.seed(seed)
 
 # Split data into calibration and validation sets
@@ -488,13 +488,14 @@ labs <- c("ref")
 lcal <- as.vector(t(gs_cal[labs]))
 
 # CoDa calibration features
-fcal <- gs_cal[ ,c(3:5,8:22)]
+fcal <- gs_cal[ ,c(3:4,8:22)]
 ```
 
 This chunk generates the (cross-validated) predictions on the validation set.
 
 ```{r, warning = FALSE, results='hide'}
 # Start doParallel to parallelize model fitting
+seed <- 123581
 set.seed(seed)
 mc <- makeCluster(detectCores())
 registerDoParallel(mc)
@@ -502,17 +503,17 @@ registerDoParallel(mc)
 # Specify model training controls
 tc <- trainControl(method = "cv", number = 10, classProbs = T,
                    summaryFunction = twoClassSummary, allowParallel = TRUE,
-                   savePredictions = 'final')
+                   savePredictions = "final")
 
 # Fit 5 calibration models using all of the CoDa features
 clist <- caretList(fcal, lcal,
                    trControl = tc,
                    tuneList = NULL,
-                   methodList = c("rf", "xgbTree", "nnet", "nb"),
+                   methodList = c("glmStepAIC", "rf", "xgbTree", "nnet", "nb"),
                    metric = "ROC")
 
 # Generate predictions on validation set
-fval <- select(gs_val,3:5,8:22,28)
+fval <- select(gs_val,3:4,8:22)
 
 gl.pred <- predict(clist$glmStepAIC, gs_val, type = "prob")
 rf.pred <- predict(clist$rf, gs_val, type = "prob")
@@ -524,6 +525,7 @@ fname <- paste("./MW_coda/Results/", labs, "_clist.rds", sep = "")
 saveRDS(clist, fname)
 ```
 
+The final chunk in this section generates the stacked predictions on the validation set.
 
 # Takeways
 
