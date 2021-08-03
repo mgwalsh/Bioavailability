@@ -16,19 +16,19 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most empirical models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., [Liebig's law](https://en.wikipedia.org/wiki/Justus_von_Liebig)). However, the law of the minimum does not appear to hold consistently (see e.g., [Danger et al., 2008]( https://doi.org/10.2134/agronj1993.00021962008500030040x)). In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of plant products that are subsequently consumed by animals, including humans. 
+Most empirical models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., [Liebig's law](https://en.wikipedia.org/wiki/Justus_von_Liebig)). However, *the law of the minimum* does not appear to hold consistently (see e.g., [Danger et al., 2008]( https://doi.org/10.2134/agronj1993.00021962008500030040x)). In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of the plant products that are subsequently consumed by animals, including humans. 
 
 *The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) for exploratory data analyses ([EDA](https://en.wikipedia.org/wiki/Exploratory_data_analysis)) and reporting of the mineral nutrient compositions of the main cereal grains (maize, pearl-millet, rice and sorghum) that are grown in Malawi. The markdown notebook presented here is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/CoDa_workflow.Rmd), and you can fork and alter it from there for your reference and as you see fit.*
 
-*Compositional Data Analysis* (CoDA) refers to the analyses of *compositional data* (CoDa). CoDa are defined as vectors with strictly positive components whose sum is constant (e.g, 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information ([van den Boogaart and Tolosana-Delgado, 2013](https://link.springer.com/book/10.1007/978-3-642-36809-7)). Because a change in any proportion of a whole changes at least one other proportion, CoDa are interdependent. Arguably, all concentration data should be treated as CoDa because as a whole they must sum to their respective unit totals of all the constituent parts e.g., in the case of plants and animals as compositions of water, organic and inorganic materials. In turn, the organic and, in this case, specifically the inorganic nutrient subcompositions should also not be analyzed and interpreted without normalizing them to each and one another. 
+*Compositional Data Analysis* (CoDA) refers to the analyses of *compositional data* (CoDa). CoDa are defined as vectors with strictly positive components whose sum is constant (e.g, 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information ([van den Boogaart and Tolosana-Delgado, 2013](https://link.springer.com/book/10.1007/978-3-642-36809-7)). Because a change in any proportion of a whole changes at least one other proportion, CoDa are interdependent. Arguably, all concentration data should be treated as CoDa because as a whole they must sum to their respective unit totals of all the constituent parts e.g., in the case of plants and animals as compositions of water, organic and inorganic materials. In turn, the organic and in this case, specifically the inorganic nutrient subcompositions should also not be analyzed and interpreted without normalizing them to each and one another. 
 
-The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a recent CoDa review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa. There is also an open paper available that treats genomic survey data in an analogous fashion and uses the graphical modeling techniques that we will be illustrating here (see [Friedman and Alm (2012)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002687), and the references therein).
+The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a recent CoDa review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa. There is also an open paper available that treats genomic survey data in an analogous fashion and uses some of the graphical modeling techniques that we will be illustrating here (see [Friedman and Alm (2012)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002687), and the references therein).
 
 # General data setup
 
 The data we will be using were generated by the [GeoNutrition project](http://www.geonutrition.com) in Malawi. They consist of 1,808 cereal grain samples that were collected for maize (1,606), millet (31), rice (54), and sorghum (117) in proportion of their national geographical occurrence. The nationally representative cropland sampling frame and the laboratory methods that were used in the data collections are described in [Gashu et al., (2021)](https://doi.org/10.1038/s41586-021-03559-3). 
 
-The data include [ICP-MS](https://en.wikipedia.org/wiki/Inductively_coupled_plasma_mass_spectrometry) concentration measurements of the respective cereal mineral nutrient contents (in mg kg^-1^), including: Na, Mg, P, S, K, Ca, Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I. They also include the georeference of where the samples were collected (lon/lat, EPSG:3857), the dominant cereal crop at that location, the source of the grain samples (crop, field stack or store), and if, or not, fertilizer and/or lime were used in growing the crop. Note that any measurements below their respective limits of detection (LOD) have been set to 2/3 of the respective minimum observed values. Other imputation methods are also possible in this context see [Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436).
+The data include [ICP-MS](https://en.wikipedia.org/wiki/Inductively_coupled_plasma_mass_spectrometry) concentration measurements of the respective cereal mineral nutrient contents (in mg kg^-1^), including: Na, Mg, P, S, K, Ca, Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I. They also include the georeference of where the samples were collected (lon/lat, EPSG:3857), basic soil properties (pH, soil organic matter and cation exchange capacity), the dominant cereal crop at that location, the source of the grain samples (crop, field stack or store), and if, or not, fertilizer and/or lime were used in growing the crop. Note that any crop nutrient measurements below their respective limits of detection (LOD) have been set to 2/3 of the respective minimum observed values. Other imputation methods are also possible in this context see [Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436).
 
 ## Packages and data download
 
@@ -36,7 +36,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "quantreg", "arm")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "stargazer", "archetypes", "arm")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -48,7 +48,7 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(packages, library, character.only = TRUE))
 ```
 
-There will be additional packages that will be need to be installed to run the graphical models presented in a later section of this notebook, which require more customized procedures for installation depending on the R version that you are running. We'll deal with those in the relevant sections below. This next chunk downloads the Malawi data.
+There will be additional packages that will be need to be installed to run the graphical models presented in a later section of this notebook, which require more customized procedures for installation depending on the R version that you are running. We'll deal with those in the relevant sections below. This next chunk downloads the Malawi crop and soil data.
 
 ```{r, results = 'hide'}
 # Create a data folder in your current working directory
@@ -56,11 +56,18 @@ dir.create("MW_coda", showWarnings=F)
 setwd("./MW_coda")
 dir.create("Results")
 
-# Data download from OSF at: https://osf.io/btxyc/
+# Crop data download from OSF at: https://osf.io/btxyc/
 osf_retrieve_file("btxyc") %>% osf_download(conflicts = "overwrite")
 codat <- read.table("MW_grain_CoDa.csv", header=T, sep=",")
 
-# Download figures
+# Soil data download from OSF at: https://osf.io/5tgu3/
+osf_retrieve_file("5tgu3") %>% osf_download(conflicts = "overwrite")
+soils <- read.table("soil_props.csv", header=T, sep=",")
+
+# Merge crop and soil data
+codat <- merge(codat, soils, by = "CropSampleID")
+
+# Download figures at: at: https://osf.io/pnw7g/
 osf_retrieve_file("pnw7g") %>% osf_download(conflicts = "overwrite")
 ```
 
@@ -75,7 +82,7 @@ w ## plot widget
 
 ## CoDa transforms
 
-This section of the notebook sets up a CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the distinction between *macro* and *micro* here is only intended to reflect the recommended daily dietary values ([DDV](https://www.fda.gov/food/new-nutrition-facts-label/daily-value-new-nutrition-and-supplement-facts-labels)) that should be consumed by people, and not their overall nutritional importance and/or benefits. The compositional macro / micro differences may also prove to be useful for measurement source and outlier screening, spatial mapping and/or soil property and MIR spectral predictions of nutrient compositions at a later stage. Those subsequent steps will be described in separate notebooks.
+This section of the notebook sets up a CoDa data frame that includes 2 amalgamations: mineral **macro-nutrients** (i.e., Na, Mg, P, S, K, and Ca ... in atomic number order), and **micro-nutrients** (i.e., Cr, Mn, Fe, Co, Cu, Zn, Se, Mo, and I). Note that the distinction between *macro* and *micro* here is only intended to reflect the recommended daily dietary values ([DDV](https://www.fda.gov/food/new-nutrition-facts-label/daily-value-new-nutrition-and-supplement-facts-labels)) that should be consumed by people, and not their overall nutritional importance and/or benefits.
 
 This next chunk [closes](https://econ-papers.upf.edu/papers/1554.pdf) the CoDa, and calculates *centered logratios* ([CLR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/clr)). These can then be analyzed, summarized and interpreted with conventional univariate, multivariate, and data modeling methods ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)). Note that you could also use other logratios such as the [ALR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/alr), or the [ILR](https://www.rdocumentation.org/packages/compositions/versions/2.0-1/topics/ilr) and/or different amalgamations of subcompositions, but we shall leave those possibilities for you to explore. We also write out the resulting data frame to your `./MW_coda/Results` directory should you wish to process it in software other than R.
 
@@ -100,7 +107,7 @@ site <- cbind(locs, combo)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-You can plot any CLR differences between crop species with something like in this next ugly chunk ...
+You can plot raw CLR differences between crop species with something like in this next ugly chunk ...
 
 ```{r, fig.align = "center", fig.show = 'hold', fig.height = 12, fig.width = 7.2, fig.cap = "Boxplots of nutrient CLR differences between crop species."}
 
@@ -122,9 +129,56 @@ boxplot(site$Mo ~ site$crop, notch = T, ylab = "Mo", xlab = "", cex.axis = 1, ce
 boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.lab = 1.3)
 ```
 
-## Compositional differences between crop species
+# Reference sample tagging and tracking
 
-This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences between the macro nutrient CLRs of millet, rice and sorghum as compared to maize. We will be doing this using quantile regression ([`quantreg`](https://cran.r-project.org/web/packages/quantreg/index.html)) to safeguard against any outliers in the data.
+The main reason for including this section is that where and from which sources the grain samples were obtained could make a big difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks in the field, or from household grain stores. Both household grain stores and fertilized fields are problematic in that we don't actually know what happened after samples were removed from the field and/or what the actual effect of the amounts of fertilizer and/or lime were. However, the combination of these factors could influence reported survey results e.g., via soil contamination and/or other overall sample treatment differences.
+
+## Reference sample tagging
+
+The next chunk provides an example of reference sample tagging. We differentiate reference samples that were obtained from field (crop or stack) on unfertilized fields, from all of the other survey samples (stored or fertilized. Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your highest-value targets in future surveys because they define a consistent baseline for monitoring diagnostic changes. Note that these are fairly hard to collect in the field because they have to be sampled during a quite narrow time window.
+
+```{r}
+# Tag reference samples with <dplyr>
+rsite <- site %>% mutate(ref = case_when(source == 'crop' | source == 'stack' & fert == 'n' ~ 'y',
+                         TRUE ~ 'n'))
+
+# Reference sample/site file write out
+write.csv(rsite, "./MW_coda/Results/MW_ref_coda.csv", row.names = F)
+
+# Reference sample location map
+rloc <- rsite[ which(rsite$ref == 'y'), ]
+
+r <- leaflet() %>%
+  setView(lng = mean(rloc$lon), lat = mean(rloc$lat), zoom = 7) %>%
+  addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
+  addCircleMarkers(rloc$lon, rloc$lat, clusterOptions = markerClusterOptions())
+r ## plot widget 
+```
+
+## Reference sample tracking
+
+```{r}
+# Set calibration/validation set randomization seed
+seed <- 123581
+set.seed(seed)
+
+# Split data into calibration and validation sets
+gsIndex <- createDataPartition(rsite$ref, p = 4/5, list = F, times = 1)
+gs_cal <- rsite[ gsIndex,]
+gs_val <- rsite[-gsIndex,]
+
+# Reference sample calibration labels
+labs <- c("ref")
+lcal <- as.vector(t(gs_cal[labs]))
+
+# CoDa calibration features
+fcal <- gs_cal[ ,c(3:4,8:22)]
+```
+
+
+## Survey post-stratification
+
+This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops. This can be readily extended to individual nutrients and/or other compositional amalgamations. This next chunk fits the differences between the macro nutrient CLRs of millet, rice and sorghum as compared to maize. We will be doing this using mixed-effects regression ([`quantreg`](https://cran.r-project.org/web/packages/quantreg/index.html)) to safeguard against any outliers in the data.
 
 ```{r, results = 'asis'}
 # Fit nutrients by crop species with quantile regression
@@ -213,122 +267,6 @@ This is an aside, but it gives you an idea of what the "*most*" dominant archety
 ```{r, echo=FALSE, fig.align="center", fig.cap="Dominant archetypal grain nutrient composition sites in Malawi visualized in GeoSurvey.", out.width = '90%'}
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
 ```
-
-We can now also generate a similar plot of the raw nutrient composition data by crop species that were presented above (code not shown, but in the markdown). Rather than focusing on the crop species, the differences in the CLRs are now shown as the differences between the 4 dominant archetypes.
-
-```{r, echo = FALSE, fig.align = "center", fig.show = 'hold', fig.height = 12, fig.width = 7.2, fig.cap = "Boxplots of nutrient CLR differences between dominant archetypes."}
-
-par(mfrow = c(5,3), pty="s", mar=c(2,4,1,1))
-boxplot(site$Na ~ site$DA, notch = T, ylab = "Na", xlab = "", cex.lab = 1.3)
-boxplot(site$Mg ~ site$DA, notch = T, ylab = "Mg", xlab = "", cex.lab = 1.3)
-boxplot(site$P ~ site$DA, notch = T, ylab = "P", xlab = "", cex.lab = 1.3)
-boxplot(site$S ~ site$DA, notch = T, ylab = "S", xlab = "", cex.lab = 1.3)
-boxplot(site$K ~ site$DA, notch = T, ylab = "K", xlab = "", cex.lab = 1.3)
-boxplot(site$Ca ~ site$DA, notch = T, ylab = "Ca", xlab = "", cex.lab = 1.3)
-boxplot(site$Cr ~ site$DA, notch = T, ylab = "Cr", xlab = "", cex.lab = 1.3)
-boxplot(site$Mn ~ site$DA, notch = T, ylab = "Mn", xlab = "", cex.lab = 1.3)
-boxplot(site$Fe ~ site$DA, notch = T, ylab = "Fe", xlab = "", cex.lab = 1.3)
-boxplot(site$Co ~ site$DA, notch = T, ylab = "Co", xlab = "", cex.lab = 1.3)
-boxplot(site$Cu ~ site$DA, notch = T, ylab = "Cu", xlab = "", cex.lab = 1.3)
-boxplot(site$Zn ~ site$DA, notch = T, ylab = "Zn", xlab = "", cex.lab = 1.3)
-boxplot(site$Se ~ site$DA, notch = T, ylab = "Se", xlab = "", cex.lab = 1.3)
-boxplot(site$Mo ~ site$DA, notch = T, ylab = "Mo", xlab = "", cex.lab = 1.3)
-boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.lab = 1.3)
-```
-
-## Post-stratified differences between crop species
-
-The main reason for post-stratification is to improve the precision and accuracy of live survey analyses and also to guide future surveys and/or monitoring activities. There are at least a couple of different ways to handle post-stratification of CoDa (and/or any other data). The first way, which we have already explored partially, would use OLS, GLM and/or quantile regression. The second approach uses mixed-effects ([multilevel](https://en.wikipedia.org/wiki/Multilevel_model)) models and is analogous to [instrumental variable regression](https://www.publichealth.columbia.edu/research/population-health-methods/instrumental-variables) approaches that are commonly used in the analyses of e.g., econometric, epidemiological and environmetric surveys. This initial post-stratification chunk uses [`quantreg`](https://cran.r-project.org/web/packages/quantreg/index.html).
-
-```{r, results = 'asis'}
-# Macro-nutrients by DA with quantreg
-p1 <- rq(macro~crop + factor(DA), data = site)
-p2 <- rq(Na~crop + factor(DA), data = site)
-p3 <- rq(Mg~crop + factor(DA), data = site)
-p4 <- rq(P~crop + factor(DA), data = site)
-p5 <- rq(S~crop + factor(DA), data = site)
-p6 <- rq(K~crop + factor(DA), data = site)
-p7 <- rq(Ca~crop + factor(DA), data = site)
-
-# Generate regression summary table
-stargazer::stargazer(p1, p2, p3, p4, p5, p6, p7, type = "html", 
-                     ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 1, 
-                     omit.table.layout = "sn", model.numbers = FALSE,
-                     column.sep.width = "24pt",
-                     covariate.labels = c("Intercept","millet","rice","sorghum","DA2","DA3","DA4"),
-                     title = "Macro-nutrient quantile regression summary using DA1/maize as the reference.")
-```
-\
-
-The micro-nutrient CLRs are handled in a similar manner (code not shown, but are included in the markdown). The table below displays the results.
-
-```{r, echo = FALSE, results = 'asis'}
-# Macro-nutrients by DA
-p8 <- rq(Cr~crop + factor(DA), data = site)
-p9 <- rq(Mn~crop + factor(DA), data = site)
-p10 <- rq(Fe~crop + factor(DA), data = site)
-p11 <- rq(Co~crop + factor(DA), data = site)
-p12 <- rq(Cu~crop + factor(DA), data = site)
-p13 <- rq(Zn~crop + factor(DA), data = site)
-p14 <- rq(Se~crop + factor(DA), data = site)
-p15 <- rq(Mo~crop + factor(DA), data = site)
-p16 <- rq(I~crop + factor(DA), data = site)
-
-# Generate regression summary table
-stargazer::stargazer(p8, p9, p10, p11, p12, p13, p14, p15, p16, type = "html", 
-                     ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 1, 
-                     omit.table.layout = "sn", model.numbers = FALSE,
-                     column.sep.width = "24pt",
-                     covariate.labels = c("Intercept","millet","rice","sorghum","DA2","DA3","DA4"),
-                     title = "Micro-nutrient quantile regression summary using DA1/maize as the reference.")
-```
-\
-
-The second approach to post-stratification is to use multilevel models. The next chunk shows how that might be done in the [`arm`](https://cran.r-project.org/web/packages/arm/arm.pdf) package. Note that dominant archetypes are included as random intercept terms. You can explore those further by looking at the `ranef` and `se.ranef` functions in the `lme4` package. 
-
-```{r, results = 'asis'}
-# Macro-nutrients by crop species and DA with lmer
-m1 <- lmer(macro~crop + (1|DA), data = site)
-m2 <- lmer(Na~crop + (1|DA), data = site)
-m3 <- lmer(Mg~crop + (1|DA), data = site)
-m4 <- lmer(P~crop + (1|DA), data = site)
-m5 <- lmer(S~crop + (1|DA), data = site)
-m6 <- lmer(K~crop + (1|DA), data = site)
-m7 <- lmer(Ca~crop + (1|DA), data = site)
-
-# Generate regression summary table
-stargazer::stargazer(m1, m2, m3, m4, m5, m6, m7, type = "html", 
-                     ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 1, 
-                     omit.table.layout = "sn", model.numbers = FALSE,
-                     column.sep.width = "24pt",
-                     covariate.labels = c("Intercept","millet","rice","sorghum"),
-                     title = "Macro-nutrient multilevel regression summary using maize as the reference.")
-```
-\
-
-The 9 micro-nutrient CLRs are handled in an identical manner (code not shown, but included in the markdown). The table below displays the results.
-
-```{r, echo = FALSE, results = 'asis'}
-# Micro-nutrients by crop species and DA with lmer
-m8 <- lmer(Cr~crop + (1|DA), data = site)
-m9 <- lmer(Mn~crop + (1|DA), data = site)
-m10 <- lmer(Fe~crop + (1|DA), data = site)
-m11 <- lmer(Co~crop + (1|DA), data = site)
-m12 <- lmer(Cu~crop + (1|DA), data = site)
-m13 <- lmer(Zn~crop + (1|DA), data = site)
-m14 <- lmer(Se~crop + (1|DA), data = site)
-m15 <- lmer(Mo~crop + (1|DA), data = site)
-m16 <- lmer(I~crop + (1|DA), data = site)
-
-# Generate regression summary table
-stargazer::stargazer(m8, m9, m10, m11, m12, m13, m14, m15, m16, type = "html", 
-                     ci = TRUE, ci.level = 0.95, intercept.bottom = FALSE, digits = 1, 
-                     omit.table.layout = "sn", model.numbers = FALSE,
-                     column.sep.width = "24pt",
-                     covariate.labels = c("Intercept","millet","rice","sorghum"),
-                     title = "Micro-nutrient multilevel regression summary using maize as the reference.")
-```
-\
 
 Based on these initial results, we can't really provide any additional guidance about how to handle post-stratification and/or the largely analogous small-area estimates ([SAE](https://en.wikipedia.org/wiki/Small_area_estimation)) of the current survey results. Note that one could always use both methods. They are certainly quick to calculate.
 
@@ -427,7 +365,7 @@ The next chunk provides an example of reference sample tagging. We differentiate
 
 ```{r}
 # Tag reference samples with <dplyr>
-rsite <- site %>% mutate(ref = case_when(source == 'crop' & fert == 'n' ~ 'y',
+rsite <- site %>% mutate(ref = case_when(source == 'crop' | source == 'stack' & fert == 'n' ~ 'y',
                          TRUE ~ 'n'))
 
 # Reference sample/site file write out
