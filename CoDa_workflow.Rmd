@@ -99,7 +99,7 @@ macro <- rowSums(combo[varm])
 combo <- cbind(combo, macro)
 
 # Attach site data info
-locv <- c("CropSampleID", "SoilSampleID", "lat", "lon", "crop", "source", "fert") 
+locv <- c("CropSampleID", "SoilSampleID", "lat", "lon", "crop", "source", "fert", "pH", "soc", "eCEC") 
 locs <- codat[locv]
 site <- cbind(locs, combo)
 
@@ -177,7 +177,7 @@ lcal <- as.vector(t(gs_cal[labs]))
 fcal <- gs_cal[ ,c(3:4,8:22)]
 ```
 
-This chunk generates the predictions on the validation set.
+This chunk generates the reference site predictions on the validation set.
 
 ```{r, warning = FALSE, results='hide'}
 # Start doParallel to parallelize model fitting
