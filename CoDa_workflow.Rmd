@@ -129,6 +129,50 @@ boxplot(site$Mo ~ site$crop, notch = T, ylab = "Mo", xlab = "", cex.axis = 1, ce
 boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.lab = 1.3)
 ```
 
+# Compositional archetypes and classification
+
+*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to e.g., [K-means clustering](https://towardsdatascience.com/k-means-clustering-explained-4528df86a120). It describes each observation in a dataset as a mixture of archetypes. Rather than describing average or typical observations and measurements, archetypal analysis seeks to identify extreme points on the [convex hull](https://en.wikipedia.org/wiki/Convex_hull) of a data matrix, which can provide a simple and quite useful way of clustering and looking at multivariate data ([Eugster and Leisch, 2009](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf)). The identified archetypes themselves are mixtures of the individual variables under consideration. Archetypal mixture coefficients and projections are also CoDa, which is why we include them in this notebook. Note that other clustering and ordination algorithms could also be used in this context ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)) .
+
+## Identifying archetypes
+
+This next chunk fits the Malawi CLR data using the [`archetypes`](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf) package, which is a robust implementation of the original Cutler and Breiman (1994) algorithm that uses [k-fold validation](https://www.statology.org/k-fold-cross-validation/)
+
+```{r, output = 'hide'}
+# Fit nutrient archetypes with 10-fold cross validation
+set.seed(85321)
+comp.arc <- stepArchetypes(data=site[,8:22], k = 1:10, nrep = 10, verbose = FALSE)
+```
+
+```{r, echo = FALSE, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "Archetype scree-plot showing the no. of archetypes vs the multivariate residual sums of squares (RSS)."}
+
+par(pty="s", mar=c(4,4,1,1))
+screeplot(comp.arc)
+```
+
+## Archetypal classification
+
+Similar to other clustering and ordination algorithms, we can use the identified archetypes for dimensional reduction and unsupervised classification.
+
+```{r}
+# Select no. of archetypes, the scree plot above suggests 3-7 ... we use 4 here
+comp.arc4 <- bestModel(comp.arc[[4]])
+
+# Classify CLRs by "dominant archetypes" (DA)
+darc <- as.data.frame(predict(comp.arc4, site[,8:22]))
+darc$DA <- apply(darc, 1, which.max)
+colnames(darc) <- c("A1","A2","A3","A4","DA")
+site <- cbind(site, darc)
+
+# Overwrite the site file
+write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
+```
+
+This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that could be explored. However, those links are certainly not plainly visible in satellite images, without significant ground data collection support.
+
+```{r, echo=FALSE, fig.align="center", fig.cap="Dominant archetypal grain nutrient composition sites in Malawi visualized in GeoSurvey.", out.width = '90%'}
+knitr::include_graphics("./MW_coda/MW_archetypes.png")
+```
+
 # Sample provenance tagging and tracking
 
 The main reason for including this section is that where and from which sources the grain samples were obtained i.e., their *"provenance"*, could make a difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks in the field, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are more problematic in this context in that we don't actually know what happened after samples were removed from the field and stored and/or what the actual effect of the amounts of fertilizer and/or lime that were used are. However, the combination of these factors could influence the reported survey results e.g., via soil contamination of the obtained grain samples and/or any other overall sample treatment differences.
