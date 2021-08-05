@@ -154,13 +154,13 @@ screeplot(comp.arc)
 Similar to other clustering and ordination algorithms, we can use the identified archetypes for dimensional reduction and unsupervised classification.
 
 ```{r}
-# Select no. of archetypes, the scree plot above suggests 3-7 ... we use 4 here
-comp.arc4 <- bestModel(comp.arc[[4]])
+# Select no. of archetypes, the scree plot above suggests 3-7 ... we use 3 here
+comp.arc3 <- bestModel(comp.arc[[3]])
 
 # Classify CLRs by "dominant archetypes" (DA)
 darc <- as.data.frame(predict(comp.arc4, site[,8:22]))
 darc$DA <- apply(darc, 1, which.max)
-colnames(darc) <- c("A1","A2","A3","A4","DA")
+colnames(darc) <- c("A1","A2","A3","DA")
 site <- cbind(site, darc)
 
 # Overwrite the site file
@@ -422,6 +422,8 @@ The main takeaways from this notebook are the following:
 * Converting nutrient concentrations to multivariate logratios is a simple step, but unlike other data transformations it preserves the integrity of the relevant compositional parts that are needed to normalize the data for most subsequent univariate, multivariate and/or inferential analyses and the associated statistics. Also, CoDA estimates can always be back-transformed into their original units given total concentration sums.
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult or time consuming, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions in instances where subcompositional closure principles (*sensu* [Aitchison geometry](https://laboratoriomatematicas.uniandes.edu.co/cursocoda/04-Vera-geometry.pdf)) apply.
+
+* Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi. Other clustering and [Ordination techniques](https://en.wikipedia.org/wiki/Ordination_(statistics)) could / should also be explored in this context (see [Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
 
 * Reference sample tagging and tracking can help with locating where and under what circumstances the CoDa were obtained and identifies high value targets for future surveys. This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
 
