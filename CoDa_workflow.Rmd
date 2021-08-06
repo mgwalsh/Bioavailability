@@ -154,12 +154,12 @@ screeplot(comp.arc)
 Similar to other clustering and ordination algorithms, we can use the identified archetypes for dimensional reduction and unsupervised classification.
 
 ```{r}
-# Select no. of archetypes, the scree plot above suggests 3-7 ... we use 3 here
-comp.arc3 <- bestModel(comp.arc[[3]])
+# Select no. of archetypes, the scree plot above suggests 3-7 ... we use 4 here
+comp.arc3 <- bestModel(comp.arc[[4]])
 
 # Classify CLRs by "dominant archetypes" (DA)
 darc <- as.data.frame(predict(comp.arc4, site[,8:22]))
-darc$DA <- apply(darc, 1, which.max)
+darc$DA <- as.factor(apply(darc, 1, which.max))
 colnames(darc) <- c("A1","A2","A3","DA")
 site <- cbind(site, darc)
 
