@@ -107,7 +107,7 @@ site <- cbind(locs, combo)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-You can plot raw CLR differences between crop species with something like in this next ugly chunk ...
+You can plot the raw CLR differences between crop species with something like in this next ugly chunk ...
 
 ```{r, fig.align = "center", fig.show = 'hold', fig.height = 12, fig.width = 7.2, fig.cap = "Boxplots of nutrient CLR differences between crop species."}
 
@@ -175,7 +175,7 @@ knitr::include_graphics("./MW_coda/MW_archetypes.png")
 
 We expect that some form dimensional reduction will help with some of the subsequent spectral and spatial modeling aspects of grain nutrient compositions, and we will follow-up those propositions with additional notebooks.
 
-# Sample provenance tagging and tracking with machine learning
+# Sample provenance tagging and tracking with supervised learning
 
 The main reason for including this section is that where and from which sources the grain samples were obtained i.e., their *"provenance"*, could make a difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks in the field, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored and/or what the actual effect of the amounts of fertilizer and/or lime that were used are (i.e., an explicit georeference / sample time link to the field is missing. The combination of these factors could influence the reported survey results e.g., via soil contamination of the obtained grain samples, any other overall sample treatment differences and/or survey artifacts.
 
@@ -203,7 +203,7 @@ r ## plot widget
 
 ## Sample provenance tracking
 
-You could track and monitor your reference samples with the following short, exploratory machine learning workflow. We initially split the data into calibration and validation sets and select the relevant features for distinguishing between `ref = y` or `ref = n` samples. This could be readily updated with new data as (i.e., from new locations and/or over time), become available.
+You could track and monitor your reference samples with the following short, exploratory machine learning workflow. We initially split the data into calibration and validation sets and select the relevant features for distinguishing between `ref = y` or `ref = n` samples. This could also be readily updated with new data as (i.e., from new locations and/or over time), become available.
 
 ```{r}
 # Set calibration/validation set randomization seed
@@ -254,7 +254,7 @@ fname <- paste("./MW_coda/Results/", labs, "_clist.rds", sep = "")
 saveRDS(clist, fname)
 ```
 
-The next chunk then stacks the 5 previous models (so-called [base learners](https://towardsdatascience.com/ensemble-methods-bagging-boosting-and-stacking-c9214a10a205)) on the validation set. We will use `glmStepAIC` function for this, but you may want to try other [top learners](https://en.wikipedia.org/wiki/Ensemble_learning) in this context as well.
+The next chunk then stacks the 5 previous models (the so-called [base learners](https://towardsdatascience.com/ensemble-methods-bagging-boosting-and-stacking-c9214a10a205)) on the validation set. We will use `glmStepAIC` function for this, but you may want to try other [top learners](https://en.wikipedia.org/wiki/Ensemble_learning) in this context as well.
 
 ```{r, results = 'hide'}
 # Set validation labels and features
@@ -279,15 +279,17 @@ st <- train(fval, lval,
             trControl = tc)
 
 # Model outputs & predictions
-gs_val$st <- predict(st, gs_val, type = 'prob')$y ## stacked predictions on validation set
+gs_val$st <- predict(st, gs_val, type = 'prob')$y ## stacked predictions on the validation set
 stopCluster(mc)
 fname <- paste("./MW_coda/Results/", labs, "_st.rds", sep = "")
 saveRDS(st, fname)
 ```
 
+The fact that we can readily distinguish / differentiate between `ref = y` and `ref = n` samples provides an indication (and a warning) that we are dealing with separate sample populations in this survey. ...
+
 # Survey post-stratification
 
-This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance and dominant archetypes. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on sample provenance (`ref`) and dominant archetype (`DA`). We will be doing this using mixed-effects (random intercept) regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
+This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance and dominant archetypes. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on predicted sample provenance (`pref`) and dominant archetype (`DA`). We will be doing this using mixed-effects (random intercept) regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
 
 ```{r, results = 'asis'}
 # Fit nutrients by crop species with mixed-effects regression
@@ -309,7 +311,7 @@ stargazer::stargazer(m0, m1, m2, m3, m4, m5, m6, type = "html",
 ```
 \
 
-Based on this, there appear to be clear differences between the macro compositional parts of the 4 cereal crops. Maize appears to have a higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast that is imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. The corresponding micro-nutrient summary is shown in the table below.
+Based on this, there appear to be clear differences between the macro compositional parts of the 4 cereal crops in this survey. Maize appears to have a higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast that is imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. The corresponding micro-nutrient summary is shown in the table below.
 
 ```{r, echo = FALSE, results = 'asis'}
 # Fit macro-nutrients by crop species and fertilizer use
