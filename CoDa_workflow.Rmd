@@ -160,7 +160,7 @@ comp.arc4 <- bestModel(comp.arc[[4]])
 # Classify CLRs by "dominant archetypes" (DA)
 darc <- as.data.frame(predict(comp.arc4, site[,8:22]))
 darc$DA <- apply(darc, 1, which.max)
-colnames(darc) <- c("A1","A2","A3","DA")
+colnames(darc) <- c("A1","A2","A3","A4","DA")
 site <- cbind(site, darc)
 
 # Overwrite the site file
@@ -195,26 +195,26 @@ This is an aside, but it gives you an idea of what the "*most*" dominant archety
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
 ```
 
-However, we expect that some form dimensional reduction will help with some of the subsequent spectral and spatial modeling goals for assessing or monitoring national grain nutrient compositions, and we will follow-up those propositions with additional notebooks.
+However, we do expect that some form dimensional CoDa reduction will help with some of the subsequent spectral and spatial modeling goals for assessing or monitoring national grain nutrient compositions, and we will follow-up those propositions with additional notebooks.
 
 # Sample provenance tagging and tracking with supervised learning
 
-The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"*, could make a difference as to how those data should be used and interpreted for diagnostics and monitoring. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from different farm fields. Based on these data we also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used are (i.e., an explicit georeference / sample time link to the field is missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain samples, and any other overall sample treatment differences and/or survey artifacts.
+The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"*. This could make a difference as to how those data should be interpreted for diagnostics and monitoring. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because an explicit georeference / sample age link to the field is missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain samples, and/or any other overall sample treatment differences or survey artifacts.
 
 ## Sample provenance tagging
 
-The next chunks provides an example of sample provenance tagging and tracking. We differentiate reference samples that were obtained directly from linked soil observations (crop or stack) on unfertilized fields, from all other survey samples (i.e., stored and/or fertilized samples). Note that you can easily change and/or expand the rule(s) for this. However you define *"reference samples"*, these should be your highest-value targets in future surveys because they define a consistent field baseline for monitoring any diagnostic changes. Also note that these high-value targets are hard to collect in the field because they have to be sampled during a quite narrow time window during a given cropping season. This next chunk tags the reference samples and produces a sketch map of where those (reference) samples were located in the currently available survey.
+The next chunks provides an example of sample provenance tagging and tracking. We differentiate reference samples that were obtained directly from linked soil observations (crop or stack) on unfertilized fields, from all other survey samples (i.e., stored and/or fertilized samples). Note that you can easily change and/or expand the rule(s) for this. However you define *"reference samples"*, these should be your highest-value targets in future surveys because they define a consistent field baseline for monitoring any diagnostic changes. Also note that these high-value targets are hard to collect in the field because they occur only and have to be sampled during a quite narrow time window during any given cropping season. This next chunk tags the reference samples and produces a sketch map of where those (reference) samples were located in the currently available survey.
 
 ```{r}
 # Tag reference samples with <dplyr>
-rsite <- site %>% mutate(ref = case_when(source == 'crop' | source == 'stack' & fert == 'n' ~ 'y',
-                         TRUE ~ 'n'))
+site <- site %>% mutate(ref = case_when(source == 'crop' | source == 'stack' & fert == 'n' ~ 'y',
+                        TRUE ~ 'n'))
 
 # Reference sample/site file write out
 write.csv(rsite, "./MW_coda/Results/MW_ref_coda.csv", row.names = F)
 
 # Reference sample location map
-rloc <- rsite[ which(rsite$ref == 'y'), ]
+rloc <- rsite[ which(site$ref == 'y'), ]
 
 r <- leaflet() %>%
   setView(lng = mean(rloc$lon), lat = mean(rloc$lat), zoom = 7) %>%
@@ -234,8 +234,8 @@ set.seed(seed)
 
 # Split data into calibration and validation sets
 gsIndex <- createDataPartition(rsite$ref, p = 4/5, list = F, times = 1)
-gs_cal <- rsite[ gsIndex,]
-gs_val <- rsite[-gsIndex,]
+gs_cal <- site[ gsIndex,]
+gs_val <- site[-gsIndex,]
 
 # Specify sample calibration labels
 labs <- c("ref")
@@ -357,7 +357,7 @@ stargazer::stargazer(m7, m8, m9, m10, m11, m12, m13, m14, m15, type = "html",
 ```
 \
 
-# Graphical models of nutrient interactions
+# Graphical models of reference sample nutrient interactions
 
 So far, we have largely been dealing with univariate CoDa models, as is common practice. The aim of this next section is to illustrate an empirical multivariate basis that describes the relevant conditional relationships between the different CoDa parts with graphical interaction models. The types of models that we will be using are well described and illustrated in [Højsgaard, Edwards and Lauritzen (2012)](https://link.springer.com/book/10.1007/978-1-4614-2299-0) including the code and references therein. There is also an open R tutorial by [Højsgaard (2012)](https://people.math.aau.dk/~sorenh/misc/2012-Oslo-GMwR/GMwR-notes.pdf) available, which you might want to consult.
 
