@@ -131,7 +131,7 @@ boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.
 
 # Compositional archetypes and unsupervised classification
 
-*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to e.g., [K-means clustering](https://towardsdatascience.com/k-means-clustering-explained-4528df86a120). It describes each observation in a dataset as a mixture of archetypes. Rather than describing average or typical observations and measurements, archetypal analysis seeks to identify extreme points on the [convex hull](https://en.wikipedia.org/wiki/Convex_hull) of a data matrix, which can provide a simple and quite useful way of clustering and looking at multivariate data ([Eugster and Leisch, 2009](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf)). The identified archetypes themselves are mixtures of the individual variables under consideration. Archetypal mixture coefficients and projections are also CoDa, which is why we include them in this notebook. Note that other clustering and ordination algorithms could also be used in this context ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
+*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to e.g., [K-means clustering](https://towardsdatascience.com/k-means-clustering-explained-4528df86a120). It describes each observation in a dataset as a mixture of archetypes. Rather than describing average or typical observations and measurements, archetypal analysis seeks to identify extreme points on the [convex hull](https://en.wikipedia.org/wiki/Convex_hull) of a data matrix, which can provide a simple and quite useful way of clustering and looking at multivariate data ([Eugster and Leisch, 2009](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf)). The identified archetypes themselves are mixtures of the individual CoDA variables under consideration. Archetypal mixture coefficients and projections are also CoDa, which is why we include them in this notebook. Note that other clustering and ordination algorithms could also be used in this context ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
 
 ## Identifying archetypes
 
@@ -195,15 +195,17 @@ This is an aside, but it gives you an idea of what the "*most*" dominant archety
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
 ```
 
-However, we do expect that some form dimensional CoDa reduction will help with some of the subsequent spectral and spatial modeling goals for assessing or monitoring national grain nutrient compositions, and we will follow-up those propositions with additional notebooks.
+However, we do expect that some form dimensional CoDa reduction technique will help with some of the subsequent spectral and spatial modeling goals for assessing or monitoring national grain nutrient compositions, and we will follow-up those propositions with additional notebooks.
 
 # Sample provenance tagging and tracking with supervised learning
 
-The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"*. This could make a difference as to how those data should be interpreted for diagnostics and monitoring. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because an explicit georeference / sample age link to the field is missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain samples, and/or any other overall sample treatment differences or survey artifacts.
+The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"*. This could make a difference as to how those data should be interpreted for diagnostics and monitoring. 
+
+In this survey dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores on both fertilized and unfertilized fields. Both household grain store and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because an explicit georeference / sample age link to the field is missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain survey samples, and/or any other overall sample survey artifacts and/or treatment differences.
 
 ## Sample provenance tagging
 
-The next chunks provides an example of sample provenance tagging and tracking. We differentiate reference samples that were obtained directly from linked soil observations (crop or stack) on unfertilized fields, from all other survey samples (i.e., stored and/or fertilized samples). Note that you can easily change and/or expand the rule(s) for this. However you define *"reference samples"*, these should be your highest-value targets in future surveys because they define a consistent field baseline for monitoring any diagnostic changes. Also note that these high-value targets are hard to collect in the field because they occur only and have to be sampled during a quite narrow time window during any given cropping season. This next chunk tags the reference samples and produces a sketch map of where those (reference) samples were located in the currently available survey.
+The next chunks provides an example of sample provenance tagging and tracking. We differentiate reference samples that were obtained directly from linked grain and soil observations (crop or stack) on unfertilized fields, from all other survey samples (i.e., those stored and/or from fertilized samples). Note that you can easily change and/or expand the rule(s) for this. However you define *"reference samples"*, these should be your highest-value targets in future surveys because they define a consistent field baseline for monitoring any diagnostic changes. Also note that these high-value targets are hard to collect in the field because they occur only and have to be sampled during a quite narrow time window during any given cropping season. This next chunk tags the reference samples and produces a sketch map of where those (reference) samples were located in the currently available survey.
 
 ```{r}
 # Tag reference samples with <dplyr>
@@ -307,11 +309,11 @@ fname <- paste("./MW_coda/Results/", labs, "_st.rds", sep = "")
 saveRDS(st, fname)
 ```
 
-The fact that we can apparently readily differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we are dealing with separate CoDa sub-populations, which may need to be treated differently for diagnostic purposes and modeling. ...
+The fact that we can apparently readily differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we are dealing with separate CoDa sub-populations, which may need to be treated differently for diagnostic purposes and modeling.
 
 # Univariate survey post-stratification
 
-This section provides initial univariate data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance and dominant archetypes. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on predicted sample provenance (`pref`) and dominant archetype (`DA`). We will be doing this using mixed-effects (random intercept) regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
+This section provides initial univariate data model summaries of parts of the CLR transformed data by crop species. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance and dominant archetypes. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on predicted sample provenance (`pref`) and dominant archetype (`DA`). We will be doing this using mixed-effects (random intercept) regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
 
 ```{r, results = 'asis'}
 # Fit nutrients by crop species with mixed-effects regression
@@ -337,15 +339,15 @@ Based on this, there appear to be clear differences between the macro compositio
 
 ```{r, echo = FALSE, results = 'asis'}
 # Fit macro-nutrients by crop species and fertilizer use
-m7 <- rq(Cr~crop, data = site)
-m8 <- rq(Mn~crop, data = site)
-m9 <- rq(Fe~crop, data = site)
-m10 <- rq(Co~crop, data = site)
-m11 <- rq(Cu~crop, data = site)
-m12 <- rq(Zn~crop, data = site)
-m13 <- rq(Se~crop, data = site)
-m14 <- rq(Mo~crop, data = site)
-m15 <- rq(I~crop, data = site)
+m7 <- lmer(Cr~crop + (1|ref) + (1|DA), data = rsite)
+m8 <- lmer(Mn~crop + (1|ref) + (1|DA), data = rsite)
+m9 <- lmer(Fe~crop + (1|ref) + (1|DA), data = rsite)
+m10 <- lmer(Co~crop + (1|ref) + (1|DA), data = rsite)
+m11 <- lmer(Cu~crop + (1|ref) + (1|DA), data = rsite)
+m12 <- lmer(Zn~crop + (1|ref) + (1|DA), data = rsite)
+m13 <- lmer(Se~crop + (1|ref) + (1|DA), data = rsite)
+m14 <- lmer(Mo~crop + (1|ref) + (1|DA), data = rsite)
+m15 <- lmer(I~crop + (1|ref) + (1|DA), data = rsite)
 
 # Generate regression summary table
 stargazer::stargazer(m7, m8, m9, m10, m11, m12, m13, m14, m15, type = "html", 
@@ -454,6 +456,6 @@ The main takeaways from this notebook are the following:
 
 * Reference sample tagging and tracking can help with locating where and under what circumstances the CoDa were obtained and identifies high value targets for future surveys. This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
 
-* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** for developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies ... data permitting.
+* Graphical interaction models help to clarify the conditional relationships between compositional parts. They can also be used to select, close, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** for developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies ... data permitting.
 
 Any questions, comments or corrections about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
