@@ -225,7 +225,7 @@ r ## plot widget
 
 ## Sample provenance tracking
 
-You could track and monitor your reference samples with the following short, exploratory machine learning workflow. We initially split the data into calibration and validation sets and select the relevant features for distinguishing between `ref = y` or `ref = n` samples. This could also be readily updated with new data as (i.e., from new locations and/or over time), become available.
+You could track and monitor your reference samples with the following short, exploratory machine learning workflow. We initially split the data into calibration and validation sets and select the relevant features for distinguishing between `ref = y` or `ref = n` samples. This could also be readily updated with new data as (i.e., from new locations and/or from repeat samples over time), become available.
 
 ```{r}
 # Set calibration/validation set randomization seed
@@ -233,7 +233,7 @@ seed <- 123581
 set.seed(seed)
 
 # Split data into calibration and validation sets
-gsIndex <- createDataPartition(rsite$ref, p = 4/5, list = F, times = 1)
+gsIndex <- createDataPartition(site$ref, p = 4/5, list = F, times = 1)
 gs_cal <- site[ gsIndex,]
 gs_val <- site[-gsIndex,]
 
@@ -307,7 +307,7 @@ fname <- paste("./MW_coda/Results/", labs, "_st.rds", sep = "")
 saveRDS(st, fname)
 ```
 
-The next chunk generates the stacked predictions on the full `site` dataset and compares those to the field observations.
+The next chunk generates the stacked predictions on the full `site` dataset and compares those to the field observations of where samples were collected in unfertilized fields (n = .
 
 ```{r}
 # Generate predictions
