@@ -155,7 +155,7 @@ Similar to other clustering and ordination algorithms, we can use the identified
 
 ```{r}
 # Select no. of archetypes, the scree plot above suggests 3-7 ... we use 4 here
-comp.arc3 <- bestModel(comp.arc[[4]])
+comp.arc4 <- bestModel(comp.arc[[4]])
 
 # Classify CLRs by "dominant archetypes" (DA)
 darc <- as.data.frame(predict(comp.arc4, site[,8:22]))
