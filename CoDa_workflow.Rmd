@@ -177,7 +177,7 @@ We expect that some form dimensional reduction will help with some of the subseq
 
 # Sample provenance tagging and tracking with supervised learning
 
-The main reason for including this section is that where and from which sources the grain samples were obtained i.e., their *"provenance"*, could make a difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks in the field, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored and/or what the actual effect of the amounts of fertilizer and/or lime that were used are (i.e., an explicit georeference / sample time link to the field is missing. The combination of these factors could influence the reported survey results e.g., via soil contamination of the obtained grain samples, any other overall sample treatment differences and/or survey artifacts.
+The main reason for including this section is that where and from which sources the grain samples were obtained i.e., their *"provenance"*, could make a difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks in the field, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored and/or what the actual effect of the amounts of fertilizer and/or lime that were used are (i.e., an explicit georeference / sample time link to the field is missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain samples, and any other overall sample treatment differences and/or survey artifacts.
 
 ## Sample provenance tagging
 
@@ -285,7 +285,7 @@ fname <- paste("./MW_coda/Results/", labs, "_st.rds", sep = "")
 saveRDS(st, fname)
 ```
 
-The fact that we can readily distinguish / differentiate between `ref = y` and `ref = n` samples provides an indication (and a warning) that we are dealing with separate sample populations in this survey. ...
+The fact that we can apparently distinguish / differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we are dealing with separate sample CoDa sub-populations, which may need to be treated separately for diagnostic purposes and modeling. ...
 
 # Survey post-stratification
 
