@@ -189,7 +189,7 @@ boxplot(site$Mo ~ site$DA, notch = T, ylab = "Mo", xlab = "", cex.axis = 1, cex.
 boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.lab = 1.3)
 ```
 
-This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that could be explored. However, those links are certainly **not plainly visible in satellite images**, apart from the co-occurence of croplands and buildings/settlements, without significant ground data collection support.
+This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that could be explored. However, those links are certainly **not plainly visible in satellite images**, apart from the co-occurrence of croplands and buildings/settlements.
 
 ```{r, echo=FALSE, fig.align="center", fig.cap="Dominant archetypal grain nutrient composition sites in Malawi visualized in GeoSurvey.", out.width = '90%'}
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
@@ -199,13 +199,11 @@ However, we do expect that some form dimensional CoDa reduction technique will h
 
 # Sample provenance tagging and tracking with supervised learning
 
-The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"*. This could make a difference as to how those data should be interpreted for diagnostics and monitoring. 
-
-In this survey dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores on both fertilized and unfertilized fields. Both household grain store and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because an explicit georeference / sample age link to the field is missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain survey samples, and/or any other overall sample survey artifacts and/or treatment differences.
+The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"* may be important. These could make a difference as to how those data should be interpreted for diagnostics and monitoring. In this survey dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores, on both fertilized and unfertilized fields. Both household grain store and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because an explicit georeference / sample age link to the field is missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain survey samples, and/or any other overall sample survey artifacts and/or treatment differences.
 
 ## Sample provenance tagging
 
-The next chunks provides an example of sample provenance tagging and tracking. We differentiate reference samples that were obtained directly from linked grain and soil observations (crop or stack) on unfertilized fields, from all other survey samples (i.e., those stored and/or from fertilized samples). Note that you can easily change and/or expand the rule(s) for this. However you define *"reference samples"*, these should be your highest-value targets in future surveys because they define a consistent field baseline for monitoring any diagnostic changes. Also note that these high-value targets are hard to collect in the field because they occur only and have to be sampled during a quite narrow time window during any given cropping season. This next chunk tags the reference samples and produces a sketch map of where those (reference) samples were located in the currently available survey.
+The next chunks provides an example of sample provenance tagging and tracking. We differentiate reference samples that were obtained directly from the linked grain and soil observations (crop or stack) on unfertilized fields, from all other survey samples (i.e., those stored and/or from fertilized samples). Note that you can easily change and/or expand the rule(s) for this. However you define *"reference samples"*, these should be your highest-value targets in future surveys because they define a consistent field baseline for monitoring any diagnostic changes. Also note that these high-value targets are hard to collect in the field because they occur only and have to be sampled during a quite narrow time window during any given cropping season. This next chunk tags the reference samples and produces a sketch map of where those (reference) samples were located in the currently available survey.
 
 ```{r}
 # Tag reference samples with <dplyr>
@@ -213,10 +211,10 @@ site <- site %>% mutate(ref = case_when(source == 'crop' | source == 'stack' & f
                         TRUE ~ 'n'))
 
 # Reference sample/site file write out
-write.csv(rsite, "./MW_coda/Results/MW_ref_coda.csv", row.names = F)
+write.csv(site, "./MW_coda/Results/MW_ref_coda.csv", row.names = F)
 
 # Reference sample location map
-rloc <- rsite[ which(site$ref == 'y'), ]
+rloc <- site[ which(site$ref == 'y'), ]
 
 r <- leaflet() %>%
   setView(lng = mean(rloc$lon), lat = mean(rloc$lat), zoom = 7) %>%
@@ -247,7 +245,7 @@ lcal <- as.vector(t(gs_cal[labs]))
 fcal <- gs_cal[ ,c(3:4,8:22)] ## selects lat/lon & CoDa features
 ```
 
-The following `caretEnsemble` chunk then generates the reference sample / site predictions on the validation set with default-tuning of the relevant [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning)). Note that if you would like more control over the individual model fits, you can also use their respective `tuneList` arguments.
+The following `caretEnsemble` chunk then generates the reference sample / site predictions on the validation set with default-tuning of the relevant model [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning)). Note that if you would like more control over the individual model fits, you can also use their respective `tuneList` arguments.
 
 ```{r, warning = FALSE, results='hide'}
 # Start doParallel to parallelize model fitting
@@ -278,7 +276,7 @@ fname <- paste("./MW_coda/Results/", labs, "_clist.rds", sep = "")
 saveRDS(clist, fname)
 ```
 
-The next chunk then stacks the 5 previous models (the so-called [base learners](https://towardsdatascience.com/ensemble-methods-bagging-boosting-and-stacking-c9214a10a205)) on the validation set. We will use `glmStepAIC` function for this, but you may want to try other [top learners](https://en.wikipedia.org/wiki/Ensemble_learning) in this context as well.
+The next chunk then stacks the 5 previous models (or the so-called [base learners](https://towardsdatascience.com/ensemble-methods-bagging-boosting-and-stacking-c9214a10a205)) on the validation set. We will use `glmStepAIC` function for this, but you may want to try other [top learners](https://en.wikipedia.org/wiki/Ensemble_learning) in this context as well.
 
 ```{r, results = 'hide'}
 # Set validation labels and features
@@ -309,7 +307,15 @@ fname <- paste("./MW_coda/Results/", labs, "_st.rds", sep = "")
 saveRDS(st, fname)
 ```
 
-The fact that we can apparently readily differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we are dealing with separate CoDa sub-populations, which may need to be treated differently for diagnostic purposes and modeling.
+The next chunk generates the stacked predictions on the full `site` dataset and compares those to the field observations.
+
+```{r}
+# Generate predictions
+site$gl <- predict(clist$glmStepAIC, site, type = 'prob')$y
+
+```
+
+The fact that we can readily differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we are or should be dealing with separate CoDa sub-populations based on their provenance, which may need to be treated differently for diagnostic purposes and modeling.
 
 # Univariate survey post-stratification
 
@@ -452,7 +458,7 @@ The main takeaways from this notebook are the following:
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult or time consuming, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions in instances where subcompositional closure principles (*sensu* [Aitchison geometry](https://laboratoriomatematicas.uniandes.edu.co/cursocoda/04-Vera-geometry.pdf)) apply.
 
-* Clustering the CoDa nutrient data in fewer dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi. Other clustering and [Ordination techniques](https://en.wikipedia.org/wiki/Ordination_(statistics)) could / should also be explored in this context (see [Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
+* Clustering the CoDa nutrient data in fewer compositional dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi. Other clustering and [Ordination techniques](https://en.wikipedia.org/wiki/Ordination_(statistics)) could / should also be explored in this context (see [Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
 
 * Reference sample tagging and tracking can help with locating where and under what circumstances the CoDa were obtained and identifies high value targets for future surveys. This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
 
