@@ -36,7 +36,7 @@ To actually run this notebook, you will need to load the packages indicated in t
 
 ```{r, results = 'hide'}
 # Package names
-packages <- c("osfr", "dplyr", "leaflet", "compositions", "doParallel", "caret", "caretEnsemble", "MASS", "randomForest", "xgboost", "nnet", "stargazer", "archetypes", "arm")
+packages <- c("osfr", "dplyr", "leaflet", "compositions", "doParallel", "caret", "caretEnsemble", "MASS", "randomForest", "xgboost", "nnet", "klaR", "stargazer", "archetypes", "arm")
 
 # Install packages
 installed_packages <- packages %in% rownames(installed.packages())
@@ -287,17 +287,17 @@ saveRDS(st, fname)
 
 # Survey post-stratification
 
-This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on sample provenance (`ref`) and dominant archetype (`DA`). We will be doing this using mixed-effects regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
+This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance and dominant archetypes. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on sample provenance (`ref`) and dominant archetype (`DA`). We will be doing this using mixed-effects (random intercept) regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
 
 ```{r, results = 'asis'}
 # Fit nutrients by crop species with mixed-effects regression
-m0 <- lmer(macro~crop + (1|ref) +(1|DA), data = rsite)
-m1 <- lmer(Na~crop + (1|ref) +(1|DA), data = rsite)
-m2 <- lmer(Mg~crop + (1|ref), data = rsite)
-m3 <- lmer(P~crop, data = rsite)
-m4 <- lmer(S~crop, data = rsite)
-m5 <- lmer(K~crop, data = rsite)
-m6 <- lmer(Ca~crop, data = rsite)
+m0 <- lmer(macro~crop + (1|ref) + (1|DA), data = rsite)
+m1 <- lmer(Na~crop + (1|ref) + (1|DA), data = rsite)
+m2 <- lmer(Mg~crop + (1|ref) + (1|DA), data = rsite)
+m3 <- lmer(P~crop + (1|ref) + (1|DA), data = rsite)
+m4 <- lmer(S~crop + (1|ref) + (1|DA), data = rsite)
+m5 <- lmer(K~crop + (1|ref) + (1|DA), data = rsite)
+m6 <- lmer(Ca~crop + (1|ref) + (1|DA), data = rsite)
 
 # Generate regression summary table
 stargazer::stargazer(m0, m1, m2, m3, m4, m5, m6, type = "html", 
