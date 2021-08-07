@@ -22,7 +22,7 @@ Most empirical models of biogeography, species distributions, photosynthesis, nu
 
 *Compositional Data Analysis* (CoDA) refers to the analyses of *compositional data* (CoDa). CoDa are defined as vectors with strictly positive components whose sum is constant (e.g, 1 or 100%). The terms also cover all other *parts* of a whole (so-called *subcompositions*), which carry only relative information ([van den Boogaart and Tolosana-Delgado, 2013](https://link.springer.com/book/10.1007/978-3-642-36809-7)). Because a change in any proportion of a whole changes at least one other proportion, CoDa are interdependent. Arguably, all concentration data should be treated as CoDa because as a whole they must sum to the respective unit totals of the constituent parts e.g., in the case of plants and animals as compositions of water, organic and inorganic materials. In turn, the organic and in this case specifically the inorganic nutrient subcompositions, should also not be analyzed and interpreted without normalizing them to one another. 
 
-The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a recent CoDa review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa. There is also an open source paper available that treats genomic survey data in an analogous fashion and uses some of the graphical modeling techniques that we will be illustrating here (see [Friedman and Alm (2012)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002687), and the references therein).
+The original approach to CoDA developed by [J. Aitchison (1982)](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1982.tb01195.x) uses logarithmic ratios (LRs) of the compositional parts as the fundamental starting point for CoDa description and modeling. There is also a recent CoDa review paper by [M. Greenacre (2021)](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436) openly available, which provides excellent guidance, as well as [R scripts](https://github.com/michaelgreenacre/CODAinPractice), about the practical applications and interpretation of CoDa. There is also an open source paper available that treats genomic survey data in an analogous fashion and uses some of the graphical modeling techniques that we will be illustrating here (see [Friedman and Alm, 2012)](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002687), and the references therein).
 
 # General data setup
 
@@ -173,7 +173,7 @@ This is an aside, but it gives you an idea of what the "*most*" dominant archety
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
 ```
 
-We expect that some form dimensional reduction will help with some of the subsequent spectral and spatial modeling aspects of grain nutrient compositions, and we will follow-up those propositions in additional notebooks.
+We expect that some form dimensional reduction will help with some of the subsequent spectral and spatial modeling aspects of grain nutrient compositions, and we will follow-up those propositions with additional notebooks.
 
 # Sample provenance tagging and tracking with machine learning
 
@@ -203,7 +203,7 @@ r ## plot widget
 
 ## Sample provenance tracking
 
-You could track and monitor your reference samples with the following short, exploratory machine learning workflow. We initially split the data into calibration and validation sets and select the relevant features for distinguishing between `reference = y` or `reference = n` samples. This could be readily updated with new data (i.e., from new locations and/or over time), become available.
+You could track and monitor your reference samples with the following short, exploratory machine learning workflow. We initially split the data into calibration and validation sets and select the relevant features for distinguishing between `ref = y` or `ref = n` samples. This could be readily updated with new data (i.e., from new locations and/or over time), become available.
 
 ```{r}
 # Set calibration/validation set randomization seed
@@ -287,7 +287,7 @@ saveRDS(st, fname)
 
 # Survey post-stratification
 
-This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on sample provenance (`ref`) and dominant archetype (`DA`). We will be doing this using mixed-effects regression with the [`arm`]() package.
+This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on sample provenance (`ref`) and dominant archetype (`DA`). We will be doing this using mixed-effects regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
 
 ```{r, results = 'asis'}
 # Fit nutrients by crop species with mixed-effects regression
