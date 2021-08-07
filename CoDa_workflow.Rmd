@@ -16,7 +16,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Introduction
 
-Most empirical models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of the potentially most limiting parts (i.e., [Liebig's law](https://en.wikipedia.org/wiki/Justus_von_Liebig)). However, *the law of the minimum* does not appear to hold consistently at plant community or ecosystem scales (see e.g., [Danger et al., 2008]( https://doi.org/10.2134/agronj1993.00021962008500030040x)). In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of the plant products that are subsequently consumed by animals, including humans. 
+Most empirical models of biogeography, species distributions, photosynthesis, nutrient uptake, yield, trophic dynamics, crop management and/or small area dietary requirements assume no interactions between the essential mineral nutrient elements and typically only describe the associated processes as a function of only the potentially most limiting parts (i.e., [Liebig's law](https://en.wikipedia.org/wiki/Justus_von_Liebig)). However, *the law of the minimum* does not appear to hold consistently at plant community or ecosystem scales (see e.g., [Danger et al., 2008]( https://doi.org/10.2134/agronj1993.00021962008500030040x)). In agricultural systems, the overall (multivariate) mineral nutrient composition is likely to affect both crop yields as well as the overall nutritional quality of the plant products that are subsequently consumed by animals, including humans. 
 
 *The objective of this notebook is to provide starter code in [R](https://www.r-project.org/) for exploratory data analyses ([EDA](https://en.wikipedia.org/wiki/Exploratory_data_analysis)) and reporting of the mineral nutrient compositions of the main cereal grains (maize, pearl-millet, rice and sorghum) that are grown in Malawi. The markdown notebook presented here is maintained on [Github](https://github.com/mgwalsh/Bioavailability/blob/master/CoDa_workflow.Rmd), and you can fork and alter it from there for your reference and as you see fit.*
 
@@ -159,7 +159,7 @@ comp.arc4 <- bestModel(comp.arc[[4]])
 
 # Classify CLRs by "dominant archetypes" (DA)
 darc <- as.data.frame(predict(comp.arc4, site[,8:22]))
-darc$DA <- as.factor(apply(darc, 1, which.max))
+darc$DA <- apply(darc, 1, which.max)
 colnames(darc) <- c("A1","A2","A3","DA")
 site <- cbind(site, darc)
 
@@ -167,17 +167,39 @@ site <- cbind(site, darc)
 write.csv(site, "./MW_coda/Results/MW_site_coda.csv", row.names = F)
 ```
 
-This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that could be explored. However, those links are certainly not plainly visible in satellite images, without significant ground data collection support.
+As before, you can plot the raw CLR differences between dominant archetypes as: (code not shown, but included in the markdown).
+
+```{r, echo = FALSE, fig.align = "center", fig.show = 'hold', fig.height = 12, fig.width = 7.2, fig.cap = "Boxplots of nutrient CLR differences between dominant archetypes."}
+
+par(mfrow = c(5,3), pty="s", mar=c(2,4,1,1))
+boxplot(site$Na ~ site$DA, notch = T, ylab = "Na", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Mg ~ site$DA, notch = T, ylab = "Mg", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$P ~ site$DA, notch = T, ylab = "P", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$S ~ site$DA, notch = T, ylab = "S", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$K ~ site$DA, notch = T, ylab = "K", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Ca ~ site$DA, notch = T, ylab = "Ca", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Cr ~ site$DA, notch = T, ylab = "Cr", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Mn ~ site$DA, notch = T, ylab = "Mn", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Fe ~ site$DA, notch = T, ylab = "Fe", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Co ~ site$DA, notch = T, ylab = "Co", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Cu ~ site$DA, notch = T, ylab = "Cu", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Zn ~ site$DA, notch = T, ylab = "Zn", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Se ~ site$DA, notch = T, ylab = "Se", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$Mo ~ site$DA, notch = T, ylab = "Mo", xlab = "", cex.axis = 1, cex.lab = 1.3)
+boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.lab = 1.3)
+```
+
+This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that could be explored. However, those links are certainly **not plainly visible in satellite images**, apart from the co-occurence of croplands and buildings/settlements, without significant ground data collection support.
 
 ```{r, echo=FALSE, fig.align="center", fig.cap="Dominant archetypal grain nutrient composition sites in Malawi visualized in GeoSurvey.", out.width = '90%'}
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
 ```
 
-We expect that some form dimensional reduction will help with some of the subsequent spectral and spatial modeling aspects of grain nutrient compositions, and we will follow-up those propositions with additional notebooks.
+However, we expect that some form dimensional reduction will help with some of the subsequent spectral and spatial modeling goals for assessing or monitoring national grain nutrient compositions, and we will follow-up those propositions with additional notebooks.
 
 # Sample provenance tagging and tracking with supervised learning
 
-The main reason for including this section is that where and from which sources the grain samples were obtained i.e., their *"provenance"*, could make a difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks in the field, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored and/or what the actual effect of the amounts of fertilizer and/or lime that were used are (i.e., an explicit georeference / sample time link to the field is missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain samples, and any other overall sample treatment differences and/or survey artifacts.
+The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"*, could make a difference as to how those data should be used and interpreted for diagnostics and monitoring. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from different farm fields. Based on these data we also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used are (i.e., an explicit georeference / sample time link to the field is missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain samples, and any other overall sample treatment differences and/or survey artifacts.
 
 ## Sample provenance tagging
 
@@ -285,11 +307,11 @@ fname <- paste("./MW_coda/Results/", labs, "_st.rds", sep = "")
 saveRDS(st, fname)
 ```
 
-The fact that we can apparently distinguish / differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we are dealing with separate sample CoDa sub-populations, which may need to be treated separately for diagnostic purposes and modeling. ...
+The fact that we can apparently readily differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we are dealing with separate CoDa sub-populations, which may need to be treated differently for diagnostic purposes and modeling. ...
 
-# Survey post-stratification
+# Univariate survey post-stratification
 
-This section provides initial data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance and dominant archetypes. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on predicted sample provenance (`pref`) and dominant archetype (`DA`). We will be doing this using mixed-effects (random intercept) regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
+This section provides initial univariate data model summaries of parts of the CLR transformed data. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance and dominant archetypes. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on predicted sample provenance (`pref`) and dominant archetype (`DA`). We will be doing this using mixed-effects (random intercept) regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
 
 ```{r, results = 'asis'}
 # Fit nutrients by crop species with mixed-effects regression
