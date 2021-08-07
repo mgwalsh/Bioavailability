@@ -129,9 +129,9 @@ boxplot(site$Mo ~ site$crop, notch = T, ylab = "Mo", xlab = "", cex.axis = 1, ce
 boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.lab = 1.3)
 ```
 
-# Compositional archetypes and classification
+# Compositional archetypes and unsupervised classification
 
-*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to e.g., [K-means clustering](https://towardsdatascience.com/k-means-clustering-explained-4528df86a120). It describes each observation in a dataset as a mixture of archetypes. Rather than describing average or typical observations and measurements, archetypal analysis seeks to identify extreme points on the [convex hull](https://en.wikipedia.org/wiki/Convex_hull) of a data matrix, which can provide a simple and quite useful way of clustering and looking at multivariate data ([Eugster and Leisch, 2009](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf)). The identified archetypes themselves are mixtures of the individual variables under consideration. Archetypal mixture coefficients and projections are also CoDa, which is why we include them in this notebook. Note that other clustering and ordination algorithms could also be used in this context ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)) .
+*Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to e.g., [K-means clustering](https://towardsdatascience.com/k-means-clustering-explained-4528df86a120). It describes each observation in a dataset as a mixture of archetypes. Rather than describing average or typical observations and measurements, archetypal analysis seeks to identify extreme points on the [convex hull](https://en.wikipedia.org/wiki/Convex_hull) of a data matrix, which can provide a simple and quite useful way of clustering and looking at multivariate data ([Eugster and Leisch, 2009](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf)). The identified archetypes themselves are mixtures of the individual variables under consideration. Archetypal mixture coefficients and projections are also CoDa, which is why we include them in this notebook. Note that other clustering and ordination algorithms could also be used in this context ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
 
 ## Identifying archetypes
 
@@ -151,7 +151,7 @@ screeplot(comp.arc)
 
 ## Archetypal classification
 
-Similar to other clustering and ordination algorithms, we can use the identified archetypes for dimensional reduction and unsupervised classification.
+Similar to other clustering and ordination algorithms, we can use the identified archetypes for dimensional reduction and unsupervised classification of CoDa.
 
 ```{r}
 # Select no. of archetypes, the scree plot above suggests 3-7 ... we use 4 here
@@ -173,13 +173,15 @@ This is an aside, but it gives you an idea of what the "*most*" dominant archety
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
 ```
 
-# Sample provenance tagging and tracking
+We expect that some form dimensional reduction will help with some of the subsequent spectral and spatial modeling aspects of grain nutrient compositions, and we will follow-up those propositions in additional notebooks.
 
-The main reason for including this section is that where and from which sources the grain samples were obtained i.e., their *"provenance"*, could make a difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks in the field, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are more problematic in this context in that we don't actually know what happened after samples were removed from the field and stored and/or what the actual effect of the amounts of fertilizer and/or lime that were used are. However, the combination of these factors could influence the reported survey results e.g., via soil contamination of the obtained grain samples and/or any other overall sample treatment differences.
+# Sample provenance tagging and tracking with machine learning
+
+The main reason for including this section is that where and from which sources the grain samples were obtained i.e., their *"provenance"*, could make a difference as to how those data should be used and interpreted for diagnostics. In this dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks in the field, or from household grain stores on both fertilized and unfertilized fields. Both household grain stores and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored and/or what the actual effect of the amounts of fertilizer and/or lime that were used are (i.e., an explicit georeference / sample time link to the field is missing. The combination of these factors could influence the reported survey results e.g., via soil contamination of the obtained grain samples, any other overall sample treatment differences and/or survey artifacts.
 
 ## Sample provenance tagging
 
-The next chunks provides an example of sample provenance tagging and tracking. We differentiate reference samples that were obtained from field (crop or stack) on unfertilized fields, from all of the other survey samples (i.e., stored and/or fertilized background samples). Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your highest-value targets in future surveys because they define a consistent baseline for monitoring diagnostic changes. Note that these are hard to collect in the field because they have to be sampled during a quite narrow time window during a given cropping season.
+The next chunks provides an example of sample provenance tagging and tracking. We differentiate reference samples that were obtained directly from linked soil observations (crop or stack) on unfertilized fields, from all of the other survey samples (i.e., stored and/or fertilized samples). Note that you can easily change and/or expand the rule(s) for this. However you define "reference samples", these should be your highest-value targets in future surveys because they define a consistent baseline for monitoring any diagnostic changes. Note that these high-value targets are hard to collect in the field because they have to be sampled during a quite narrow time window during a given cropping season. This next chunk tags the reference samples and produces a sketch map of where they were located in the survey.
 
 ```{r}
 # Tag reference samples with <dplyr>
@@ -201,7 +203,7 @@ r ## plot widget
 
 ## Sample provenance tracking
 
-You could track and monitor your reference samples with the following short, exploratory machine learning workflow. We initially split the data into calibration and validation sets and select the relevant features for distinguishing between reference and other samples.
+You could track and monitor your reference samples with the following short, exploratory machine learning workflow. We initially split the data into calibration and validation sets and select the relevant features for distinguishing between `reference = y` or `reference = n` samples. This could be readily updated with new data (i.e., from new locations and/or over time), become available.
 
 ```{r}
 # Set calibration/validation set randomization seed
@@ -252,7 +254,7 @@ fname <- paste("./MW_coda/Results/", labs, "_clist.rds", sep = "")
 saveRDS(clist, fname)
 ```
 
-The next chunk then stacks the 5 previous models (or "base learners") on the validation set. We will use `glmStepAIC` function for this, but you might want to try other "top learners" in this context as well.
+The next chunk then stacks the 5 previous models (so-called [base learners](https://towardsdatascience.com/ensemble-methods-bagging-boosting-and-stacking-c9214a10a205)) on the validation set. We will use `glmStepAIC` function for this, but you might want to try other [top learners](https://en.wikipedia.org/wiki/Ensemble_learning) in this context as well.
 
 ```{r, results = 'hide'}
 # Set validation labels and features
