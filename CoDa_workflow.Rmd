@@ -307,15 +307,19 @@ fname <- paste("./MW_coda/Results/", labs, "_st.rds", sep = "")
 saveRDS(st, fname)
 ```
 
-The next chunk generates the stacked predictions on the full `site` dataset and compares those to the field observations of where samples were collected in unfertilized fields (n = .
+The next chunk generates the stacked predictions on the full `site` dataset and compares those to the provenance observations.
 
 ```{r}
-# Generate predictions
+# Generate predictions on overall dataset
 site$gl <- predict(clist$glmStepAIC, site, type = 'prob')$y
-
+site$rf <- predict(clist$rf, site, type = 'prob')$y
+site$xt <- predict(clist$xt, site, type = 'prob')$y
+site$nn <- predict(clist$nn, site, type = 'prob')$y
+site$nb <- predict(clist$nb, site, type = 'prob')$y
+site$st <- predict(clist$st, site, type = 'prob')$y
 ```
 
-The fact that we can readily differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we are or should be dealing with separate CoDa sub-populations based on their provenance, which may need to be treated differently for diagnostic purposes and modeling.
+The fact that we can readily differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we are or at least should be dealing with separate CoDa sub-populations based on their provenance.
 
 # Univariate survey post-stratification
 
