@@ -276,7 +276,7 @@ fname <- paste("./MW_coda/Results/", labs, "_clist.rds", sep = "")
 saveRDS(clist, fname)
 ```
 
-The next chunk then stacks the 5 previous models, the so-called [base learners](https://towardsdatascience.com/ensemble-methods-bagging-boosting-and-stacking-c9214a10a205)), on the validation set. We will use `glmStepAIC` function for this, but you may want to try other [top learners](https://en.wikipedia.org/wiki/Ensemble_learning) in this context as well.
+The next chunk then stacks the 5 previous models, the so-called [base learners](https://towardsdatascience.com/ensemble-methods-bagging-boosting-and-stacking-c9214a10a205)), on the validation set. We will use `glmStepAIC` function for model selection and weighting, but you may want to try other [top learners](https://en.wikipedia.org/wiki/Ensemble_learning) in this context as well.
 
 ```{r, results = 'hide'}
 # Set validation labels and features
@@ -307,22 +307,27 @@ fname <- paste("./MW_coda/Results/", labs, "_st.rds", sep = "")
 saveRDS(st, fname)
 ```
 
-The next chunk generates the stacked predictions on the full `site` dataset and compares those to the provenance observations.
+The next chunks generate the stacked predictions (`st`) on the full `site` dataset and compares those to the currently available, field-based provenance tags.
 
 ```{r}
 # Generate predictions on overall dataset
 site$gl <- predict(clist$glmStepAIC, site, type = 'prob')$y
 site$rf <- predict(clist$rf, site, type = 'prob')$y
-site$xt <- predict(clist$xt, site, type = 'prob')$y
-site$nn <- predict(clist$nn, site, type = 'prob')$y
+site$xt <- predict(clist$xgbTree, site, type = 'prob')$y
+site$nn <- predict(clist$nnet, site, type = 'prob')$y
 site$nb <- predict(clist$nb, site, type = 'prob')$y
 site$st <- predict(st, site)
 
 # Confusion matrix
-
+confusionMatrix(site$st, as.factor(site$ref))
 ```
 
-The fact that we can readily differentiate `ref = y` from `ref = n` samples in this survey provides a clear indication that we should be dealing with CoDa sub-populations based on their provenance tags.
+```{r}
+# Confusion matrix
+confusionMatrix(site$st, as.factor(site$ref))
+```
+
+The fact that we can readily differentiate `ref = y` from `ref = n` samples with high [sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity) in this survey provides a good indication that we should probably be dealing with two CoDa sub-populations based on their provenance tags. Given the sample geographical locations and their associated CoDa, the samples are clearly compositionally and geographically different.
 
 # Univariate survey post-stratification
 
