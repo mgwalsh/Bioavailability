@@ -242,7 +242,7 @@ labs <- c("ref")
 lcal <- as.vector(t(gs_cal[labs]))
 
 # Specify calibration features
-fcal <- gs_cal[ ,c(3:4,8:22)] ## selects lat/lon & CoDa features
+fcal <- gs_cal[ ,c(3:4,11:25)] ## selects lat/lon & CoDa features
 ```
 
 The following `caretEnsemble` chunk then generates the reference sample / site predictions on the validation set with default-tuning of the relevant model [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning)). Note that if you would like more control over the individual model fits, you can also use their respective `tuneList` arguments.
@@ -281,7 +281,7 @@ The next chunk then stacks the 5 previous models, the so-called [base learners](
 ```{r, results = 'hide'}
 # Set validation labels and features
 lval <- as.vector(t(gs_val[labs])) ##  subset validation labels
-fval <- gs_val[ ,28:32] ## subset validation features
+fval <- gs_val[ ,33:37] ## subset validation features
 
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
@@ -319,11 +319,11 @@ site$nb <- predict(clist$nb, site, type = 'prob')$y
 site$st <- predict(clist$st, site, type = 'prob')$y
 ```
 
-The fact that we can readily differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we are or at least should be dealing with separate CoDa sub-populations based on their provenance.
+The fact that we can readily differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we should be dealing with CoDa sub-populations based on their provenance tags.
 
 # Univariate survey post-stratification
 
-This section provides initial univariate data model summaries of parts of the CLR transformed data by crop species. We focus on the contrast of the macro / micro nutrient subcompositions between crops by predicted provenance and dominant archetypes. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on predicted sample provenance (`pref`) and dominant archetype (`DA`). We will be doing this using mixed-effects (random intercept) regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
+This section provides initial univariate data model summaries of parts of the CLR transformed data by crop species. We focus on the contrast of the macro / micro nutrient subcompositions between crops. This can be readily extended to other compositional amalgamations. These next chunks fit the differences between the individual macro nutrient CLRs of millet, rice and sorghum as compared to maize, post-stratified on sample provenance (`ref`) and dominant archetype (`DA`). We will be doing this using mixed-effects (random intercept) regression with the [`arm`](https://www.rdocumentation.org/packages/arm/versions/1.11-2) package.
 
 ```{r, results = 'asis'}
 # Fit nutrients by crop species with mixed-effects regression
