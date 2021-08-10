@@ -199,7 +199,7 @@ However, we do expect that some form dimensional CoDa reduction technique will h
 
 # Sample provenance tagging and tracking with supervised learning
 
-The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"* may be important. These could make a difference as to how those data should be interpreted for diagnostics and monitoring. In this survey dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores, on both fertilized and unfertilized fields. Both household grain store and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because an explicit georeference / sample age link to the field is missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain survey samples, and/or any other overall sample survey artifacts and/or treatment differences.
+The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"* may be important. These could make a difference as to how those data should be interpreted for diagnostics and monitoring. In this survey dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores, on both fertilized and unfertilized fields. Both household grain store and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because explicit georeference and sample age links to the field are missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain survey samples, and any other overall sample survey artifacts or treatment differences.
 
 ## Sample provenance tagging
 
@@ -225,7 +225,7 @@ r ## plot widget
 
 ## Sample provenance tracking
 
-You could track and monitor your reference samples with the following short, exploratory machine learning workflow. We initially split the data into calibration and validation sets and select the relevant features for distinguishing between `ref = y` or `ref = n` samples. This could also be readily updated with new data as (i.e., from new locations and/or from repeat samples over time), become available.
+You could track and monitor your reference samples with the following short, exploratory machine learning workflow. We initially split the data into calibration and validation sets and select the relevant features for distinguishing between `ref = y` or `ref = n` samples. This could also be readily updated with new data as (i.e., from new locations and/or from repeat samples), become available over time.
 
 ```{r}
 # Set calibration/validation set randomization seed
@@ -316,10 +316,13 @@ site$rf <- predict(clist$rf, site, type = 'prob')$y
 site$xt <- predict(clist$xt, site, type = 'prob')$y
 site$nn <- predict(clist$nn, site, type = 'prob')$y
 site$nb <- predict(clist$nb, site, type = 'prob')$y
-site$st <- predict(clist$st, site, type = 'prob')$y
+site$st <- predict(st, site)
+
+# Confusion matrix
+
 ```
 
-The fact that we can readily differentiate between `ref = y` and `ref = n` samples in this survey provides a clear indication that we should be dealing with CoDa sub-populations based on their provenance tags.
+The fact that we can readily differentiate `ref = y` from `ref = n` samples in this survey provides a clear indication that we should be dealing with CoDa sub-populations based on their provenance tags.
 
 # Univariate survey post-stratification
 
@@ -462,7 +465,7 @@ The main takeaways from this notebook are the following:
 
 * We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult or time consuming, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions in instances where subcompositional closure principles (*sensu* [Aitchison geometry](https://laboratoriomatematicas.uniandes.edu.co/cursocoda/04-Vera-geometry.pdf)) apply.
 
-* Clustering the CoDa nutrient data in fewer compositional dimensions, e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi. Other clustering and [Ordination techniques](https://en.wikipedia.org/wiki/Ordination_(statistics)) could and should also be explored in this context (see [Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
+* Clustering the CoDa nutrient data in fewer compositional dimensions e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi. Other clustering and [Ordination techniques](https://en.wikipedia.org/wiki/Ordination_(statistics)) could and should also be explored in this context (see [Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
 
 * Reference sample tagging and tracking can help with locating where and under what circumstances the CoDa were obtained and identifies high value targets for future surveys (*sensu*, their provenance). This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks.
 
