@@ -151,7 +151,7 @@ screeplot(comp.arc)
 
 ## Archetypal classification
 
-Similar to other clustering and ordination algorithms, we can use the identified archetypes for dimensional reduction and unsupervised classification of CoDa.
+Similar to other clustering and ordination algorithms, we can use the identified archetypes for dimensional reduction and unsupervised classification.
 
 ```{r}
 # Select no. of archetypes, the scree plot above suggests 3-7 ... we use 4 here
@@ -276,7 +276,7 @@ fname <- paste("./MW_coda/Results/", labs, "_clist.rds", sep = "")
 saveRDS(clist, fname)
 ```
 
-The next chunk then stacks the 5 previous models (or the so-called [base learners](https://towardsdatascience.com/ensemble-methods-bagging-boosting-and-stacking-c9214a10a205)) on the validation set. We will use `glmStepAIC` function for this, but you may want to try other [top learners](https://en.wikipedia.org/wiki/Ensemble_learning) in this context as well.
+The next chunk then stacks the 5 previous models, the so-called [base learners](https://towardsdatascience.com/ensemble-methods-bagging-boosting-and-stacking-c9214a10a205)), on the validation set. We will use `glmStepAIC` function for this, but you may want to try other [top learners](https://en.wikipedia.org/wiki/Ensemble_learning) in this context as well.
 
 ```{r, results = 'hide'}
 # Set validation labels and features
