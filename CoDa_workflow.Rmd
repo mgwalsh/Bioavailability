@@ -129,7 +129,7 @@ boxplot(site$Mo ~ site$crop, notch = T, ylab = "Mo", xlab = "", cex.axis = 1, ce
 boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.lab = 1.3)
 ```
 
-# Compositional archetypes and unsupervised classification
+# Compositional archetypes and unsupervised CoDa classification
 
 *Archetypal analysis* ([Cutler and Breiman, 1994](https://www.stat.cmu.edu/technometrics/90-00/vol-36-04/v3604338.pdf)) is an unsupervised learning method similar to e.g., [K-means clustering](https://towardsdatascience.com/k-means-clustering-explained-4528df86a120). It describes each observation in a dataset as a mixture of archetypes. Rather than describing average or typical observations and measurements, archetypal analysis seeks to identify extreme points on the [convex hull](https://en.wikipedia.org/wiki/Convex_hull) of a data matrix, which can provide a simple and quite useful way of clustering and looking at multivariate data ([Eugster and Leisch, 2009](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf)). The identified archetypes themselves are mixtures of the individual CoDA variables under consideration. Archetypal mixture coefficients and projections are also CoDa, which is why we include them in this notebook. Note that other clustering and ordination algorithms could also be used in this context ([Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
 
@@ -199,7 +199,7 @@ However, we do expect that some form dimensional CoDa reduction technique will h
 
 # Sample provenance tagging and tracking with supervised learning
 
-The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"* may be important. These could make a difference as to how those data should be interpreted for diagnostics and monitoring. In this survey dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores, on both fertilized and unfertilized fields. Both household grain store and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because explicit georeference and sample age links to the field are missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain survey samples, and any other overall sample survey artifacts or treatment differences.
+The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"* may be important. These could make a difference as to how those data should be interpreted for diagnostics and monitoring. In this survey dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores, on both fertilized and unfertilized fields. Both household grain store and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from potentially different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because explicit georeference and sample age links to the field data are missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain survey samples, and any other overall sample survey artifacts or treatment differences.
 
 ## Sample provenance tagging
 
@@ -317,9 +317,6 @@ site$xt <- predict(clist$xgbTree, site, type = 'prob')$y
 site$nn <- predict(clist$nnet, site, type = 'prob')$y
 site$nb <- predict(clist$nb, site, type = 'prob')$y
 site$st <- predict(st, site)
-
-# Confusion matrix
-confusionMatrix(site$st, as.factor(site$ref))
 ```
 
 ```{r}
@@ -327,7 +324,7 @@ confusionMatrix(site$st, as.factor(site$ref))
 confusionMatrix(site$st, as.factor(site$ref))
 ```
 
-The fact that we can readily differentiate `ref = y` from `ref = n` samples with high [sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity) in this survey provides a good indication that we should probably be dealing with two CoDa sub-populations based on their provenance tags. Given the sample geographical locations and their associated CoDa, the samples are clearly compositionally and geographically different.
+The fact that we can readily differentiate `ref = y` from `ref = n` samples with high [sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity) in this survey provides a good indication that we should probably be dealing with at least two CoDa sub-populations based on their provenance tags (i.e., field vs store from either fertilized or unfertilized fields). Given the sample geographical locations and their associated CoDa, the samples are clearly compositionally and/or geographically separable. Note that these differences were not considered in the [Gashu et al., (2021)](https://doi.org/10.1038/s41586-021-03559-3) article, and may have distorted the Malawi results presented therein with regard to the underlying survey artifacts.
 
 # Univariate survey post-stratification
 
