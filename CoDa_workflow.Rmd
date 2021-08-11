@@ -426,7 +426,7 @@ net <- as.network(x = mmf2, directed = FALSE, loops = FALSE, matrix.type = "adja
 
 This next chunk produces the associated interaction graph. Note that this represents the maximal interaction graph for the reference data.
 
-```{r, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "Baseline CoDa nutrient interaction graph by crop species."}
+```{r, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "Baseline CoDa nutrient interaction graph by crop species for reference samples."}
 
 par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
@@ -448,7 +448,7 @@ mmf4 <- ugList(terms(mm4), result="matrix")
 net <- as.network(x = mmf4, directed = FALSE, loops = FALSE, matrix.type = "adjacency")
 ```
 
-```{r, echo = FALSE, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "CoDa macro and micro-nutrient interaction graph by crop species."}
+```{r, echo = FALSE, fig.align = "center", fig.height = 4, fig.width = 4, fig.cap = "CoDa macro and micro-nutrient interaction graph by crop species for reference samples."}
 
 par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
