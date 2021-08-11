@@ -324,7 +324,7 @@ site$st <- predict(st, site)
 confusionMatrix(site$st, as.factor(site$ref))
 ```
 
-The fact that we can readily differentiate `ref = y` from `ref = n` samples with high [sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity) in this survey provides a good indication that we should probably be dealing with at least two CoDa measurement sub-populations based on their provenance tags (i.e., field vs store from either fertilized or unfertilized fields). Given the sample geographical locations and their associated CoDa, the samples are clearly compositionally and/or geographically separable. Note that these differences were not considered in the [Gashu et al., (2021)](https://doi.org/10.1038/s41586-021-03559-3) article, and may have distorted the Malawi results presented therein with regard to any of the underlying survey artifacts.
+The fact that we can readily differentiate `ref = y` from `ref = n` samples with high [sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity) in this survey provides a good indication that we should probably be dealing with at least two CoDa measurement sub-populations based on their provenance tags (i.e., field vs store from either fertilized or unfertilized fields). Given the sample geographical locations and their associated CoDa, the samples are clearly compositionally and/or geographically separable. Note that these differences were not considered in the [Gashu et al., (2021)](https://doi.org/10.1038/s41586-021-03559-3) article, and may have distorted the Malawi results presented therein without regard to any of the underlying survey artifacts.
 
 # Univariate survey post-stratification
 
