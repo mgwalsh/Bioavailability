@@ -189,7 +189,7 @@ boxplot(site$Mo ~ site$DA, notch = T, ylab = "Mo", xlab = "", cex.axis = 1, cex.
 boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.lab = 1.3)
 ```
 
-This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that should be explored. However, those links are certainly **not plainly visible in satellite images**, apart from the co-occurrence of croplands, buildings/settlements and their potential anthropic effects that are apparent in these examples.
+This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that should be explored. However, those links are certainly **not plainly visible in satellite images**, apart from the co-occurrence of croplands, buildings/settlements and their potential anthropic effects apparent in these examples.
 
 ```{r, echo=FALSE, fig.align="center", fig.cap="Dominant archetypal grain nutrient composition sites in Malawi visualized in GeoSurvey.", out.width = '90%'}
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
@@ -199,7 +199,7 @@ However, we do expect that some form dimensional CoDa reduction technique will h
 
 # Sample provenance tagging and tracking with supervised learning
 
-The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"* may be important. These could make a difference as to how those data should be interpreted for diagnostics and monitoring. In this survey dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores, on both fertilized and unfertilized fields. Both household grain store and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from potentially different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because explicit georeference and sample age links to the field data are missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain survey samples, and any other overall sample survey artifacts or treatment differences.
+The main reason for including this section in notebook is that where and from which sources the grain samples were obtained i.e., their *"provenance"* may be important. Provenance could make a difference as to how those respective data should be interpreted for diagnostics and monitoring. In this survey dataset the grain samples were collected either directly from the standing crop, from harvested crop stacks located in the respective fields, or from household grain stores, on both fertilized and unfertilized fields. Both household grain store and fertilized fields are problematic in this context in that we don't actually know what happened after samples were removed from the field, mixed and stored from potentially different farm fields. We also cannot assess what the actual effect of the types and amounts of fertilizer and/or lime that were used were because explicit georeference and sample age links to the field data are missing. The combination of these factors could influence reported survey results e.g., via soil contamination of the obtained grain survey samples, and any other overall sample survey artifacts or treatment differences.
 
 ## Sample provenance tagging
 
@@ -438,7 +438,7 @@ You can also obtain the [Maximal cliques](https://www.sciencedirect.com/topics/m
 getCliques(mmf2)
 ```
 
-We can fit a similar model by separating the interactions by macro and micro-nutrient subcompositions, by crop species. The `mm3` base model specification sets that up. We can then use [Backward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf) to retain only the most significant interactions in the corresponding `mm4` fit, which also produces the associated graph.
+We can fit a similar model by separating the interactions by macro and micro-nutrient sub-compositions, by crop species. The `mm3` base model specification sets that up. We can then use [Backward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf) to retain only the most significant interactions in the corresponding `mm4` fit, which also produces the associated graph.
 
 ```{r, results = 'hide'}
 # Marco and micro-nutrient interactions by crop type
@@ -454,13 +454,13 @@ par(mar=c(1,1,1,1))
 plot.network(net, vertex.col = "light grey", vertex.cex = 6, displaylabels = T, label.pos = 5, mode = "circle")
 ```
 
-Under the given model assumptions, the corresponding maximal cliques (subcompositions) are identified as:
+Under the given model assumptions, the corresponding maximal cliques (sub-compositions) are identified as:
 
 ```{r, echo = FALSE}
 getCliques(mmf4)
 ```
 
-Note that this halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and therefore could be considered as a minimal CoDa interaction model relative to the main cereal crops that are reported in Malawi.
+Note that this halves the number of sub-compositions that might need to be considered relative to the baseline (`m2`) model, and therefore could be considered as a minimal CoDa interaction model relative to the main cereal crops that are reported in Malawi.
 
 # Takeways
 
@@ -474,6 +474,6 @@ The main takeaways from this notebook are the following:
 
 * Reference sample tagging and tracking can help with locating where and under what circumstances the CoDa were obtained, and identifies high value targets for future surveys (*sensu*, their [provenance](https://en.wikipedia.org/wiki/Provenance)). This also broaches the subject of generating deployment-ready, spectral and/or spatial nutrient predictions using machine learning and/or geostatistics. These additional topics will be covered in more detail in subsequent notebooks. The lesson is to pay close(r) attention to collection and interpretation of *provenance data* in future surveys!
 
-* Graphical interaction models can help to clarify the conditional relationships between compositional parts conditioned on observations and measurements. They can also be used to select, compositionally close, model and compare different subcompositions, including those guided by domain experts. This is **our preferred EDA technique** for developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies ... and data permitting.
+* Graphical interaction models can help to clarify the conditional relationships between compositional parts conditioned on observations and measurements. They can also be used to select, compositionally close, model and compare different sub-compositions, including those guided by domain experts. This is **our preferred EDA technique** for developing e.g., reproducible soil and/or spatial diagnostics of potential nutrient deficiencies ... and data permitting.
 
 Any questions, comments or corrections about this notebook are most welcome via [AFSIS](mailto:mgw.africasoils.info).
