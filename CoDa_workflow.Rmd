@@ -189,7 +189,7 @@ boxplot(site$Mo ~ site$DA, notch = T, ylab = "Mo", xlab = "", cex.axis = 1, cex.
 boxplot(site$I ~ site$DA, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.lab = 1.3)
 ```
 
-This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that should be explored. However, those links are certainly **not plainly visible in satellite images**, apart from the co-occurrence of croplands, buildings/settlements and their potential anthropic effects.
+This is an aside, but it gives you an idea of what the "*most*" dominant archetypal sites look like from a [GeoSurvey](https://osf.io/vxc97/) perspective in Malawi. This should remind us of the fact that there are probably quite explicit spatial links to assessing nutrient compositions that should be explored. However, those links are certainly **not plainly visible in satellite images**, apart from the co-occurrence of croplands, buildings/settlements and their potential anthropic effects that are apparent in these examples.
 
 ```{r, echo=FALSE, fig.align="center", fig.cap="Dominant archetypal grain nutrient composition sites in Malawi visualized in GeoSurvey.", out.width = '90%'}
 knitr::include_graphics("./MW_coda/MW_archetypes.png")
@@ -324,7 +324,7 @@ site$st <- predict(st, site)
 confusionMatrix(site$st, as.factor(site$ref))
 ```
 
-The fact that we can readily differentiate `ref = y` from `ref = n` samples with high [sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity) in this survey provides a good indication that we should probably be dealing with at least two CoDa sub-populations based on their provenance tags (i.e., field vs store from either fertilized or unfertilized fields). Given the sample geographical locations and their associated CoDa, the samples are clearly compositionally and/or geographically separable. Note that these differences were not considered in the [Gashu et al., (2021)](https://doi.org/10.1038/s41586-021-03559-3) article, and may have distorted the Malawi results presented therein with regard to the underlying survey artifacts.
+The fact that we can readily differentiate `ref = y` from `ref = n` samples with high [sensitivity and specificity](https://en.wikipedia.org/wiki/Sensitivity_and_specificity) in this survey provides a good indication that we should probably be dealing with at least two CoDa measurement sub-populations based on their provenance tags (i.e., field vs store from either fertilized or unfertilized fields). Given the sample geographical locations and their associated CoDa, the samples are clearly compositionally and/or geographically separable. Note that these differences were not considered in the [Gashu et al., (2021)](https://doi.org/10.1038/s41586-021-03559-3) article, and may have distorted the Malawi results presented therein with regard to any of the underlying survey artifacts.
 
 # Univariate survey post-stratification
 
@@ -332,13 +332,13 @@ This section provides initial univariate data model summaries of parts of the CL
 
 ```{r, results = 'asis'}
 # Fit nutrients by crop species with mixed-effects regression
-m0 <- lmer(macro~crop + (1|ref) + (1|DA), data = rsite)
-m1 <- lmer(Na~crop + (1|ref) + (1|DA), data = rsite)
-m2 <- lmer(Mg~crop + (1|ref) + (1|DA), data = rsite)
-m3 <- lmer(P~crop + (1|ref) + (1|DA), data = rsite)
-m4 <- lmer(S~crop + (1|ref) + (1|DA), data = rsite)
-m5 <- lmer(K~crop + (1|ref) + (1|DA), data = rsite)
-m6 <- lmer(Ca~crop + (1|ref) + (1|DA), data = rsite)
+m0 <- lmer(macro~crop + (1|ref) + (1|DA), data = site)
+m1 <- lmer(Na~crop + (1|ref) + (1|DA), data = site)
+m2 <- lmer(Mg~crop + (1|ref) + (1|DA), data = site)
+m3 <- lmer(P~crop + (1|ref) + (1|DA), data = site)
+m4 <- lmer(S~crop + (1|ref) + (1|DA), data = site)
+m5 <- lmer(K~crop + (1|ref) + (1|DA), data = site)
+m6 <- lmer(Ca~crop + (1|ref) + (1|DA), data = site)
 
 # Generate regression summary table
 stargazer::stargazer(m0, m1, m2, m3, m4, m5, m6, type = "html", 
@@ -350,19 +350,19 @@ stargazer::stargazer(m0, m1, m2, m3, m4, m5, m6, type = "html",
 ```
 \
 
-Based on this, there appear to be clear differences between the macro compositional parts of the 4 cereal crops in this survey. Maize appears to have a higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast that is imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. The corresponding micro-nutrient summary is shown in the table below.
+Based on this, there appear to be clear differences between the macro compositional parts of the 4 cereal crops covered by this survey. Maize appears to have a higher macro-nutrient proportion than millet, rice or sorghum. Conversely, because of the binary macro / micro contrast that is imposed here, the proportion of total micro-minerals would be expected to be proportionally higher in millet, rice and sorghum as compared to maize. The corresponding micro-nutrient summary is shown in the table below.
 
 ```{r, echo = FALSE, results = 'asis'}
 # Fit macro-nutrients by crop species and fertilizer use
-m7 <- lmer(Cr~crop + (1|ref) + (1|DA), data = rsite)
-m8 <- lmer(Mn~crop + (1|ref) + (1|DA), data = rsite)
-m9 <- lmer(Fe~crop + (1|ref) + (1|DA), data = rsite)
-m10 <- lmer(Co~crop + (1|ref) + (1|DA), data = rsite)
-m11 <- lmer(Cu~crop + (1|ref) + (1|DA), data = rsite)
-m12 <- lmer(Zn~crop + (1|ref) + (1|DA), data = rsite)
-m13 <- lmer(Se~crop + (1|ref) + (1|DA), data = rsite)
-m14 <- lmer(Mo~crop + (1|ref) + (1|DA), data = rsite)
-m15 <- lmer(I~crop + (1|ref) + (1|DA), data = rsite)
+m7 <- lmer(Cr~crop + (1|ref) + (1|DA), data = site)
+m8 <- lmer(Mn~crop + (1|ref) + (1|DA), data = site)
+m9 <- lmer(Fe~crop + (1|ref) + (1|DA), data = site)
+m10 <- lmer(Co~crop + (1|ref) + (1|DA), data = site)
+m11 <- lmer(Cu~crop + (1|ref) + (1|DA), data = site)
+m12 <- lmer(Zn~crop + (1|ref) + (1|DA), data = site)
+m13 <- lmer(Se~crop + (1|ref) + (1|DA), data = site)
+m14 <- lmer(Mo~crop + (1|ref) + (1|DA), data = site)
+m15 <- lmer(I~crop + (1|ref) + (1|DA), data = site)
 
 # Generate regression summary table
 stargazer::stargazer(m7, m8, m9, m10, m11, m12, m13, m14, m15, type = "html", 
@@ -408,9 +408,11 @@ Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versi
 
 ## Fitting graphical interaction models
 
-The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species. We start with a model that initially contains no interactions and then adds only the most significant ones sequentially (i.e., with [Foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
+The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species and reference (`ref = y`) sites. We start with a model that initially contains no interactions and then adds only the most significant ones sequentially (i.e., with [Foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
 
 ```{r, results = 'hide'}
+# Select reference sites
+
 # CoDa interactions by crop type
 coda <- site[ ,c(5,8:22)]
 
