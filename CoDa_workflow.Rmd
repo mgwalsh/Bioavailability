@@ -460,7 +460,7 @@ Under the given model assumptions, the corresponding maximal cliques (subcomposi
 getCliques(mmf4)
 ```
 
-Note that this halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and therefore could be considered as a minimal CoDa interaction model relative to the main cereal crop species that are reported in Malawi.
+Note that this halves the number of subcompositions that might need to be considered relative to the baseline (`m2`) model, and therefore could be considered as a minimal CoDa interaction model relative to the main cereal crops that are reported in Malawi.
 
 # Takeways
 
