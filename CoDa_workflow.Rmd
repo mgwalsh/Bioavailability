@@ -129,7 +129,7 @@ boxplot(site$Mo ~ site$crop, notch = T, ylab = "Mo", xlab = "", cex.axis = 1, ce
 boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.lab = 1.3)
 ```
 
-# Compositional anomaly and outlier tagging
+# Compositional outlier detection
 
 Note that there are quite a few outliers apparent in the boxplot figure above. This short section demonstrates an unspervised anomaly and outlier detection method for CoDa (and other multivariate data, see [Liu, Ting and Zhou (2008)](https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/tkdd11.pdf)). We will be using the `isolationForest` function from the [`solitude`](https://www.rdocumentation.org/packages/solitude/versions/1.1.1) package here, with default tuning parameters. We also plan to expand on anomaly and outlier detection more in subsequent notebooks, so this next chunk should be considered as just an initial draft.
 
