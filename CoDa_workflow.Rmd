@@ -430,7 +430,7 @@ Similarly, the [`statnet`](https://www.rdocumentation.org/packages/statnet/versi
 
 ## Fitting graphical interaction models
 
-The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species for the reference (`ref = y`) sites. We start with a model that initially contains no interactions and then adds only the most significant ones sequentially (i.e., with [Foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
+The first graphical model that we fit provides a baseline for describing nutrient interactions by crop species for provenance reference (`ref = y`) sites. We start with a model that initially contains no interactions and then adds only the most significant ones sequentially (i.e., with [Foward selection](https://jmlr.csail.mit.edu/papers/volume20/17-334/17-334.pdf)).
 
 ```{r, results = 'hide'}
 # Select reference sites
