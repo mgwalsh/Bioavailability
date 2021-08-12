@@ -149,7 +149,7 @@ site <- cbind(site, coda$outlier)
 names(site)[names(site)=="coda$outlier"] <- "outlier"
 ```
 
-At the set threshold this identifies 91 potential CoDa anomalies / outliers that we will screen from some of the subsequent analyses in the notebook e.g., see the provenance sample tagging and tracking section below.  
+At the set 95% quantile threshold of the modeled `anomaly_score`, this identifies 91 potential CoDa sample anomalies / outliers that we will screen from some of the subsequent EDAs in this notebook e.g., see the provenance sample tagging section further below. Again, we shall revisit this issue later in additional notebooks.
 
 # Compositional archetypes and unsupervised CoDa classification
 
@@ -225,12 +225,12 @@ The main reason for including this section in notebook is that where and from wh
 
 ## Sample provenance tagging
 
-The next chunks provides an example of sample provenance tagging and tracking. We differentiate reference samples that were obtained directly from the linked grain and soil observations (crop or stack) on unfertilized fields, from all other survey samples (i.e., those stored and/or from fertilized samples). Note that you can easily change and/or expand the rule(s) for this. However you define *"reference samples"*, these should be your highest-value targets in future surveys because they define a consistent field baseline for monitoring any diagnostic changes. Also note that these high-value targets are hard to collect in the field because they occur only and have to be sampled during a quite narrow time window during any given cropping season. This next chunk tags the reference samples and produces a sketch map of where those (reference) samples were located in the currently available survey.
+The next chunks provides an example of sample provenance tagging and tracking. We differentiate reference samples that were obtained directly from the linked grain and soil observations (crop or stack) on unfertilized fields, which are not CoDa outliers from all other survey samples (i.e., those stored and/or from fertilized samples and/or outliers). Note that you can easily change and/or expand the rule(s) for this. However you define *"reference samples"*, these should be your highest-value targets in future surveys because they define a consistent field baseline for monitoring any diagnostic changes. Also note that these high-value targets are hard to collect in the field because they occur only and have to be sampled during a quite narrow time window during any given cropping season. This next chunk tags the reference samples and produces a sketch map of where those (reference) samples were located in the currently available survey.
 
 ```{r}
 # Tag reference samples with <dplyr>
-site <- site %>% mutate(ref = case_when(source == 'crop' | source == 'stack' & fert == 'n' ~ 'y',
-                        TRUE ~ 'n'))
+site <- site %>% mutate(ref = case_when(source == 'crop' | source == 'stack' & outlier == 'n'
+                                        & fert == 'n' ~ 'y', TRUE ~ 'n'))
 
 # Reference sample/site file write out
 write.csv(site, "./MW_coda/Results/MW_ref_coda.csv", row.names = F)
