@@ -131,7 +131,7 @@ boxplot(site$I ~ site$crop, notch = T, ylab = "I", xlab = "", cex.axis = 1, cex.
 
 # Compositional anomaly and outlier detection
 
-Note that there are quite a few outliers apparent in the boxplot figure above. This short section demonstrates an unspervised anomaly and outlier detection method for CoDa (and other multivariate data, see [Liu, Ting and Zhou (2008)](https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/tkdd11.pdf)). We will be using the `isolationForest` function from the [`solitude`](https://www.rdocumentation.org/packages/solitude/versions/1.1.1) package here, with default tuning parameters. We also plan to expand on anomaly and outlier detection more in subsequent notebooks, so this next chunk should be considered an initial draft.
+Note that there are quite a few outliers apparent in the boxplot figure above. This short section demonstrates an unspervised anomaly and outlier detection method for CoDa (and other multivariate data, see [Liu, Ting and Zhou (2008)](https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/tkdd11.pdf)). We will be using the `isolationForest` function from the [`solitude`](https://www.rdocumentation.org/packages/solitude/versions/1.1.1) package here, with default tuning parameters. We also plan to expand on anomaly and outlier detection more in subsequent notebooks, so this next chunk should be considered as just an initial draft.
 
 ```{r, results = 'hide'}
 # Select CoDa variables
@@ -149,7 +149,7 @@ site <- cbind(site, coda$outlier)
 names(site)[names(site)=="coda$outlier"] <- "outlier"
 ```
 
-At the set 95% quantile threshold of the modeled `anomaly_score`, this identifies 91 potential CoDa sample anomalies / outliers that we will screen from some of the subsequent EDAs in this notebook e.g., see the provenance sample tagging section further below. Again, we shall revisit this issue later in additional notebooks.
+At the set 95% quantile threshold of the modeled `anomaly_score` this identifies 91 potential CoDa sample outliers that we will screen from some of the subsequent EDAs in this notebook e.g., see the provenance sample tagging section further below. Again, we shall revisit this issue later in additional notebooks.
 
 # Compositional archetypes and unsupervised CoDa classification
 
@@ -303,7 +303,7 @@ The next chunk then stacks the 5 previous models, the so-called [base learners](
 ```{r, results = 'hide'}
 # Set validation labels and features
 lval <- as.vector(t(gs_val[labs])) ##  subset validation labels
-fval <- gs_val[ ,33:37] ## subset validation features
+fval <- gs_val[ ,34:38] ## subset validation features
 
 # Start doParallel to parallelize model fitting
 mc <- makeCluster(detectCores())
@@ -490,7 +490,9 @@ The main takeaways from this notebook are the following:
 
 * Converting nutrient concentrations to multivariate logratios is a simple step, but unlike other data transformations it preserves the integrity of the relevant compositional parts that are needed to normalize the data for most subsequent univariate, multivariate and/or inferential analyses and the associated statistics. Also, CoDA estimates can always be back-transformed into their original units given total concentration sums.
 
-* We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make the data any more computationally difficult or time consuming, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions in instances where subcompositional closure principles (*sensu* [Aitchison geometry](https://laboratoriomatematicas.uniandes.edu.co/cursocoda/04-Vera-geometry.pdf)) apply.
+* We think that it may be more informative to analyze mineral nutrient concentration data as CoDa. The associated LR conversions (ALR, CLR, ILR) do not make EDAs any more computationally difficult or time consuming, but they should improve any subsequent data modeling, geostatistical and/or machine learning based predictions in instances where subcompositional closure principles (*sensu* [Aitchison geometry](https://laboratoriomatematicas.uniandes.edu.co/cursocoda/04-Vera-geometry.pdf)) apply.
+
+* Automated, multivariate anomaly and outlier detection is advancing with the application of isolation principles with machine learning. We shall explore this further in additional notebooks.
 
 * Clustering the CoDa nutrient data in fewer compositional dimensions e.g., via archetypal analysis, provides a simple framework and generalization for post-stratifying nutrient survey results that should improve the precision and accuracy of national cereal grain mineral nutrient estimates in Malawi. They also represent an alternate means for closing and normalizing CoDA. Other clustering, standard [Ordination techniques](https://en.wikipedia.org/wiki/Ordination_(statistics)) and genotype × environment interaction ([GGE](https://cran.r-project.org/web/packages/gge/gge.pdf)) approaches could and should also be explored in this context (see [Greenacre, 2021](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-042720-124436)).
 
