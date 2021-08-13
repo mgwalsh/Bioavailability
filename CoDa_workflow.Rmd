@@ -157,7 +157,7 @@ At the specified 95% quantile threshold of the modeled `anomaly_score` this iden
 
 ## Identifying archetypes
 
-This next chunk fits the Malawi CLR data using the [`archetypes`](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf) package, which is a robust implementation of the original Cutler and Breiman (1994) algorithm that uses [k-fold validation](https://www.statology.org/k-fold-cross-validation/)
+This next chunk fits the Malawi CLR data using the [`archetypes`](https://cran.r-project.org/web//packages/archetypes/vignettes/archetypes.pdf) package, which is a robust implementation of the original Cutler and Breiman (1994) algorithm that uses [k-fold validation](https://www.statology.org/k-fold-cross-validation/).
 
 ```{r, output = 'hide'}
 # Fit nutrient archetypes with 10-fold cross validation
