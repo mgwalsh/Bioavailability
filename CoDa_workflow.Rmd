@@ -149,7 +149,7 @@ site <- cbind(site, coda$outlier)
 names(site)[names(site)=="coda$outlier"] <- "outlier"
 ```
 
-At the set 95% quantile threshold of the modeled `anomaly_score` this identifies 91 potential CoDa sample outliers that we will screen from some of the subsequent EDAs in this notebook e.g., see the provenance sample tagging section further below. Again, we shall revisit this issue later in additional notebooks.
+At the specified 95% quantile threshold of the modeled `anomaly_score` this identifies 91 potential CoDa sample outliers that we will use in some of the subsequent EDAs in this notebook e.g., see the provenance sample tagging section further below.
 
 # Compositional archetypes and unsupervised CoDa classification
 
